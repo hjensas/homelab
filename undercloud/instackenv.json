@@ -1,0 +1,11 @@
+{"nodes": 
+  [
+    {"name": "T5610",
+      "pm_type": "manual-management",
+      "ports": [{"address": "34:17:EB:B8:DA:58", "physical_network": "ctlplane"}],
+      "cpu": "2",
+      "memory": "131072",
+      "disk": "200",
+      "arch": "x86_64"}
+  ]
+}

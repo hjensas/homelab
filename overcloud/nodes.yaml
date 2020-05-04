@@ -1,0 +1,12 @@
+resource_registry:
+  OS::TripleO::AllInOne::Net::SoftwareConfig: /home/stack/overcloud/net-config-static-bridge.yaml
+
+parameter_defaults:
+  swap_size_megabytes: 8192
+  AllInOneCount: 1
+  OvercloudAllInOneFlavor: aio
+
+  NetworkDeploymentActions: ['CREATE','UPDATE']
+  NeutronBridgeMappings: datacentre:br-ex
+  # NeutronExternalNetworkBridge: 'br-ex'
+
