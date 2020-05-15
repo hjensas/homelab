@@ -14,7 +14,7 @@ Set up OVB environment
   pip install python-openstackclient
   pip install ansible
   git clone https://github.com/hjensas/homelab.git ~/ovb-ipv4-routed/homelab
-  cp ~/ovb-ipv4-routed/homelab/ovb-ipv4-routed/ovb/* ~/ovb-ipv4-routed/openstack-virtual-baremetal/
+  cp ~/ovb-ipv4-routed/homelab/labs/ovb-ipv4-routed/ovb/* ~/ovb-ipv4-routed/openstack-virtual-baremetal/
 
 Set up OVB routed-networks lab
 ------------------------------
