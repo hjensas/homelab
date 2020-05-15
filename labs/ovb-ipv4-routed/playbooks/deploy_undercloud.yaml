@@ -38,7 +38,7 @@
     become: yes
     shell: |
       cd {{ ansible_env.HOME }}/tripleo-repos
-      python setup.py install
+      /usr/libexec/platform-python setup.py install
   - name: Set up tripleo repos
     become: yes
     shell:
@@ -56,10 +56,10 @@
       packages:
         - python-tripleoclient
         - ceph-ansible
-  - name: Git checkout ooo-bp-tripleo-routed-networks-templates-testing
+  - name: Git checkout labs
     git:
-      repo: https://github.com/hjensas/ooo-bp-tripleo-routed-networks-templates-testing.git
-      dest: "{{ ansible_env.HOME }}/ooo-bp-tripleo-routed-networks-templates-testing"
+      repo: https://github.com/hjensas/homelab.git
+      dest: "{{ ansible_env.HOME }}/homelab"
   - name: Git checkout tripleo-heat-templates
     git:
       repo: https://opendev.org/openstack/tripleo-heat-templates.git
@@ -68,7 +68,7 @@
       # version: FETCH_HEAD
   - name: Create symlinks
     file:
-      src: "{{ ansible_env.HOME }}/ooo-bp-tripleo-routed-networks-templates-testing/{{ item }}"
+      src: "{{ ansible_env.HOME }}/homelab/labs/ovb-ipv4-routed/{{ item }}"
       dest: "{{ ansible_env.HOME }}/{{ item }}"
       state: link
     with_items:
