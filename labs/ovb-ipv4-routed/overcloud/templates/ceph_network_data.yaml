@@ -1,0 +1,77 @@
+- name: External
+  vip: true
+  name_lower: external
+  vlan: 100
+  ip_subnet: '10.0.0.0/24'
+  allocation_pools: [{'start': '10.0.0.4', 'end': '10.0.0.99'}]
+  gateway_ip: '10.0.0.254'
+  mtu: 1450
+- name: InternalApi
+  name_lower: internal_api
+  vip: true
+  vlan: 10
+  ip_subnet: '172.17.0.0/24'
+  allocation_pools: [{'start': '172.17.0.10', 'end': '172.17.0.250'}]
+  gateway_ip: '172.17.0.254'
+  routes: [{'destination': '172.17.1.0/24', 'nexthop': '172.17.0.254'}]
+  mtu: 1450
+- name: InternalApi2
+  name_lower: internal_api2
+  vlan: 11
+  ip_subnet: '172.17.1.0/24'
+  allocation_pools: [{'start': '172.17.1.10', 'end': '172.17.1.250'}]
+  gateway_ip: '172.17.1.254'
+  routes: [{'destination': '172.17.0.0/24', 'nexthop': '172.17.1.254'}]
+  mtu: 1450
+- name: Storage
+  vip: true
+  vlan: 20
+  name_lower: storage
+  ip_subnet: '172.18.0.0/24'
+  allocation_pools: [{'start': '172.18.0.10', 'end': '172.18.0.250'}]
+  gateway_ip: '172.18.0.254'
+  routes: [{'destination': '172.18.1.0/24', 'nexthop': '172.18.0.254'}]
+  mtu: 1450
+- name: Storage2
+  name_lower: storage2
+  vlan: 21
+  ip_subnet: '172.18.1.0/24'
+  allocation_pools: [{'start': '172.18.1.10', 'end': '172.18.1.250'}]
+  gateway_ip: '172.18.1.254'
+  routes: [{'destination': '172.18.0.0/24', 'nexthop': '172.18.1.254'}]
+  mtu: 1450
+- name: StorageMgmt
+  name_lower: storage_mgmt
+  vip: true
+  vlan: 30
+  ip_subnet: '172.19.0.0/24'
+  allocation_pools: [{'start': '172.19.0.10', 'end': '172.19.0.250'}]
+  gateway_ip: '172.19.0.254'
+  routes: [{'destination': '172.19.1.0/24', 'nexthop': '172.19.0.254'}]
+  mtu: 1450
+- name: StorageMgmt2
+  name_lower: storage_mgmt2
+  vlan: 31
+  ip_subnet: '172.19.1.0/24'
+  allocation_pools: [{'start': '172.19.1.10', 'end': '172.19.1.250'}]
+  gateway_ip: '172.19.1.254'
+  routes: [{'destination': '172.19.0.0/24', 'nexthop': '172.19.1.254'}]
+  mtu: 1450
+- name: Tenant
+  vip: false  # Tenant network does not use VIPs
+  name_lower: tenant
+  vlan: 40
+  ip_subnet: '172.16.0.0/24'
+  allocation_pools: [{'start': '172.16.0.10', 'end': '172.16.0.250'}]
+  gateway_ip: '172.16.0.254'
+  routes: [{'destination': '172.16.1.0/24', 'nexthop': '172.16.0.254'}]
+  mtu: 1450
+- name: Tenant2
+  name_lower: tenant2
+  vlan: 41
+  ip_subnet: '172.16.1.0/24'
+  allocation_pools: [{'start': '172.16.1.10', 'end': '172.16.1.250'}]
+  gateway_ip: '172.16.1.254'
+  routes: [{'destination': '172.16.0.0/24', 'nexthop': '172.16.1.254'}]
+  mtu: 1450
+

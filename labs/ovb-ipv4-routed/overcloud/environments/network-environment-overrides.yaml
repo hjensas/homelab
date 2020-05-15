@@ -1,0 +1,15 @@
+parameter_defaults:
+    # -------------------------------------------------------------------------
+    # Control Plane subnet is used to get the VIPs,
+    #    VIPs need to be on same network as controllers.
+    # -------------------------------------------------------------------------
+    ControlPlaneSubnet: ctlplane-leaf1
+
+    NeutronBridgeMappings: datacentre:br-ex,tenant:br-isolated
+    NeutronExternalNetworkBridge: ''
+    NeutronNetworkType: geneve
+    NeutronNetworkVLANRanges: tenant:1000:2000
+    NeutronTunnelTypes: geneve
+
+    NetworkDeploymentActions: ['CREATE','UPDATE']
+

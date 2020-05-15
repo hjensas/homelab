@@ -1,0 +1,17 @@
+parameter_defaults:
+
+  swap_size_megabytes: 8192
+
+  # ROLE: Controller
+  ControllerCount: 1
+  OvercloudControllerFlavor: control-leaf1
+  ControllerControlPlaneSubnet: ctlplane-leaf1
+
+  # ROLE: Compute
+  ComputeCount: 1
+  OvercloudComputeFlavor: compute-leaf1
+  ComputeControlPlaneSubnet: ctlplane-leaf1
+
+  # ROLE: Compute-Leaf1
+  ComputeLeaf1Count: 0
+

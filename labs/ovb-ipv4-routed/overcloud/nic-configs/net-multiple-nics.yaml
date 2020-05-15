@@ -1,0 +1,9 @@
+resource_registry:
+  # Network configuration assignments for the Controller
+  OS::TripleO::Controller::Net::SoftwareConfig: /home/centos/overcloud/nic-configs/controller.yaml
+  # Network configuration assignments for the Compute
+  OS::TripleO::Compute::Net::SoftwareConfig: /home/centos/overcloud/nic-configs/compute.yaml
+  # Network configuration assignments for the Compute2
+  OS::TripleO::Compute2::Net::SoftwareConfig: /home/centos/overcloud/nic-configs/compute2.yaml
+  # Network configuration assignments for the CephStorage
+  OS::TripleO::CephStorage::Net::SoftwareConfig: /home/centos/overcloud/nic-configs/ceph-storage.yaml

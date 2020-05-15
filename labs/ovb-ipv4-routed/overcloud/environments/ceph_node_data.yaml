@@ -1,0 +1,26 @@
+parameter_defaults:
+
+  swap_size_megabytes: 8192
+
+  # Controller
+  ControllerCount: 1
+  OvercloudControllerFlavor: control-leaf1
+  ControllerControlPlaneSubnet: ctlplane-leaf1
+
+  # Compute
+  ComputeCount: 1
+  OvercloudComputeFlavor: compute-leaf1
+  ComputeControlPlaneSubnet: ctlplane-leaf1
+  ComputeParameters:
+    NovaEnableRbdBackend: true
+
+  # CephStorage
+  CephStorageCount: 1
+  OvercloudCephStorageFlavor: ceph-leaf2
+  CephStorageControlPlaneSubnet: ctlplane-leaf2
+  CephDefaultPoolSize: 1
+  CephHostnameResolveNetwork: storage1
+  CephAnsibleExtraConfig:
+    public_network: '172.18.0.0/24,172.18.1.0/24'
+    cluster_network: '172.19.0.0/24,172.19.1.0/24'
+  
