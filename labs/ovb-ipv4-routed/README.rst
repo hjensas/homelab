@@ -30,7 +30,7 @@ The OVB environment files expect:
 ::
 
   cd ~/ovb-ipv4-routed/openstack-virtual-baremetal/
-  export OS_CLOUD=homecloud
+  export OS_CLOUD=homelab
   bash ~/ovb-ipv4-routed/openstack-virtual-baremetal/deploy_ovb.sh
 
 Deploy the overcloud
