@@ -48,13 +48,16 @@
     yum:
       name: '*'
       state: latest
+  - name: Unconditionally reboot the machine with all defaults
+    become: yes
+    reboot:
   - name: Install tripleo client and ceph-ansible
     become: yes
     yum:
       name: "{{ packages }}"
     vars:
       packages:
-        - python-tripleoclient
+        - python3-tripleoclient
         - ceph-ansible
   - name: Git checkout labs
     git:
@@ -85,19 +88,9 @@
       cd {{ ansible_env.HOME }}/images
       export DIB_YUM_REPO_CONF="/etc/yum.repos.d/delorean*"
       openstack overcloud image build
-    # async: 1800
-    # poll: 0
-    # register: build_images
   - name: Install Undercloud
     shell:
       openstack undercloud install
-  # - name: Build image - check async task
-  #   async_status:
-  #     jid: "{{ build_images.ansible_job_id }}"
-  #   register: build_image_result
-  #   until: build_image_result.finished
-  #   retries: 100
-  #   delay: 10
   - name: Upload overcloud images
     shell: |
       source {{ ansible_env.HOME }}/stackrc
