@@ -86,8 +86,8 @@
   - name: Build Images - async task
     shell: |
       cd {{ ansible_env.HOME }}/images
-      export DIB_YUM_REPO_CONF="/etc/yum.repos.d/delorean*"
-      openstack overcloud image build
+      export DIB_YUM_REPO_CONF="/etc/yum.repos.d/delorean* /etc/yum.repos.d/tripleo-centos-*"
+      openstack overcloud image build --config-file /usr/share/openstack-tripleo-common/image-yaml/overcloud-images-python3.yaml --config-file /usr/share/openstack-tripleo-common/image-yaml/overcloud-images-centos8.yaml
   - name: Install Undercloud
     shell:
       openstack undercloud install
