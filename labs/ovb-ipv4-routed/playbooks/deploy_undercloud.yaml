@@ -42,7 +42,7 @@
   - name: Set up tripleo repos
     become: yes
     shell:
-      tripleo-repos current-tripleo-dev ceph
+      /usr/local/bin/tripleo-repos current-tripleo-dev ceph
   - name: upgrade all packages
     become: yes
     yum:
