@@ -12,7 +12,8 @@ ovb-deploy \
 	--env env-routed-lab.yaml \
 	--physical_network
 
-OVB_UNDERCLOUD=$(openstack stack show quintupleo -f json -c outputs | jq '.outputs[0].output_value' | sed s/'"'//g)
+OVB_UNDERCLOUD=$(openstack stack output show quintupleo undercloud_host_floating_ip -f value -c output_value)
+# OVB_UNDERCLOUD_PUBLIC=$(openstack stack output show quintupleo undercloud_host_public_ip -f value -c output_value)
 OVB_UNDERCLOUD_PUBLIC=$(openstack server show undercloud -f json -c addresses | jq '.addresses' | sed s/.*public=// | sed s/\"//)
 cat << EOF > inventory.ini
 [undercloud]
