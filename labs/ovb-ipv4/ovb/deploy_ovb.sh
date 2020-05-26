@@ -1,5 +1,5 @@
 # Deploy ovb lab
-ovb-deploy --env env-lab.yaml --quintupleo --env environments/all-networks.yaml
+ovb-deploy --env env-lab.yaml --quintupleo --env environments/all-networks.yaml --poll
 
 # Build nodes json
 ./bin/build-nodes-json --env env-lab.yaml --physical_network
