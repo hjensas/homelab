@@ -16,7 +16,7 @@
         BOOTPROTO=static
         IPADDR={{ undercloud_public_ip }}
         PREFIX=24
-        MTU=1450
+        MTU=1442
       dest: /etc/sysconfig/network-scripts/ifcfg-eth2
   - name: Bring up public interface
     become: yes
@@ -71,7 +71,7 @@
       # version: FETCH_HEAD
   - name: Create symlinks
     file:
-      src: "{{ ansible_env.HOME }}/homelab/labs/ovb-ipv4-routed/{{ item }}"
+      src: "{{ ansible_env.HOME }}/homelab/labs/ovb-ipv4/{{ item }}"
       dest: "{{ ansible_env.HOME }}/{{ item }}"
       state: link
     with_items:
