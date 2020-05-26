@@ -1,0 +1,12 @@
+parameter_defaults:
+
+  swap_size_megabytes: 8192
+
+  # Controller
+  ControllerCount: 1
+  OvercloudControllerFlavor: control
+
+  # Compute
+  ComputeCount: 1
+  OvercloudComputeFlavor: compute
+
