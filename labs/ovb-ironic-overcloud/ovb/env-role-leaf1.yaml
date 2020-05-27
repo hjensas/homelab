@@ -1,0 +1,11 @@
+parameter_defaults:
+  baremetal_flavor: m1.large
+  key_name: default
+  node_count: 2
+  role: leaf1
+  provision_net: ctlplane-leaf1
+  overcloud_internal_net: overcloud_internal
+  overcloud_storage_net: overcloud_storage
+  overcloud_storage_mgmt_net: overcloud_storage_mgmt
+  overcloud_tenant_net: overcloud_tenant
+

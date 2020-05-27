@@ -1,0 +1,5 @@
+resource_registry:
+  OS::OVB::UndercloudNetworks: templates/undercloud-networks-routed.yaml
+  OS::OVB::DHCPRelay: templates/dhcp-relay.yaml
+  OS::OVB::BaremetalNetworks: templates/baremetal-networks-routed.yaml
+

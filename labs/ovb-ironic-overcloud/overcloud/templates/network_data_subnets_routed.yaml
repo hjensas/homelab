@@ -1,0 +1,64 @@
+- name: External
+  vip: true
+  name_lower: external
+  vlan: 100
+  ip_subnet: '10.0.0.0/24'
+  allocation_pools: [{'start': '10.0.0.4', 'end': '10.0.0.99'}]
+  gateway_ip: '10.0.0.254'
+  mtu: 1442
+- name: InternalApi
+  name_lower: internal_api
+  vip: true
+  vlan: 10
+  ip_subnet: '172.17.0.0/24'
+  allocation_pools: [{'start': '172.17.0.10', 'end': '172.17.0.250'}]
+  gateway_ip: '172.17.0.254'
+  mtu: 1442
+  subnets:
+    internal_api_leaf1:
+      vlan: 11
+      ip_subnet: '172.17.1.0/24'
+      allocation_pools: [{'start': '172.17.1.10', 'end': '172.17.1.250'}]
+      gateway_ip: '172.17.1.254'
+- name: Storage
+  vip: true
+  vlan: 20
+  name_lower: storage
+  ip_subnet: '172.18.0.0/24'
+  allocation_pools: [{'start': '172.18.0.10', 'end': '172.18.0.250'}]
+  gateway_ip: '172.18.0.254'
+  mtu: 1442
+  subnets:
+    storage_leaf1:
+      vlan: 21
+      ip_subnet: '172.18.1.0/24'
+      allocation_pools: [{'start': '172.18.1.10', 'end': '172.18.1.250'}]
+      gateway_ip: '172.18.1.254'
+- name: Baremetal
+  name_lower: baremetal
+  vip: true
+  vlan: 30
+  ip_subnet: '172.19.0.0/24'
+  allocation_pools: [{'start': '172.19.0.10', 'end': '172.19.0.250'}]
+  mtu: 1442
+  subnets:
+    baremtal_leaf1:
+      vlan: 31
+      ip_subnet: '172.19.1.0/24'
+      allocation_pools: [{'start': '172.19.1.10', 'end': '172.19.1.250'}]
+      gateway_ip: '172.19.1.254'
+- name: Tenant
+  vip: false  # Tenant network does not use VIPs
+  name_lower: tenant
+  vlan: 40
+  ip_subnet: '172.16.0.0/24'
+  allocation_pools: [{'start': '172.16.0.10', 'end': '172.16.0.250'}]
+  gateway_ip: '172.16.0.254'
+  mtu: 1442
+  subnets:
+    tenant_leaf1:
+      vlan: 41
+      ip_subnet: '172.16.1.0/24'
+      allocation_pools: [{'start': '172.16.1.10', 'end': '172.16.1.250'}]
+      gateway_ip: '172.16.1.254'
+

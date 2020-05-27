@@ -1,0 +1,17 @@
+parameter_defaults:
+
+  swap_size_megabytes: 8192
+
+  # Controller
+  ControllerCount: 1
+
+  IronicConductorACount: 1
+  OvercloudIronicConductorAFlavor: ironic-conductor-a
+  IronicConductorAControlPlaneSubnet: ctlplane-leaf1
+
+  IronicConductorBCount: 1
+  OvercloudIronicConductorbFlavor: ironic-conductor-b
+  IronicConductorBControlPlaneSubnet: ctlplane-leaf2
+
+  IronicCleaningDiskErase: metadata
+  IronicEnabledDrivers: ipmi
