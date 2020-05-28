@@ -190,7 +190,7 @@
       subnet: storage_subnet
     Baremetal:
       subnet: baremetal_subnet
-  HostnameFormatDefault: 'ironic-b-%index%'
+  HostnameFormatDefault: 'ironic-a-%index%'
   update_serial: 25
   ServicesDefault:
     - OS::TripleO::Services::Aide

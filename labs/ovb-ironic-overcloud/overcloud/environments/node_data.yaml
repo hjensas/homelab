@@ -4,6 +4,7 @@ parameter_defaults:
 
   # Controller
   ControllerCount: 1
+  OvercloudControlleFlavor: control
 
   IronicConductorACount: 1
   OvercloudIronicConductorAFlavor: ironic-conductor-a
