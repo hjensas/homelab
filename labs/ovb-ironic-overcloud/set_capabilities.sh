@@ -32,8 +32,8 @@ openstack baremetal node set \
 #
 # Delete nodes on undercloud, will add them in overcloud.
 #
-openstack baremtal node manage baremetal-leaf1-1
-openstack baremtal node manage baremetal-leaf2-1
-openstack baremtal node delete baremetal-leaf1-1
-openstack baremtal node delete baremetal-leaf2-1
+openstack baremetal node manage baremetal-leaf1-1
+openstack baremetal node manage baremetal-leaf2-1
+openstack baremetal node delete baremetal-leaf1-1
+openstack baremetal node delete baremetal-leaf2-1
 
