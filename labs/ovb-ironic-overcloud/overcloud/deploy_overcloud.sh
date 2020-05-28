@@ -8,10 +8,8 @@ openstack overcloud deploy --templates /home/centos/tripleo-heat-templates \
   -r /home/centos/overcloud/templates/my_roles_data.yaml \
   -e /home/centos/tripleo-heat-templates/environments/enable-swap.yaml \
   -e /home/centos/tripleo-heat-templates/environments/services/ironic-overcloud.yaml \
-  -e /home/centos/overcloud/environments/node_data.yaml \
   -e /home/centos/tripleo-heat-templates/environments/network-isolation.yaml \
   -e /home/centos/tripleo-heat-templates/environments/network-environment.yaml \
   -e /home/centos/overcloud/nic-configs/net-multiple-nics.yaml \
-  -e /home/centos/overcloud/environments/network-environment-overrides.yaml
-
+  -e /home/centos/overcloud/environments/node_data.yaml
 

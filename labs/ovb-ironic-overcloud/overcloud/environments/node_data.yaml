@@ -15,3 +15,24 @@ parameter_defaults:
 
   IronicCleaningDiskErase: metadata
   IronicEnabledDrivers: ipmi
+
+  ControllerParameters:
+    NeutronBridgeMappings: datacentre:br-ex,tenant:br-isolated,baremetal_a:br-baremetal
+  IronicConductorAParameters:
+    NeutronBridgeMappings: datacentre:br-ex,tenant:br-isolated,baremetal_a:br-baremetal
+  IronicConductorBParameters:
+    NeutronBridgeMappings: datacentre:br-ex,tenant:br-isolated,baremetal_a:br-baremetal
+  
+  NeutronFlatNetworks: datacentre,baremetal_a,baremetal_b
+  NeutronExternalNetworkBridge: ''
+  NeutronNetworkType: geneve
+  NeutronNetworkVLANRanges: tenant:1000:2000
+  NeutronTunnelTypes: geneve
+
+  NetworkDeploymentActions: ['CREATE','UPDATE']
+
+
+  ServiceNetMap:
+    IronicApiNetwork: oc_provisioning
+    IronicNetwork: oc_provisioning
+
