@@ -4,14 +4,14 @@ parameter_defaults:
 
   # Controller
   ControllerCount: 1
-  OvercloudControlleFlavor: control
+  OvercloudControllerFlavor: control
 
   IronicConductorACount: 1
   OvercloudIronicConductorAFlavor: ironic-conductor-a
   IronicConductorAControlPlaneSubnet: ctlplane-leaf1
 
   IronicConductorBCount: 1
-  OvercloudIronicConductorbFlavor: ironic-conductor-b
+  OvercloudIronicConductorBFlavor: ironic-conductor-b
   IronicConductorBControlPlaneSubnet: ctlplane-leaf2
 
   IronicCleaningDiskErase: metadata
