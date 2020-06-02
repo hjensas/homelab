@@ -22,6 +22,11 @@ openstack flavor create \
 openstack baremetal node set \
   --property capabilities='profile:control,boot_option:local' baremetal-0
 
+openstack baremetal node set \
+  --property capabilities='profile:leaf1,boot_option:local' baremetal-leaf1-0
+openstack baremetal node set \
+  --property capabilities='profile:leaf2,boot_option:local' baremetal-leaf2-0
+
 #
 # Delete nodes on undercloud, will add them in overcloud.
 #
