@@ -7,7 +7,7 @@ openstack flavor create \
   --property resources:CUSTOM_BAREMETAL='1' \
   --property resources:DISK_GB='0' \
   --property resources:MEMORY_MB='0' \
-  --property resources:VCPU='0' ironic-conductor-a
+  --property resources:VCPU='0' leaf1
 
 openstack flavor create \
   --disk 40 --public --ram 4096 --vcpus 1 --rxtx-factor 1.0 \
@@ -16,7 +16,7 @@ openstack flavor create \
   --property resources:CUSTOM_BAREMETAL='1' \
   --property resources:DISK_GB='0' \
   --property resources:MEMORY_MB='0' \
-  --property resources:VCPU='0' ironic-conductor-b
+  --property resources:VCPU='0' leaf2
 
 
 openstack baremetal node set \
