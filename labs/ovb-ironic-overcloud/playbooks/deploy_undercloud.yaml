@@ -100,6 +100,8 @@
     shell: |
       source {{ ansible_env.HOME }}/stackrc
       openstack overcloud node import instackenv.json
+  - pause:
+      minutes: 1
   - name: Introspect and provide nodes
     shell: |
       source {{ ansible_env.HOME }}/stackrc
