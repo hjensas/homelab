@@ -18,11 +18,17 @@ parameter_defaults:
   IronicEnabledDrivers: ipmi
 
   ControllerParameters:
-    NeutronBridgeMappings: datacentre:br-ex,tenant:br-isolated,baremetal_a:br-baremetal
+    NeutronBridgeMappings: datacentre:br-ex,tenant:br-isolated
   IronicConductorAParameters:
     NeutronBridgeMappings: datacentre:br-ex,tenant:br-isolated,baremetal_a:br-baremetal
+    IronicProvisioningNetwork: baremetal_a
+    IronicCleaningNetwork: baremetal_a
+    IronicRescuingNetwork: baremetal_a
   IronicConductorBParameters:
-    NeutronBridgeMappings: datacentre:br-ex,tenant:br-isolated,baremetal_a:br-baremetal
+    NeutronBridgeMappings: datacentre:br-ex,tenant:br-isolated,baremetal_b:br-baremetal
+    IronicProvisioningNetwork: baremetal_b
+    IronicCleaningNetwork: baremetal_b
+    IronicRescuingNetwork: baremetal_b
   
   NeutronFlatNetworks: datacentre,baremetal_a,baremetal_b
   NeutronExternalNetworkBridge: ''
