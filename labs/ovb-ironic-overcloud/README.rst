@@ -67,6 +67,40 @@ Overcloud post deploy config
   openstack image create --container-format aki --disk-format aki  --public --file ./images/ironic-python-agent.initramfs bm-deploy-ramdisk
   openstack image create --file CentOS-8-GenericCloud-8.1.1911-20200113.3.x86_64.qcow2 --public --container-format bare --disk-format qcow2 centos8
 
+Overcloud baremetal nodes example
+---------------------------------
+
+::
+
+  nodes:
+    - name: baremetal-leaf1-1
+      driver: ipmi
+      driver_info:
+        ipmi_address: 172.19.0.42
+        ipmi_username: admin
+        ipmi_password: password
+      properties:
+        cpus: 4
+        cpu_arch: x86_64
+        memory_mb: 8192
+        local_gb: 50
+      ports:
+        - address: fa:16:3e:a8:7f:63
+          physical_network: baremetal_a
+    - name: baremetal-leaf2-1
+      driver: ipmi
+      driver_info:
+        ipmi_address: 172.19.0.60
+        ipmi_username: admin
+        ipmi_password: password
+      properties:
+        cpus: 4
+        cpu_arch: x86_64
+        memory_mb: 8192
+        local_gb: 50
+      ports:
+        - address: fa:16:3e:8a:a3:8e
+          physical_network: baremetal_b
 
 Run Tempest tests on the overcloud
 ----------------------------------
