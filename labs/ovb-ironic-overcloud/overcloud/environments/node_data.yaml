@@ -20,11 +20,13 @@ parameter_defaults:
   ControllerParameters:
     NeutronBridgeMappings: datacentre:br-ex,tenant:br-isolated
   IronicConductorAParameters:
+    IronicConductorGroup: group-a
     NeutronBridgeMappings: datacentre:br-ex,tenant:br-isolated,baremetal_a:br-baremetal
     IronicProvisioningNetwork: baremetal_a
     IronicCleaningNetwork: baremetal_a
     IronicRescuingNetwork: baremetal_a
   IronicConductorBParameters:
+    IronicConductorGroup: group-b
     NeutronBridgeMappings: datacentre:br-ex,tenant:br-isolated,baremetal_b:br-baremetal
     IronicProvisioningNetwork: baremetal_b
     IronicCleaningNetwork: baremetal_b
