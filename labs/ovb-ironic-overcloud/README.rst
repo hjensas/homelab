@@ -46,6 +46,22 @@ Deploy (or update) with routed networks::
 
   bash ~/overcloud/deploy_overcloud.sh
 
+Set up portforwarding for IPMI via the undercloud
+-------------------------------------------------
+
+Set up DNAT and masquerading on the undercloud so that overcloud ironic can
+reach OVB BMC's.
+
+::
+
+  sudo iptables -A PREROUTING -t nat -i br-ctlplane -p udp --dport 1631 -j DNAT --to 172.31.0.177:623
+  sudo iptables -A PREROUTING -t nat -i br-ctlplane -p udp --dport 1632 -j DNAT --to 172.31.0.104:623
+  sudo iptables -A POSTROUTING -t nat -p udp --dport 623 -j MASQUERADE
+  sudo iptables -A POSTROUTING -t nat -p udp --dport 623 -j MASQUERADE
+  sudo iptables -I FORWARD 1 -p udp -d 172.31.0.177 --dport 623 -j ACCEPT
+  sudo iptables -I FORWARD 1 -p udp -d 172.31.0.104 --dport 623 -j ACCEPT
+  sudo iptables -I INPUT 1 -p udp --dport 1631 -j ACCEPT
+  sudo iptables -I INPUT 1 -p udp --dport 1632 -j ACCEPT
 
 Overcloud post deploy config
 ----------------------------
@@ -62,7 +78,6 @@ Overcloud post deploy config
   openstack subnet create --network baremetal_a --subnet-range 172.19.0.0/24 --ip-version 4 --gateway 172.19.0.254 --allocation-pool start=172.19.0.100,end=172.19.0.199 --dhcp baremetal_a_subnet
   openstack subnet create --network baremetal_b --subnet-range 172.19.1.0/24 --ip-version 4 --gateway 172.19.1.254 --allocation-pool start=172.19.1.100,end=172.19.1.199 --dhcp baremetal_b_subnet
   openstack flavor create --disk 40 --public --ram 4096 --vcpus 1 --rxtx-factor 1.0 --property resources:CUSTOM_BAREMETAL='1' --property resources:DISK_GB='0' --property resources:MEMORY_MB='0' --property resources:VCPU='0' baremetal
-  openstack image create --container-format aki --disk-format aki  --public --file ./tftpboot/agent.kernel bm-deploy-kernel
   openstack image create --container-format aki --disk-format aki  --public --file ./images/ironic-python-agent.kernel bm-deploy-kernel
   openstack image create --container-format aki --disk-format aki  --public --file ./images/ironic-python-agent.initramfs bm-deploy-ramdisk
   openstack image create --file CentOS-8-GenericCloud-8.1.1911-20200113.3.x86_64.qcow2 --public --container-format bare --disk-format qcow2 centos8
@@ -74,9 +89,11 @@ Overcloud baremetal nodes example
 
   nodes:
     - name: baremetal-leaf1-1
+      conductor_group: group-a
       driver: ipmi
       driver_info:
-        ipmi_address: 172.19.0.42
+        ipmi_address: 192.168.24.1
+        ipmi_port: 1631
         ipmi_username: admin
         ipmi_password: password
       properties:
@@ -88,9 +105,11 @@ Overcloud baremetal nodes example
         - address: fa:16:3e:a8:7f:63
           physical_network: baremetal_a
     - name: baremetal-leaf2-1
+      conductor_group: group-b
       driver: ipmi
       driver_info:
-        ipmi_address: 172.19.0.60
+        ipmi_address: 192.168.24.1
+        ipmi_port: 1632
         ipmi_username: admin
         ipmi_password: password
       properties:
