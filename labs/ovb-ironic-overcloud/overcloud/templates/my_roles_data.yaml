@@ -127,7 +127,7 @@
     - OS::TripleO::Services::NeutronBgpVpnApi
     - OS::TripleO::Services::NeutronSfcApi
     - OS::TripleO::Services::NeutronCorePlugin
-    # - OS::TripleO::Services::NeutronDhcpAgent
+    - OS::TripleO::Services::NeutronDhcpAgent
     - OS::TripleO::Services::NeutronL2gwAgent
     - OS::TripleO::Services::NeutronL2gwApi
     - OS::TripleO::Services::NeutronL3Agent
@@ -206,6 +206,7 @@
     - OS::TripleO::Services::MetricsQdr
     - OS::TripleO::Services::MySQLClient
     - OS::TripleO::Services::NeutronDhcpAgent
+    - OS::TripleO::Services::NeutronOvsAgent
     - OS::TripleO::Services::ContainersLogrotateCrond
     - OS::TripleO::Services::Podman
     - OS::TripleO::Services::Rhsm
@@ -247,6 +248,7 @@
     - OS::TripleO::Services::MetricsQdr
     - OS::TripleO::Services::MySQLClient
     - OS::TripleO::Services::NeutronDhcpAgent
+    - OS::TripleO::Services::NeutronOvsAgent
     - OS::TripleO::Services::ContainersLogrotateCrond
     - OS::TripleO::Services::Podman
     - OS::TripleO::Services::Rhsm
