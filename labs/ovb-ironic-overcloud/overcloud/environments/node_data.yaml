@@ -1,4 +1,5 @@
 parameter_defaults:
+  NeutronMechanismDrivers: ['openvswitch', 'baremetal']
 
   swap_size_megabytes: 8192
 
@@ -34,9 +35,9 @@ parameter_defaults:
   
   NeutronFlatNetworks: datacentre,baremetal_a,baremetal_b
   NeutronExternalNetworkBridge: ''
-  NeutronNetworkType: geneve
+  NeutronNetworkType: vxlan
   NeutronNetworkVLANRanges: tenant:1000:2000
-  NeutronTunnelTypes: geneve
+  NeutronTunnelTypes: vxlan
 
   NetworkDeploymentActions: ['CREATE','UPDATE']
 

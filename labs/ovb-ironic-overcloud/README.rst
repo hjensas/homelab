@@ -82,8 +82,8 @@ Overcloud post deploy config
   openstack image create --container-format aki --disk-format aki  --public --file ./images/ironic-python-agent.initramfs bm-deploy-ramdisk
   openstack image create --file CentOS-8-GenericCloud-8.1.1911-20200113.3.x86_64.qcow2 --public --container-format bare --disk-format qcow2 centos8
 
-Overcloud baremetal nodes example
----------------------------------
+Overcloud baremetal nodes.yaml example
+--------------------------------------
 
 ::
 
@@ -120,6 +120,13 @@ Overcloud baremetal nodes example
       ports:
         - address: fa:16:3e:8a:a3:8e
           physical_network: baremetal_b
+
+Import overcloud baremetal nodes
+--------------------------------
+
+::
+
+  baremetal create nodes.yaml
 
 Run Tempest tests on the overcloud
 ----------------------------------
