@@ -110,4 +110,8 @@
     shell: |
       source {{ ansible_env.HOME }}/stackrc
       bash {{ ansible_env.HOME }}/set_capabilities.sh
+  - name: Deploy baremetal nodes
+    shell: |
+      source {{ ansible_env.HOME }}/stackrc
+      openstack overcloud node provision --stack overcloud -o --output {{ ansible_env.HOME }}/overcloud-baremetal-deployed.yaml {{ ansible_env.HOME }}/baremetal_deployment.yaml
 
