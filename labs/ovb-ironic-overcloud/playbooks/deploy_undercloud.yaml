@@ -113,5 +113,5 @@
   - name: Deploy baremetal nodes
     shell: |
       source {{ ansible_env.HOME }}/stackrc
-      openstack overcloud node provision --stack overcloud -o --output {{ ansible_env.HOME }}/overcloud-baremetal-deployed.yaml {{ ansible_env.HOME }}/baremetal_deployment.yaml
+      openstack overcloud node provision --stack overcloud --output {{ ansible_env.HOME }}/overcloud-baremetal-deployed.yaml {{ ansible_env.HOME }}/baremetal_deployment.yaml
 
