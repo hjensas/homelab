@@ -1,0 +1,9 @@
+- name: Controller
+  count: 1
+  profile: control
+- name: IronicConductorA
+  count: 1
+  profile: leaf1
+- name: IronicConductorB
+  count: 1
+  profile: leaf2
