@@ -1,15 +1,15 @@
 - name: Controller
   count: 1
-  hostname_format: controller-%index%.homelab.example.com
+  hostname_format: controller-%index%
   defaults:
     profile: control
 - name: IronicConductorA
   count: 1
-  hostname_format: ironic-a-%index%.homelab.example.com
+  hostname_format: ironic-a-%index%
   defaults:
     profile: leaf1
 - name: IronicConductorB
   count: 1
-  hostname_format: ironic-b-%index%.homelab.example.com
+  hostname_format: ironic-b-%index%
   defaults:
     profile: leaf2
