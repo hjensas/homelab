@@ -1,4 +1,4 @@
-vb-ipv4-routed lab
+ovb-ipv4-routed lab
 ===================
 
 Set up OVB environment

@@ -79,6 +79,7 @@
       - undercloud.conf
       - containers-prepare-parameter.yaml
       - set_capabilities.sh
+      - baremetal_deployment.yaml
   - name: Create images directory
     file:
       dest: "{{ ansible_env.HOME }}/images"
@@ -110,4 +111,8 @@
     shell: |
       source {{ ansible_env.HOME }}/stackrc
       bash {{ ansible_env.HOME }}/set_capabilities.sh
+  - name: Deploy baremetal nodes
+    shell: |
+      source {{ ansible_env.HOME }}/stackrc
+      openstack overcloud node provision --stack overcloud --output {{ ansible_env.HOME }}/overcloud-baremetal-deployed.yaml {{ ansible_env.HOME }}/baremetal_deployment.yaml
 

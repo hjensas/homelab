@@ -6,7 +6,8 @@ ovb-deploy --env env-lab.yaml --quintupleo --env environments/all-networks.yaml 
 
 OVB_UNDERCLOUD=$(openstack stack output show quintupleo undercloud_host_floating_ip -f value -c output_value)
 # OVB_UNDERCLOUD_PUBLIC=$(openstack stack output show quintupleo undercloud_host_public_ip -f value -c output_value)
-OVB_UNDERCLOUD_PUBLIC=$(openstack server show undercloud -f json -c addresses | jq '.addresses' | sed s/.*public=// | sed s/\"//)
+# OVB_UNDERCLOUD_PUBLIC=$(openstack server show undercloud -f json -c addresses | jq '.addresses' | sed s/.*public=// | sed s/\"//)
+OVB_UNDERCLOUD_PUBLIC=10.0.0.254
 cat << EOF > inventory.ini
 [undercloud]
 $OVB_UNDERCLOUD ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' undercloud_public_ip=$OVB_UNDERCLOUD_PUBLIC

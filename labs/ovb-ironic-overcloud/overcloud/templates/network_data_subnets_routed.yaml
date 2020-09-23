@@ -40,6 +40,7 @@
   vlan: 30
   ip_subnet: '172.19.0.0/24'
   allocation_pools: [{'start': '172.19.0.10', 'end': '172.19.0.250'}]
+  gateway_ip: '172.19.0.254'
   mtu: 1442
   subnets:
     baremetal_leaf1:
