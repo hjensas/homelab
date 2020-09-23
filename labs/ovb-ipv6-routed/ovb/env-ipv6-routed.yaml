@@ -58,5 +58,7 @@ parameter_defaults:
 resource_registry:
   OS::OVB::UndercloudNetworks: templates/undercloud-networks-routed.yaml
   OS::OVB::DHCPRelay: templates/dhcpv6-relay.yaml
+  OS::OVB::ProvisionNetRouter: OS::Heat::None
+  OS::OVB::ProvisionNetRouterInterface: OS::Heat::None
   OS::OVB::BaremetalNetworks: templates/baremetal-networks-routed.yaml
 
