@@ -16,7 +16,7 @@ parameter_defaults:
   bmc_prefix: bmc
   external_net: provider
   key_name: default
-  node_count: 1
+  node_count: 0
   private_net: private
   provision_net: ctlplane
   provision_net2: ctlplane-leaf1
