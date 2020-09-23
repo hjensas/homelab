@@ -1,0 +1,62 @@
+parameter_defaults:
+  #
+  # IPv6 params for all networks
+  # 
+
+  provision_net_ip_version: 6
+  provision_net_cidr: fd12:3456:789a:1::/64
+  provision_net_router_address: fd12:3456:789a:1::fffe
+  dhcp_relay_provision_address: fd12:3456:789a:1::fffd
+
+  provision_net2_ip_version: 6
+  provision_net2_cidr: fd12:3456:789a:2::/64
+  provision_net2_router_address: fd12:3456:789a:2::fffe
+  dhcp_relay_provision2_address: fd12:3456:789a:2::fff2
+
+  provision_net3_ip_version: 6
+  provision_net3_cidr: fd12:3456:789a:3::/64
+  provision_net3_router_address: fd12:3456:789a:3::fffe
+  dhcp_relay_provision3_address: fd12:3456:789a:3::fffd
+
+  public_net_ip_version: 6
+  public_net_cidr: fd12:3456:789a:ffff::/64
+  public_net_router_address: fd12:3456:789a:ffff::fffe
+
+  overcloud_internal_net_ip_version: 6
+  overcloud_internal_net_cidr: fd12:3456:789a:21::/64
+  overcloud_internal_net_router_address: fd12:3456:789a:21::fffe
+
+  overcloud_internal_net2_ip_version: 6
+  overcloud_internal_net2_cidr: fd12:3456:789a:22::/64
+  overcloud_internal_net2_router_address: fd12:3456:789a:22::fffe
+ 
+  overcloud_storage_net_ip_version: 6
+  overcloud_storage_net_cidr: fd12:3456:789a:31::/64
+  overcloud_storage_net_router_address: fd12:3456:789a:31::fffe
+ 
+  overcloud_storage_net2_ip_version: 6
+  overcloud_storage_net2_cidr: fd12:3456:789a:32::/64
+  overcloud_storage_net2_router_address: fd12:3456:789a:32::fffe
+ 
+  overcloud_storage_mgmt_net_ip_version: 6
+  overcloud_storage_mgmt_net_cidr: fd12:3456:789a:41::/64
+  overcloud_storage_mgmt_net_router_address: fd12:3456:789a:41::fffe
+ 
+  overcloud_storage_mgmt_net2_ip_version: 6
+  overcloud_storage_mgmt_net2_cidr: fd12:3456:789a:42::/64
+  overcloud_storage_mgmt_net2_router_address: fd12:3456:789a:42::fffe
+
+  overcloud_tenant_net_ip_version: 6
+  overcloud_tenant_net_cidr: fd12:3456:789a:51::/64
+  overcloud_tenant_net_router_address: fd12:3456:789a:51::fffe
+ 
+  overcloud_tenant_net2_ip_version: 6
+  overcloud_tenant_net2_cidr: fd12:3456:789a:52::/64
+  overcloud_tenant_net2_router_address: fd12:3456:789a:52::fffe
+ 
+ 
+resource_registry:
+  OS::OVB::UndercloudNetworks: templates/undercloud-networks-routed.yaml
+  OS::OVB::DHCPRelay: templates/dhcpv6-relay.yaml
+  OS::OVB::BaremetalNetworks: templates/baremetal-networks-routed.yaml
+
