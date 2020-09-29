@@ -54,6 +54,7 @@ parameter_defaults:
   overcloud_tenant_net2_cidr: fd12:3456:789a:52::/64
   overcloud_tenant_net2_router_address: fd12:3456:789a:52::fffe
  
+  IPv6_dhcpv6-statefull: true
  
 resource_registry:
   OS::OVB::UndercloudNetworks: templates/undercloud-networks-routed.yaml
