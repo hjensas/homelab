@@ -7,6 +7,41 @@
       mkswap /opt/8GB.swap
       swapon /opt/8GB.swap
       echo "/opt/8GB.swap swap                                    swap    defaults 0 0" >> /etc/fstab
+  - name: Install packages
+    become: yes
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+        - python3
+        - git
+        - tmux
+        - vim-enhanced
+        - tcpdump
+        - python3-setuptools
+        - python3-requests
+        - libguestfs-tools
+        - patch
+        - patchutils
+        - createrepo_c
+        - network-scripts
+  - name: Ensure /etc/sysconfig/network-scripts/ifcfg-ens3 is GONE
+    become: yes
+    file:
+      path: /etc/sysconfig/network-scripts/ifcfg-ens3
+      state: absent
+  - name: Disable NetworkManager.service
+    become: yes
+    systemd:
+      state: stopped
+      enabled: no
+      name: NetworkManager.service
+  - name: Enable network.service
+    become: yes
+    systemd:
+      state: started
+      enabled: yes
+      name: network.service
   - name: Set up public interface
     become: yes
     copy:
@@ -21,15 +56,6 @@
   - name: Bring up public interface
     become: yes
     command: ifup eth2
-  - name: Install packages
-    become: yes
-    yum:
-      name: "{{ packages }}"
-    vars:
-      packages:
-        - git
-        - tmux
-        - vim-enhanced
   - name: Git checkout tripleo-repos
     git:
       repo: https://opendev.org/openstack/tripleo-repos.git
