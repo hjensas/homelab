@@ -37,3 +37,7 @@ parameter_defaults:
   dhcp_relay_image: CentOS-7-x86_64-GenericCloud
   dhcp_relay_flavor: m1.small
 
+
+resource_registry:
+  # Comment this if node_count != 0 above.
+  OS::OVB::BMC: templates/bmc-none.yaml

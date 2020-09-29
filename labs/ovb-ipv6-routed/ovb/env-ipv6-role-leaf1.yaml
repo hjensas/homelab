@@ -9,3 +9,6 @@ parameter_defaults:
   overcloud_storage_mgmt_net: overcloud_storage_mgmt
   overcloud_tenant_net: overcloud_tenant
 
+resource_registry:
+  OS::OVB::BMC: templates/bmc.yaml
+
