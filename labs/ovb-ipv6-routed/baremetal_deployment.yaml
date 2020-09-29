@@ -7,9 +7,4 @@
   count: 1
   hostname_format: compute-leaf1-%index%
   defaults:
-    profile: leaf1
-- name: CompuateLeaf2
-  count: 1
-  hostname_format: compute-leaf2-%index%
-  defaults:
-    profile: leaf2
+    profile: compute-leaf1

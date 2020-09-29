@@ -1,3 +1,5 @@
+set -e
+
 # Deploy ovb lab
 ovb-deploy \
  --env env-routed-lab.yaml \
