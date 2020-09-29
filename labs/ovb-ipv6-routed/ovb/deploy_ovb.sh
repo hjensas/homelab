@@ -2,7 +2,7 @@
 ovb-deploy \
  --env env-routed-lab.yaml \
  --quintupleo \
- --name quintupleo-ipv6-l3
+ --name quintupleo-ipv6-l3 \
  --id ipv6-l3 \
  --env environments/all-networks.yaml \
  --env env-ipv6-routed.yaml \
