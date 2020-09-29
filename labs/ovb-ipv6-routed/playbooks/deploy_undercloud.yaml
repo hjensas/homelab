@@ -103,7 +103,6 @@
     with_items:
       - overcloud
       - undercloud.conf
-      - containers-prepare-parameter.yaml
       - set_capabilities.sh
       - baremetal_deployment.yaml
   - name: Create images directory
