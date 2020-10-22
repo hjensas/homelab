@@ -6,32 +6,67 @@ Set up OVB environment
 
 ::
 
-  mkdir ~/ovb-ipv4-routed
-  virtualenv ~/ovb-ipv4-routed
-  source ~/ovb-ipv4-routed/bin/activate
-  git clone https://opendev.org/openstack/openstack-virtual-baremetal.git ~/ovb-ipv4-routed/openstack-virtual-baremetal
-  pip install ~/ovb-ipv4-routed/openstack-virtual-baremetal
-  pip install python-openstackclient
+  export LAB_DIR=~/ovb-ipv4-routed
+  mkdir $LAB_DIR
+  virtualenv --system-site-packages $LAB_DIR/venv
+  source $LAB_DIR/venv/bin/activate
   pip install ansible
-  git clone https://github.com/hjensas/homelab.git ~/ovb-ipv4-routed/homelab
-  cp ~/ovb-ipv4-routed/homelab/labs/ovb-ipv4-routed/ovb/* ~/ovb-ipv4-routed/openstack-virtual-baremetal/
+  mkdir $LAB_DIR/roles
+  git clone https://review.rdoproject.org/r/config $LAB_DIR/config
+  cd $LAB_DIR/config
+  git fetch https://review.rdoproject.org/r/config refs/changes/25/30625/1 && git checkout FETCH_HEAD
+  git switch -c optional-create-clouds-yaml
+  git fetch https://review.rdoproject.org/r/config refs/changes/90/30490/2 && git checkout FETCH_HEAD
+  git switch -c routed-networks-support
+  git rebase optional-create-clouds-yaml
+  cd $LAB_DIR 
 
-Set up OVB routed-networks lab
-------------------------------
+  scp -r $LAB_DIR/config/roles/ovb-manage $LAB_DIR/roles/
+  cat << EOF > $LAB_DIR/inventory.yaml
+  all:
+    hosts:
+      localhost:
+        ovb_working_dir: $LAB_DIR/ovb_working_dir
+        ovb_clone: true
+        ovb_repo_version: master
+        ovb_repo_directory: $LAB_DIR/openstack-virtual-baremetal
+        create_undercloud: true
+        attach_to_ovb_networks: false
+        routed_networks: true
+        nodes: zero_nodes
+        leaf1_nodes: 1
+        leaf2_nodes: 1
+        net_iso: multi-nic
+        key_name: default
+        create_clouds_yaml: false
+        cloud_name: homelab
+        baremetal_image_name: ipxe-boot
+        bmc_template_name: CentOS-7-x86_64-GenericCloud
+        env_args: >-
+         -e {{ ovb_working_dir }}/env-{{ idnum }}-base.yaml
+         -e {{ ovb_repo_directory }}/environments/bmc-use-cache.yaml
+        cloud_settings:
+          homelab:
+            public_ip_net: public
+            undercloud_flavor: m1.large # not used
+            baremetal_flavor: m1.large
+            bmc_flavor: m1.small
+            extra_node_flavor: m1.small
+            baremetal_image: CentOS-8-GenericCloud
+            radvd_flavor: m1.small
+            radvd_image: CentOS-7-x86_64-GenericCloud
+            dhcp_relay_image: CentOS-7-x86_64-GenericCloud
+            dhcp_relay_flavor: m1.small
+            external_net: provider
+  EOF
+  cat << EOF > $LAB_DIR/create-ovb-stack.yaml
+  - name: Create the OVB stack
+    hosts: localhost
+    roles:
+      - { role: ovb-manage, ovb_manage_stack_mode: 'create' }
+  EOF
+  ansible-playbook --inventory $LAB_DIR/inventory.yaml $LAB_DIR/create-ovb-stack.yaml
 
-The OVB environment files expect:
- - A pre-existing private network to be available in the tenant.
-   This network also need to be connected to a router with a connection
-   to the external network.
- - A key, key_name: default must exist
-
-  .. NOTE:: Source the cloud RC file first
-
-::
-
-  cd ~/ovb-ipv4-routed/openstack-virtual-baremetal/
-  export OS_CLOUD=homelab
-  bash ~/ovb-ipv4-routed/openstack-virtual-baremetal/deploy_ovb.sh
 
 Deploy the overcloud
 --------------------
