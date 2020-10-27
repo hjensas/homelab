@@ -67,6 +67,27 @@ Set up OVB environment
   EOF
   ansible-playbook --inventory $LAB_DIR/inventory.yaml $LAB_DIR/create-ovb-stack.yaml
 
+  export OS_CLOUD=homelab
+  git clone https://github.com/hjensas/homelab.git /homelab
+  ID_NUM=$(cat $LAB_DIR/ovb_working_dir/idnum)
+  OVB_UNDERCLOUD=$(openstack stack output show baremetal_$ID_NUM undercloud_host_floating_ip -f value -c output_value)
+  OVB_UNDERCLOUD_PUBLIC=10.0.0.254
+
+  cat << EOF > ovb-inventory.ini
+  [undercloud]
+  $OVB_UNDERCLOUD ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' undercloud_public_ip=$OVB_UNDERCLOUD_PUBLIC
+  EOF
+
+  ansible-playbook -i ovb-inventory.ini $LAB_DIR/homelab/labs/playbooks/ssh_hardening.yaml
+
+  DEPLOY_UNDERCLOUD="ansible-playbook -i ovb-inventory.ini $LAB_DIR/homelab/labs/ovb-ipv4-routed/playbooks//deploy_undercloud.yaml"
+  DEPLOY_OVERCLOUD="Log into undercloud ($OVB_UNDERCLOUD) and run command: bash ~/overcloud/deploy_overcloud.sh"
+  echo "###############################################"
+  echo -e "Undercloud floating IP:\n\t$OVB_UNDERCLOUD"
+  echo -e "Deploy undercloud:\n\t$DEPLOY_UNDERCLOUD"
+  echo -e "Deploy overcloud:\n\t$DEPLOY_OVERCLOUD"
+  echo "###############################################"
+
 
 Deploy the overcloud
 --------------------
