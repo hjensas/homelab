@@ -77,8 +77,6 @@
     with_items:
       - overcloud
       - undercloud.conf
-      - containers-prepare-parameter.yaml
-      - set_capabilities.sh
   - name: Create images directory
     file:
       dest: "{{ ansible_env.HOME }}/images"
