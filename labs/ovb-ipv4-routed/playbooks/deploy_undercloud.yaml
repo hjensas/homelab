@@ -98,12 +98,19 @@
     shell: |
       source {{ ansible_env.HOME }}/stackrc
       openstack overcloud node import instackenv.json
+  - pause:
+      minutes: 1
   - name: Introspect and provide nodes
     shell: |
       source {{ ansible_env.HOME }}/stackrc
       openstack overcloud node introspect --all-manageable --provide
-  - name: Create flavors and set node capabilities
+  - name: Create flavors and 
+  - name: Set node capabilities
     shell: |
-      source {{ ansible_env.HOME }}/stackrc
-      bash {{ ansible_env.HOME }}/set_capabilities.sh
+      source ~/stackrc
+      openstack baremetal node set --property capabilities='profile:control,boot_option:local' baremetal-{{ idnum }}-leaf1-0
+      openstack baremetal node set --property capabilities='profile:control,boot_option:local' baremetal-{{ idnum }}-leaf1-1
+      openstack baremetal node set --property capabilities='profile:control,boot_option:local' baremetal-{{ idnum }}-leaf1-2
+      openstack baremetal node set --property capabilities='profile:compute-leaf2,boot_option:local' baremetal-{{ idnum }}-leaf2-0
+      openstack baremetal node set --property capabilities='profile:compute-leaf2,boot_option:local' baremetal-{{ idnum }}-leaf2-1
 

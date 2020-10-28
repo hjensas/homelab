@@ -73,14 +73,15 @@ Set up OVB environment
   OVB_UNDERCLOUD=$(openstack stack output show baremetal_$ID_NUM undercloud_host_floating_ip -f value -c output_value)
   OVB_UNDERCLOUD_PUBLIC=10.0.0.254
 
-  cat << EOF > ovb-inventory.ini
+  cat << EOF > inventory.ini
   [undercloud]
-  $OVB_UNDERCLOUD ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' undercloud_public_ip=$OVB_UNDERCLOUD_PUBLIC
+  $OVB_UNDERCLOUD ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' undercloud_public_ip=$OVB_UNDERCLOUD_PUBLIC idnum=$ID_NUM
   EOF
 
   ansible-playbook -i ovb-inventory.ini $LAB_DIR/homelab/labs/playbooks/ssh_hardening.yaml
 
-  DEPLOY_UNDERCLOUD="ansible-playbook -i ovb-inventory.ini $LAB_DIR/homelab/labs/ovb-ipv4-routed/playbooks//deploy_undercloud.yaml"
+  scp $LAB_DIR/ovb_working_dir/instackenv.json centos@$OVB_UNDERCLOUD:
+  DEPLOY_UNDERCLOUD="ansible-playbook -i inventory.ini $LAB_DIR/homelab/labs/ovb-ipv4-routed/playbooks//deploy_undercloud.yaml"
   DEPLOY_OVERCLOUD="Log into undercloud ($OVB_UNDERCLOUD) and run command: bash ~/overcloud/deploy_overcloud.sh"
   echo "###############################################"
   echo -e "Undercloud floating IP:\n\t$OVB_UNDERCLOUD"
