@@ -6,12 +6,14 @@ Set up OVB environment
 
 ::
 
-  export LAB_DIR=~/ovb-ipv4-routed
+  export OS_CLOUD=homelab
+
+  export LAB_NAME=ovb-ipv4-routed
+  export LAB_DIR=~/$LAB_NAME
   mkdir $LAB_DIR
-  virtualenv --system-site-packages $LAB_DIR/venv
-  source $LAB_DIR/venv/bin/activate
-  pip install ansible
-  mkdir $LAB_DIR/roles
+  git clone https://github.com/hjensas/homelab.git $LAB_DIR/homelab
+  export LAB_REPO_DIR=$LAB_DIR/homelab/labs/$LAB_NAME
+
   git clone https://review.rdoproject.org/r/config $LAB_DIR/config
   cd $LAB_DIR/config
   git fetch https://review.rdoproject.org/r/config refs/changes/25/30625/1 && git checkout FETCH_HEAD
@@ -21,54 +23,14 @@ Set up OVB environment
   git rebase optional-create-clouds-yaml
   cd $LAB_DIR 
 
-  scp -r $LAB_DIR/config/roles/ovb-manage $LAB_DIR/roles/
-  cat << EOF > $LAB_DIR/inventory.yaml
-  all:
-    hosts:
-      localhost:
-        ovb_working_dir: $LAB_DIR/ovb_working_dir
-        ovb_clone: true
-        ovb_repo_version: master
-        ovb_repo_directory: $LAB_DIR/openstack-virtual-baremetal
-        create_undercloud: true
-        attach_to_ovb_networks: false
-        routed_networks: true
-        nodes: zero_nodes
-        leaf1_nodes: 1
-        leaf2_nodes: 1
-        net_iso: multi-nic
-        key_name: default
-        create_clouds_yaml: false
-        cloud_name: homelab
-        baremetal_image_name: ipxe-boot
-        bmc_template_name: CentOS-7-x86_64-GenericCloud
-        env_args: >-
-         -e {{ ovb_working_dir }}/env-{{ idnum }}-base.yaml
-         -e {{ ovb_repo_directory }}/environments/bmc-use-cache.yaml
-        cloud_settings:
-          homelab:
-            public_ip_net: public
-            undercloud_flavor: m1.large # not used
-            baremetal_flavor: m1.large
-            bmc_flavor: m1.small
-            extra_node_flavor: m1.small
-            baremetal_image: CentOS-8-GenericCloud
-            radvd_flavor: m1.small
-            radvd_image: CentOS-7-x86_64-GenericCloud
-            dhcp_relay_image: CentOS-7-x86_64-GenericCloud
-            dhcp_relay_flavor: m1.small
-            external_net: provider
-  EOF
-  cat << EOF > $LAB_DIR/create-ovb-stack.yaml
-  - name: Create the OVB stack
-    hosts: localhost
-    roles:
-      - { role: ovb-manage, ovb_manage_stack_mode: 'create' }
-  EOF
-  ansible-playbook --inventory $LAB_DIR/inventory.yaml $LAB_DIR/create-ovb-stack.yaml
+  mkdir $LAB_REPO_DIR/roles
+  scp -r $LAB_DIR/config/roles/ovb-manage $LAB_REPO_DIR/roles
 
-  export OS_CLOUD=homelab
-  git clone https://github.com/hjensas/homelab.git /homelab
+  ansible-playbook --inventory $LAB_REPO_DIR/inventory.yaml $LAB_REPO_DIR/create-ovb-stack.yaml -e lab_dir=$LAB_DIR
+
+
+::
+
   ID_NUM=$(cat $LAB_DIR/ovb_working_dir/idnum)
   OVB_UNDERCLOUD=$(openstack stack output show baremetal_$ID_NUM undercloud_host_floating_ip -f value -c output_value)
   OVB_UNDERCLOUD_PUBLIC=10.0.0.254
@@ -78,16 +40,9 @@ Set up OVB environment
   $OVB_UNDERCLOUD ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' undercloud_public_ip=$OVB_UNDERCLOUD_PUBLIC idnum=$ID_NUM
   EOF
 
-  ansible-playbook -i ovb-inventory.ini $LAB_DIR/homelab/labs/playbooks/ssh_hardening.yaml
-
-  scp $LAB_DIR/ovb_working_dir/instackenv.json centos@$OVB_UNDERCLOUD:
-  DEPLOY_UNDERCLOUD="ansible-playbook -i inventory.ini $LAB_DIR/homelab/labs/ovb-ipv4-routed/playbooks//deploy_undercloud.yaml"
-  DEPLOY_OVERCLOUD="Log into undercloud ($OVB_UNDERCLOUD) and run command: bash ~/overcloud/deploy_overcloud.sh"
-  echo "###############################################"
-  echo -e "Undercloud floating IP:\n\t$OVB_UNDERCLOUD"
-  echo -e "Deploy undercloud:\n\t$DEPLOY_UNDERCLOUD"
-  echo -e "Deploy overcloud:\n\t$DEPLOY_OVERCLOUD"
-  echo "###############################################"
+  ansible-playbook -i inventory.ini $LAB_DIR/homelab/labs/playbooks/ssh_hardening.yaml
+  scp -o StrictHostKeyChecking=no $LAB_DIR/ovb_working_dir/instackenv.json centos@$OVB_UNDERCLOUD:
+  ansible-playbook -i inventory.ini $LAB_REPO_DIR/deploy_undercloud.yaml
 
 
 Deploy the overcloud

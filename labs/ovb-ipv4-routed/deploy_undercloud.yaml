@@ -76,6 +76,12 @@
       state: link
     with_items:
       - overcloud
+  - name: Create symlinks undercloud
+    file:
+      src: "{{ ansible_env.HOME }}/homelab/labs/ovb-ipv4-routed/undercloud/{{ item }}"
+      dest: "{{ ansible_env.HOME }}/{{ item }}"
+      state: link
+    with_items:
       - undercloud.conf
   - name: Create images directory
     file:
@@ -104,7 +110,6 @@
     shell: |
       source {{ ansible_env.HOME }}/stackrc
       openstack overcloud node introspect --all-manageable --provide
-  - name: Create flavors and 
   - name: Set node capabilities
     shell: |
       source ~/stackrc
