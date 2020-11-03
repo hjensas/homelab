@@ -54,8 +54,3 @@
           port: overcloud-compute-leaf1-0-tenant
         - network: Storage
           subnet: storage_subnet
-        
-          
-
-
-
