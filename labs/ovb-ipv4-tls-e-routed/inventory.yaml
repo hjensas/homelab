@@ -8,9 +8,9 @@ all:
       create_undercloud: true
       attach_to_ovb_networks: false
       routed_networks: true
-      nodes: zero_nodes
+      nodes: 1ctlr
       nodes_leaf1: 1
-      nodes_leaf2: 1
+      nodes_leaf2: 0
       net_iso: multi-nic
       key_name: default
       create_clouds_yaml: false
