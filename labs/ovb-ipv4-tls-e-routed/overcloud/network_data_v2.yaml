@@ -1,0 +1,79 @@
+- name: External
+  mtu: 1442
+  subnets:
+    external_subnet:
+      ip_subnet: 10.0.0.0/24
+      gateway_ip: 10.0.0.254
+      allocation_pools:
+        - start: 10.0.0.10
+          end: 10.0.0.250
+      vlan: 100
+- name: Storage
+  mtu: 1442
+  subnets:
+    storage_subnet01:
+      ip_subnet: 172.18.0.0/24
+      gateway_ip: 172.18.0.254
+      allocation_pools:
+        - start: 172.18.0.10
+          end: 172.18.0.250
+      vlan: 18
+    storage_subnet02:
+      ip_subnet: 172.18.1.0/24
+      gateway_ip: 172.18.1.254
+      allocation_pools:
+        - start: 172.18.1.10
+          end: 172.18.1.250
+      vlan: 18
+- name: StorageMgmt
+  mtu: 1442
+  subnets:
+    storage_mgmt_subnet01:
+      ip_subnet: 172.19.0.0/24
+      gateway_ip: 172.19.0.254
+      allocation_pools:
+        - start: 172.19.0.10
+          end: 172.19.0.250
+      vlan: 19
+    storage_mgmt_subnet02:
+      ip_subnet: 172.19.1.0/24
+      gateway_ip: 172.19.1.254
+      allocation_pools:
+        - start: 172.19.1.10
+          end: 172.19.1.250
+      vlan: 19
+- name: InternalApi
+  mtu: 1442
+  subnets:
+    internal_api_subnet01:
+      ip_subnet: 172.17.0.0/24
+      gateway_ip: 172.17.0.254
+      allocation_pools:
+        - start: 172.17.0.10
+          end: 172.17.0.250
+      vlan: 17
+    internal_api_subnet02:
+      ip_subnet: 172.17.1.0/24
+      gateway_ip: 172.17.1.254
+      allocation_pools:
+        - start: 172.17.1.10
+          end: 172.17.1.250
+      vlan: 17
+- name: Tenant
+  mtu: 1442
+  subnets:
+    tenant_subnet01:
+      ip_subnet: 172.16.0.0/24
+      gateway_ip: 172.16.0.254
+      allocation_pools:
+        - start: 172.16.0.10
+          end: 172.16.0.250
+      vlan: 16
+    tenant_subnet02:
+      ip_subnet: 172.16.1.0/24
+      gateway_ip: 172.16.1.254
+      allocation_pools:
+        - start: 172.16.1.10
+          end: 172.16.1.250
+      vlan: 16
+
