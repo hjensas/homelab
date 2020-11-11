@@ -27,7 +27,7 @@ all:
           undercloud_flavor: m1.large # not used
           baremetal_flavor: m1.large
           bmc_flavor: m1.small
-          extra_node_flavor: m1.small
+          extra_node_flavor: m1.large
           baremetal_image: CentOS-7-x86_64-GenericCloud
           radvd_flavor: m1.small
           radvd_image: CentOS-7-x86_64-GenericCloud
