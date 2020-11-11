@@ -45,7 +45,7 @@ Set up OVB environment
   $OVB_UNDERCLOUD ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' undercloud_public_ip=$OVB_UNDERCLOUD_PUBLIC idnum=$ID_NUM
   
   [freeipa]
-  $FREEIPA ansible_user=centos ansible_ssh_extra_args='-i ~/extranode-id_rsa -o StrictHostKeyChecking=no -J $OVB_UNDERCLOUD' ctlplane_ip=$FREEIPA_CTLPLANE
+  $FREEIPA ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no -J $OVB_UNDERCLOUD' ctlplane_ip=$FREEIPA_CTLPLANE
   
   [all:vars]
   freeipa_ip=$FREEIPA_CTLPLANE
