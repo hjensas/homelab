@@ -1,4 +1,10 @@
 - hosts: undercloud
+  vars_prompt:
+  - name: rhn_username
+    prompt: "RHN Username?"
+    private: no
+  - name: rhn_password
+    prompt: "RHN password?"
   tasks:
   - name: Set up some swap space
     become: yes
@@ -30,19 +36,11 @@
         - git
         - tmux
         - vim-enhanced
-  - name: Git checkout tripleo-repos
-    git:
-      repo: https://opendev.org/openstack/tripleo-repos.git
-      dest: "{{ ansible_env.HOME }}/tripleo-repos"
-  - name: Install tripleo repos rpm
+  - name: Set up repos
     become: yes
     shell: |
-      cd {{ ansible_env.HOME }}/tripleo-repos
-      /usr/libexec/platform-python setup.py install
-  - name: Set up tripleo repos
-    become: yes
-    shell:
-      /usr/local/bin/tripleo-repos current-tripleo-dev ceph
+      subscription-manager repos --disable=*
+      sudo subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-extras-rpms --enable=rhel-7-server-rh-common-rpms --enable=rhel-ha-for-rhel-7-server-rpms --enable=rhel-7-server-openstack-13-rpms --enable=rhel-7-server-rhceph-3-tools-rpms
   - name: upgrade all packages
     become: yes
     yum:
@@ -51,14 +49,13 @@
   - name: Unconditionally reboot the machine with all defaults
     become: yes
     reboot:
-  - name: Install tripleo client and ceph-ansible
+  - name: Install tripleo client
     become: yes
     yum:
       name: "{{ packages }}"
     vars:
       packages:
-        - python3-tripleoclient
-        - ceph-ansible
+        - python-tripleoclient
   - name: Git checkout labs
     git:
       repo: https://github.com/hjensas/homelab.git
@@ -71,51 +68,71 @@
       # version: FETCH_HEAD
   - name: Create symlinks
     file:
-      src: "{{ ansible_env.HOME }}/homelab/labs/ovb-ipv4-routed/{{ item }}"
+      src: "{{ ansible_env.HOME }}/homelab/labs/ovb-ipv4-tls-e-routed/{{ item }}"
       dest: "{{ ansible_env.HOME }}/{{ item }}"
       state: link
     with_items:
       - overcloud
   - name: Create symlinks undercloud
     file:
-      src: "{{ ansible_env.HOME }}/homelab/labs/ovb-ipv4-routed/undercloud/{{ item }}"
+      src: "{{ ansible_env.HOME }}/homelab/labs/ovb-ipv4-tls-e-routed/undercloud/{{ item }}"
       dest: "{{ ansible_env.HOME }}/{{ item }}"
       state: link
     with_items:
       - undercloud.conf
+  - name: Use FreeIPA for nameservices
+    become: yes
+    shell: |
+      cat << EOF > /etc/resolv.conf
+      search tls.example.com
+      nameserver {{ freeipa_ip }}
+      EOF
+  - name: IPA Join
+    become: yes
+    shell: |
+      /usr/libexec/novajoin-ipa-setup \
+        --principal admin \
+        --password {{ ipa_password }} \
+        --server freeipa.tls.example.com \
+        --realm TLS.EXAMPLE.COM \
+        --domain tls.example.com \
+        --hostname undercloud.tls.example.com \
+        --precreate
+    register:
+      ipa_otp
+  - name: Set undercloud.conf otp
+    replace:
+      path: "{{ ansible_env.HOME }}/undercloud.conf"
+      regexp: <otp>
+      replace: "{{ ipa_otp.stdout }}"
   - name: Create images directory
     file:
       dest: "{{ ansible_env.HOME }}/images"
       state: directory
-  - name: Build Images - async task
-    shell: |
-      cd {{ ansible_env.HOME }}/images
-      export DIB_YUM_REPO_CONF="/etc/yum.repos.d/delorean* /etc/yum.repos.d/tripleo-centos-*"
-      openstack overcloud image build --config-file /usr/share/openstack-tripleo-common/image-yaml/overcloud-images-python3.yaml --config-file /usr/share/openstack-tripleo-common/image-yaml/overcloud-images-centos8.yaml
   - name: Install Undercloud
     shell:
       openstack undercloud install
-  - name: Upload overcloud images
-    shell: |
-      source {{ ansible_env.HOME }}/stackrc
-      cd {{ ansible_env.HOME }}/images
-      openstack overcloud image upload
-  - name: Import nodes
-    shell: |
-      source {{ ansible_env.HOME }}/stackrc
-      openstack overcloud node import instackenv.json
-  - pause:
-      minutes: 1
-  - name: Introspect and provide nodes
-    shell: |
-      source {{ ansible_env.HOME }}/stackrc
-      openstack overcloud node introspect --all-manageable --provide
-  - name: Set node capabilities
-    shell: |
-      source ~/stackrc
-      openstack baremetal node set --property capabilities='profile:control,boot_option:local' baremetal-{{ idnum }}-leaf1-0
-      openstack baremetal node set --property capabilities='profile:control,boot_option:local' baremetal-{{ idnum }}-leaf1-1
-      openstack baremetal node set --property capabilities='profile:control,boot_option:local' baremetal-{{ idnum }}-leaf1-2
-      openstack baremetal node set --property capabilities='profile:compute-leaf2,boot_option:local' baremetal-{{ idnum }}-leaf2-0
-      openstack baremetal node set --property capabilities='profile:compute-leaf2,boot_option:local' baremetal-{{ idnum }}-leaf2-1
-
+#  - name: Upload overcloud images
+#    shell: |
+#      source {{ ansible_env.HOME }}/stackrc
+#      cd {{ ansible_env.HOME }}/images
+#      openstack overcloud image upload
+#  - name: Import nodes
+#    shell: |
+#      source {{ ansible_env.HOME }}/stackrc
+#      openstack overcloud node import instackenv.json
+#  - pause:
+#      minutes: 1
+#  - name: Introspect and provide nodes
+#    shell: |
+#      source {{ ansible_env.HOME }}/stackrc
+#      openstack overcloud node introspect --all-manageable --provide
+#  - name: Set node capabilities
+#    shell: |
+#      source ~/stackrc
+#      openstack baremetal node set --property capabilities='profile:control,boot_option:local' baremetal-{{ idnum }}-leaf1-0
+#      openstack baremetal node set --property capabilities='profile:control,boot_option:local' baremetal-{{ idnum }}-leaf1-1
+#      openstack baremetal node set --property capabilities='profile:control,boot_option:local' baremetal-{{ idnum }}-leaf1-2
+#      openstack baremetal node set --property capabilities='profile:compute-leaf2,boot_option:local' baremetal-{{ idnum }}-leaf2-0
+#      openstack baremetal node set --property capabilities='profile:compute-leaf2,boot_option:local' baremetal-{{ idnum }}-leaf2-1
+#

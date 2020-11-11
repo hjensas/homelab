@@ -30,7 +30,7 @@ all:
           baremetal_flavor: m1.large
           bmc_flavor: m1.small
           extra_node_flavor: m1.large
-          baremetal_image: CentOS-7-x86_64-GenericCloud
+          baremetal_image: RHEL-7-GenericCloud
           radvd_flavor: m1.small
           radvd_image: CentOS-7-x86_64-GenericCloud
           dhcp_relay_image: CentOS-7-x86_64-GenericCloud
