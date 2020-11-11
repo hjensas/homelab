@@ -9,8 +9,8 @@ all:
       attach_to_ovb_networks: false
       routed_networks: true
       nodes: zero_nodes
-      leaf1_nodes: 1
-      leaf2_nodes: 1
+      nodes_leaf1: 1
+      nodes_leaf2: 1
       net_iso: multi-nic
       key_name: default
       create_clouds_yaml: false
@@ -21,7 +21,6 @@ all:
        -e {{ ovb_working_dir }}/env-{{ idnum }}-base.yaml
        -e {{ ovb_repo_directory }}/environments/bmc-use-cache.yaml
       extra_node: 1
-      extra_node_key_name: default
       cloud_settings:
         homelab:
           public_ip_net: public
