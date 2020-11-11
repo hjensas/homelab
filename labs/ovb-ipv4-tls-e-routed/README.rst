@@ -16,7 +16,7 @@ Set up OVB environment
 
   git clone https://review.rdoproject.org/r/config $LAB_DIR/config
   cd $LAB_DIR/config
-  git fetch https://review.rdoproject.org/r/config refs/changes/90/30490/4 && git checkout FETCH_HEAD
+  git fetch https://review.rdoproject.org/r/config refs/changes/37/30837/1 && git checkout FETCH_HEAD
   git switch -c routed-networks-support
   cd $LAB_DIR 
 
@@ -45,7 +45,7 @@ Set up OVB environment
   $OVB_UNDERCLOUD ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' undercloud_public_ip=$OVB_UNDERCLOUD_PUBLIC idnum=$ID_NUM
   
   [freeipa]
-  $FREEIPA ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no -J $OVB_UNDERCLOUD' ctlplane_ip=$FREEIPA_CTLPLANE
+  $FREEIPA ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no -J centos@$OVB_UNDERCLOUD' ctlplane_ip=$FREEIPA_CTLPLANE
   
   [all:vars]
   freeipa_ip=$FREEIPA_CTLPLANE
