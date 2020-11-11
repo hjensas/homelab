@@ -32,7 +32,7 @@ Set up OVB environment
   OVB_UNDERCLOUD=$(openstack stack output show baremetal_$ID_NUM undercloud_host_floating_ip -f value -c output_value)
   OVB_UNDERCLOUD_PUBLIC=10.0.0.254
 
-  FREEIPA=$(openstack server show baremetal-$ID_NUM-extra_0 -f json |  jq '.addresses' | awk '{ print $3 }' | sed s/\;//)
+  FREEIPA=$(openstack port list --server baremetal-26488-extra_0 --network private -f json -c "Fixed IP Addresses" | jq '.[0]."Fixed IP Addresses"[0]."ip_address"' --raw-output)
   FREEIPA_CTLPLANE=192.168.24.5
   IPA_PASSWORD=$(uuidgen)
 
@@ -45,11 +45,10 @@ Set up OVB environment
   $OVB_UNDERCLOUD ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' undercloud_public_ip=$OVB_UNDERCLOUD_PUBLIC idnum=$ID_NUM
   
   [freeipa]
-  $FREEIPA ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' ctlplane_ip=$FREEIPA_CTLPLANE
+  $FREEIPA ansible_user=centos ansible_ssh_extra_args='-i ~/extranode-id_rsa -o StrictHostKeyChecking=no -J $OVB_UNDERCLOUD' ctlplane_ip=$FREEIPA_CTLPLANE
   
   [all:vars]
   freeipa_ip=$FREEIPA_CTLPLANE
-  undercloud_ip=$OVB_UNDERCLOUD_CTLPLANE
   ipa_password=$IPA_PASSWORD
   EOF
 
