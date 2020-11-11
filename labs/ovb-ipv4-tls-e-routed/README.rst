@@ -8,7 +8,7 @@ Set up OVB environment
 
   export OS_CLOUD=homelab
 
-  export LAB_NAME=ovb-ipv4-routed
+  export LAB_NAME=ovb-ipv4-tls-e-routed
   export LAB_DIR=~/$LAB_NAME
   mkdir $LAB_DIR
   git clone https://github.com/hjensas/homelab.git $LAB_DIR/homelab
