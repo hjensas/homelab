@@ -20,6 +20,8 @@ all:
       env_args: >-
        -e {{ ovb_working_dir }}/env-{{ idnum }}-base.yaml
        -e {{ ovb_repo_directory }}/environments/bmc-use-cache.yaml
+      extra_node: 1
+      extra_node_key_name: default
       cloud_settings:
         homelab:
           public_ip_net: public
@@ -27,7 +29,7 @@ all:
           baremetal_flavor: m1.large
           bmc_flavor: m1.small
           extra_node_flavor: m1.small
-          baremetal_image: CentOS-8-GenericCloud
+          baremetal_image: CentOS-7-x86_64-GenericCloud
           radvd_flavor: m1.small
           radvd_image: CentOS-7-x86_64-GenericCloud
           dhcp_relay_image: CentOS-7-x86_64-GenericCloud
