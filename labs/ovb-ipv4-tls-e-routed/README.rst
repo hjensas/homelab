@@ -16,11 +16,8 @@ Set up OVB environment
 
   git clone https://review.rdoproject.org/r/config $LAB_DIR/config
   cd $LAB_DIR/config
-  git fetch https://review.rdoproject.org/r/config refs/changes/25/30625/1 && git checkout FETCH_HEAD
-  git switch -c optional-create-clouds-yaml
-  git fetch https://review.rdoproject.org/r/config refs/changes/90/30490/2 && git checkout FETCH_HEAD
+  git fetch https://review.rdoproject.org/r/config refs/changes/90/30490/3 && git checkout FETCH_HEAD
   git switch -c routed-networks-support
-  git rebase optional-create-clouds-yaml
   cd $LAB_DIR 
 
   mkdir $LAB_REPO_DIR/roles
