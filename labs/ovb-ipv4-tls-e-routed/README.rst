@@ -42,10 +42,10 @@ Set up OVB environment
   freeipa
 
   [undercloud]
-  $OVB_UNDERCLOUD ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' undercloud_public_ip=$OVB_UNDERCLOUD_PUBLIC idnum=$ID_NUM
+  $OVB_UNDERCLOUD ansible_user=cloud-user ansible_ssh_extra_args='-o StrictHostKeyChecking=no' undercloud_public_ip=$OVB_UNDERCLOUD_PUBLIC idnum=$ID_NUM
   
   [freeipa]
-  $FREEIPA ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no -J centos@$OVB_UNDERCLOUD' ctlplane_ip=$FREEIPA_CTLPLANE
+  $FREEIPA ansible_user=cloud-user ansible_ssh_extra_args='-o StrictHostKeyChecking=no -J cloud-user@$OVB_UNDERCLOUD' ctlplane_ip=$FREEIPA_CTLPLANE
   
   [all:vars]
   freeipa_ip=$FREEIPA_CTLPLANE
@@ -54,8 +54,9 @@ Set up OVB environment
 
 
   ansible-playbook -i inventory.ini $LAB_DIR/homelab/labs/playbooks/ssh_hardening.yaml
-  scp -o StrictHostKeyChecking=no $LAB_DIR/ovb_working_dir/instackenv.json centos@$OVB_UNDERCLOUD:
-  ansible-playbook -i inventory.ini $AB_DIR/homelab/labs/playbooks/deploy_freeipa.yaml
+  scp -o StrictHostKeyChecking=no $LAB_DIR/ovb_working_dir/instackenv.json cloud-user@$OVB_UNDERCLOUD:
+
+  ansible-playbook -i inventory.ini $LAB_REPO_DIR/deploy_freeipa.yaml
 
   ansible-playbook -i inventory.ini $LAB_REPO_DIR/deploy_undercloud.yaml
 
@@ -63,7 +64,7 @@ Set up OVB environment
 Deploy the overcloud
 --------------------
 
-Log into the ovb undercloud node, user: centos.
+Log into the ovb undercloud node, user: cloud-user.
 
 To deploy without routed networks first::
 

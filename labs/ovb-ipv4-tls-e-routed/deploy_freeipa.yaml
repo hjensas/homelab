@@ -1,0 +1,92 @@
+- hosts: freeipa
+  vars_prompt:
+  - name: rhn_username
+    prompt: "RHN Username?"
+    private: no
+  - name: rhn_password
+    prompt: "RHN password?"
+
+  tasks:
+  - name: Set hostname
+    become: yes
+    shell: |
+      hostnamectl set-hostname freeipa.tls.example.com
+      hostnamectl set-hostname --transient freeipa.tls.example.com
+  - name: Set up ctlplane interface
+    become: yes
+    copy:
+      content: |
+        NAME=eth1
+        DEVICE=eth1
+        BOOTPROTO=static
+        ONBOOT=yes
+        IPADDR={{ ctlplane_ip }}
+        PREFIX=24
+        MTU=1450
+      dest: /etc/sysconfig/network-scripts/ifcfg-eth1
+  - name: Bring up ctlplane interface
+    become: yes
+    command: ifup eth1
+  - name: Set up some swap space
+    become: yes
+    shell: |
+      dd if=/dev/zero of=/opt/8GB.swap bs=8192 count=1048576
+      mkswap /opt/8GB.swap
+      swapon /opt/8GB.swap
+      echo "/opt/8GB.swap swap                                    swap    defaults 0 0" >> /etc/fstab
+  - name: Register node
+    become: yes
+    shell: |
+      subscription-manager register --username {{ rhn_username }} --password {{ rhn_password }}
+      subscription-manager role --set="Red Hat Enterprise Linux Server"
+      subscription-manager service-level --set="Self-Support"
+      subscription-manager usage --set="Development/Test"
+      subscription-manager attach --pool=8a85f98c60c2c2b40160c324e5d21d70
+  - name: Set up repos
+    become: yes
+    shell: |
+      subscription-manager repos --disable=*
+      sudo subscription-manager repos --enable=rhel-7-server-rpms
+  - name: upgrade all packages
+    become: yes
+    yum:
+      name: '*'
+      state: latest
+  - name: Install freeipa packages
+    become: yes
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+        - tmux
+        - ipa-server
+        - ipa-server-dns
+  - name: Install FreeIPA
+    become: yes
+    shell: |
+      ipa-server-install \
+        --unattended \
+        --ds-password={{ ipa_password }} \
+        --admin-password={{ ipa_password }} \
+        --ip-address {{ ctlplane_ip }} \
+        --hostname freeipa.tls.example.com \
+        --domain=tls.example.com \
+        --realm=TLS.EXAMPLE.COM \
+        --no-host-dns \
+        --setup-dns \
+        --auto-reverse \
+        --setup-kra \
+        --forwarder=8.8.8.8 \
+        --forwarder=8.8.4.4
+  - name: Configure FreeIPA to publish Master CRL at start
+    become: yes
+    lineinfile:
+      path: /etc/pki/pki-tomcat/ca/CS.cfg
+      regexp: '^ca.crl.MasterCRL.publishOnStart=(.*)$'
+      line: 'ca.crl.MasterCRL.publishOnStart=true'
+  - name: Restart FreeIPA server
+    become: yes
+    service:
+      name: ipa
+      state: restarted
+

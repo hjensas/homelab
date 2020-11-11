@@ -27,6 +27,19 @@
   - name: Bring up public interface
     become: yes
     command: ifup eth2
+  - name: Register node
+    become: yes
+    shell: |
+      subscription-manager register --username {{ rhn_username }} --password {{ rhn_password }}
+      subscription-manager role --set="Red Hat Enterprise Linux Server"
+      subscription-manager service-level --set="Self-Support"
+      subscription-manager usage --set="Development/Test"
+      subscription-manager attach --pool=8a85f98c60c2c2b40160c324e5d21d70
+  - name: Set up repos
+    become: yes
+    shell: |
+      subscription-manager repos --disable=*
+      sudo subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-extras-rpms --enable=rhel-7-server-rh-common-rpms --enable=rhel-ha-for-rhel-7-server-rpms --enable=rhel-7-server-openstack-13-rpms --enable=rhel-7-server-rhceph-3-tools-rpms
   - name: Install packages
     become: yes
     yum:
@@ -36,11 +49,6 @@
         - git
         - tmux
         - vim-enhanced
-  - name: Set up repos
-    become: yes
-    shell: |
-      subscription-manager repos --disable=*
-      sudo subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-extras-rpms --enable=rhel-7-server-rh-common-rpms --enable=rhel-ha-for-rhel-7-server-rpms --enable=rhel-7-server-openstack-13-rpms --enable=rhel-7-server-rhceph-3-tools-rpms
   - name: upgrade all packages
     become: yes
     yum:
@@ -56,6 +64,7 @@
     vars:
       packages:
         - python-tripleoclient
+        - python-novajoin
   - name: Git checkout labs
     git:
       repo: https://github.com/hjensas/homelab.git
