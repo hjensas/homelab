@@ -91,11 +91,11 @@
       - undercloud.conf
   - name: Use FreeIPA for nameservices
     become: yes
-    shell: |
-      cat << EOF > /etc/resolv.conf
-      search tls.example.com
-      nameserver {{ freeipa_ip }}
-      EOF
+    copy:
+      dest: /etc/resolv.conf
+      contenet: |
+        search tls.example.com
+        nameserver {{ freeipa_ip }}
   - name: IPA Join
     become: yes
     shell: |
@@ -114,6 +114,11 @@
       path: "{{ ansible_env.HOME }}/undercloud.conf"
       regexp: <otp>
       replace: "{{ ipa_otp.stdout }}"
+  - name: set undercloud.conf nameservers
+    replace:
+      path: "{{ ansible_env.HOME }}/undercloud.conf"
+      regexp: <freeipa_ip>
+      replace "{{ freeipa_ip }}
   - name: Create images directory
     file:
       dest: "{{ ansible_env.HOME }}/images"
