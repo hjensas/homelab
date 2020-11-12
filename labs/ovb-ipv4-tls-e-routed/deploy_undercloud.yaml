@@ -6,6 +6,11 @@
   - name: rhn_password
     prompt: "RHN password?"
   tasks:
+  - name: Set hostname
+    become: yes
+    shell: |
+      hostnamectl set-hostname undercloud.tls.example.com
+      hostnamectl set-hostname --transient undercloud.tls.example.com
   - name: Set up some swap space
     become: yes
     shell: |
@@ -92,10 +97,10 @@
   - name: Use FreeIPA for nameservices
     become: yes
     copy:
-      dest: /etc/resolv.conf
-      contenet: |
-        search tls.example.com
+      content: |
+        # search tls.example.com
         nameserver {{ freeipa_ip }}
+      dest: /etc/resolv.conf
   - name: IPA Join
     become: yes
     shell: |
@@ -118,7 +123,7 @@
     replace:
       path: "{{ ansible_env.HOME }}/undercloud.conf"
       regexp: <freeipa_ip>
-      replace "{{ freeipa_ip }}"
+      replace: "{{ freeipa_ip }}"
   - name: Create images directory
     file:
       dest: "{{ ansible_env.HOME }}/images"
