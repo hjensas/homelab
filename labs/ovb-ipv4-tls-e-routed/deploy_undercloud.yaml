@@ -70,6 +70,7 @@
       packages:
         - python-tripleoclient
         - python-novajoin
+        - rhosp-director-images
   - name: Git checkout labs
     git:
       repo: https://github.com/hjensas/homelab.git
@@ -98,7 +99,7 @@
     become: yes
     copy:
       content: |
-        # search tls.example.com
+        search tls.example.com
         nameserver {{ freeipa_ip }}
       dest: /etc/resolv.conf
   - name: IPA Join
@@ -124,34 +125,57 @@
       path: "{{ ansible_env.HOME }}/undercloud.conf"
       regexp: <freeipa_ip>
       replace: "{{ freeipa_ip }}"
+  - name: Install Undercloud
+    shell:
+      openstack undercloud install
   - name: Create images directory
     file:
       dest: "{{ ansible_env.HOME }}/images"
       state: directory
-  - name: Install Undercloud
-    shell:
-      openstack undercloud install
-#  - name: Upload overcloud images
-#    shell: |
-#      source {{ ansible_env.HOME }}/stackrc
-#      cd {{ ansible_env.HOME }}/images
-#      openstack overcloud image upload
-#  - name: Import nodes
-#    shell: |
-#      source {{ ansible_env.HOME }}/stackrc
-#      openstack overcloud node import instackenv.json
-#  - pause:
-#      minutes: 1
-#  - name: Introspect and provide nodes
-#    shell: |
-#      source {{ ansible_env.HOME }}/stackrc
-#      openstack overcloud node introspect --all-manageable --provide
-#  - name: Set node capabilities
-#    shell: |
-#      source ~/stackrc
-#      openstack baremetal node set --property capabilities='profile:control,boot_option:local' baremetal-{{ idnum }}-leaf1-0
-#      openstack baremetal node set --property capabilities='profile:control,boot_option:local' baremetal-{{ idnum }}-leaf1-1
-#      openstack baremetal node set --property capabilities='profile:control,boot_option:local' baremetal-{{ idnum }}-leaf1-2
-#      openstack baremetal node set --property capabilities='profile:compute-leaf2,boot_option:local' baremetal-{{ idnum }}-leaf2-0
-#      openstack baremetal node set --property capabilities='profile:compute-leaf2,boot_option:local' baremetal-{{ idnum }}-leaf2-1
-#
+  - name: Extract rhosp-director-images
+    unarchive:
+      remote_src: yes
+      src: "{{ item }}"
+      dest: "{{ ansible_env.HOME }}/images"
+    with_items:
+      - /usr/share/rhosp-director-images/overcloud-full-latest.tar
+      - /usr/share/rhosp-director-images/ironic-python-agent-latest.tar
+  - name: Upload overcloud images
+    shell: |
+      source {{ ansible_env.HOME }}/stackrc
+      cd {{ ansible_env.HOME }}/images
+      openstack overcloud image upload
+  - name: Import nodes
+    shell: |
+      source {{ ansible_env.HOME }}/stackrc
+      openstack overcloud node import instackenv.json
+  - pause:
+      minutes: 1
+  - name: Introspect and provide nodes
+    shell: |
+      source {{ ansible_env.HOME }}/stackrc
+      openstack overcloud node introspect --all-manageable --provide
+  - name: Set node capabilities
+    shell: |
+      source ~/stackrc
+      openstack flavor create leaf0 \
+        --disk 40 --public --ram 4096 --vcpus 1 --rxtx-factor 1.0 \
+        --property capabilities:boot_option='local' \
+        --property capabilities:profile='leaf0' \
+        --property resources:CUSTOM_BAREMETAL='1' \
+        --property resources:DISK_GB='0' \
+        --property resources:MEMORY_MB='0' \
+        --property resources:VCPU='0'
+      openstack flavor create leaf1 \
+      --disk 40 --public --ram 4096 --vcpus 1 --rxtx-factor 1.0 \
+      --property capabilities:boot_option='local' \
+      --property capabilities:profile='leaf1' \
+      --property resources:CUSTOM_BAREMETAL='1' \
+      --property resources:DISK_GB='0' \
+      --property resources:MEMORY_MB='0' \
+      --property resources:VCPU='0'
+      openstack baremetal node set baremetal-38162-0 \
+        --property capabilities='profile:leaf0,boot_option:local' 
+      openstack baremetal node set baremetal-38162-leaf1-0 \
+        --property capabilities='profile:leaf1,boot_option:local'
+

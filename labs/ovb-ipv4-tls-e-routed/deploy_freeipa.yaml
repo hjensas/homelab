@@ -22,7 +22,7 @@
         ONBOOT=yes
         IPADDR={{ ctlplane_ip }}
         PREFIX=24
-        MTU=1450
+        MTU=1442
       dest: /etc/sysconfig/network-scripts/ifcfg-eth1
   - name: Bring up ctlplane interface
     become: yes
