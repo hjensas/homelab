@@ -19,7 +19,7 @@
   count: 1
   hostname_format: compute-%index%
   defaults:
-    profile: compute
+    profile: compute-leaf2
     networks:
       - network: InternalApi
         subnet: internal_api_subnet02
