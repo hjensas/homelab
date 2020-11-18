@@ -4,13 +4,17 @@ source /home/centos/stackrc
 cd /home/centos
 
 openstack overcloud deploy --templates /home/centos/tripleo-heat-templates \
-  -n /home/centos/overcloud/templates/my_network_data.yaml \
-  -r /home/centos/overcloud/templates/my_roles_data.yaml \
+  --deployed-server \
+  --disable-validations \
+  -n /home/centos/overcloud/network_data_v2.yaml \
+  -r /home/centos/overcloud/my_roles_data.yaml \
+  -e /home/centos/tripleo-heat-templates/environments/deployed-server-environment.yaml \
+  -e /home/centos/overcloud-baremetal-deployed.yaml \
+  -e /home/centos/overcloud-networks-deployed.yaml \
   -e /home/centos/tripleo-heat-templates/environments/enable-swap.yaml \
-  -e /home/centos/overcloud/environments/node_data.yaml \
   -e /home/centos/tripleo-heat-templates/environments/network-isolation.yaml \
   -e /home/centos/tripleo-heat-templates/environments/network-environment.yaml \
   -e /home/centos/tripleo-heat-templates/environments/net-multiple-nics.yaml \
-  -e /home/centos/overcloud/environments/network-environment-overrides.yaml
+  -e /home/centos/overcloud/node_data.yaml
 
 
