@@ -1,5 +1,6 @@
 - name: External
   mtu: 1442
+  vip: true
   subnets:
     external_subnet:
       ip_subnet: 10.0.0.0/24
@@ -10,6 +11,7 @@
       vlan: 100
 - name: Storage
   mtu: 1442
+  vip: true
   subnets:
     storage_subnet01:
       ip_subnet: 172.18.0.0/24
@@ -27,6 +29,7 @@
       vlan: 18
 - name: StorageMgmt
   mtu: 1442
+  vip: true
   subnets:
     storage_mgmt_subnet01:
       ip_subnet: 172.19.0.0/24
@@ -44,6 +47,7 @@
       vlan: 19
 - name: InternalApi
   mtu: 1442
+  vip: true
   subnets:
     internal_api_subnet01:
       ip_subnet: 172.17.0.0/24
