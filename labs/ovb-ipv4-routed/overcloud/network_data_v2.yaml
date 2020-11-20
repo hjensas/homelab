@@ -1,3 +1,21 @@
+- name: InternalApi
+  mtu: 1442
+  vip: true
+  subnets:
+    internal_api_subnet01:
+      ip_subnet: 172.17.0.0/24
+      gateway_ip: 172.17.0.254
+      allocation_pools:
+        - start: 172.17.0.10
+          end: 172.17.0.250
+      vlan: 17
+    internal_api_subnet02:
+      ip_subnet: 172.17.1.0/24
+      gateway_ip: 172.17.1.254
+      allocation_pools:
+        - start: 172.17.1.10
+          end: 172.17.1.250
+      vlan: 17
 - name: External
   mtu: 1442
   vip: true
@@ -45,24 +63,6 @@
         - start: 172.19.1.10
           end: 172.19.1.250
       vlan: 19
-- name: InternalApi
-  mtu: 1442
-  vip: true
-  subnets:
-    internal_api_subnet01:
-      ip_subnet: 172.17.0.0/24
-      gateway_ip: 172.17.0.254
-      allocation_pools:
-        - start: 172.17.0.10
-          end: 172.17.0.250
-      vlan: 17
-    internal_api_subnet02:
-      ip_subnet: 172.17.1.0/24
-      gateway_ip: 172.17.1.254
-      allocation_pools:
-        - start: 172.17.1.10
-          end: 172.17.1.250
-      vlan: 17
 - name: Tenant
   mtu: 1442
   subnets:
