@@ -1,3 +1,14 @@
+- name: External
+  mtu: 1442
+  vip: true
+  subnets:
+    external_subnet:
+      ip_subnet: 10.0.0.0/24
+      gateway_ip: 10.0.0.254
+      allocation_pools:
+        - start: 10.0.0.10
+          end: 10.0.0.250
+      vlan: 100
 - name: InternalApi
   mtu: 1442
   vip: true
@@ -16,17 +27,6 @@
         - start: 172.17.1.10
           end: 172.17.1.250
       vlan: 17
-- name: External
-  mtu: 1442
-  vip: true
-  subnets:
-    external_subnet:
-      ip_subnet: 10.0.0.0/24
-      gateway_ip: 10.0.0.254
-      allocation_pools:
-        - start: 10.0.0.10
-          end: 10.0.0.250
-      vlan: 100
 - name: Storage
   mtu: 1442
   vip: true
