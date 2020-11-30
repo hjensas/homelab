@@ -33,7 +33,7 @@ Set up OVB environment
   OVB_UNDERCLOUD_PUBLIC=10.0.0.254
 
   FREEIPA=$(openstack port list --server baremetal-$ID_NUM-extra_0 --network private -f json -c "Fixed IP Addresses" | jq '.[0]."Fixed IP Addresses"[0]."ip_address"' --raw-output)
-  FREEIPA_CTLPLANE=192.168.24.5
+  FREEIPA_CTLPLANE=$(openstack port list --server baremetal-$ID_NUM-extra_0 --network ctlplane-$ID_NUM -f json -c "Fixed IP Addresses" | jq '.[0]."Fixed IP Addresses"[0]."ip_address"' --raw-output)
   IPA_PASSWORD=$(uuidgen)
 
   cat << EOF > inventory.ini
