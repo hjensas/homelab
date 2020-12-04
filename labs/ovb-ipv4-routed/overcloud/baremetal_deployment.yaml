@@ -6,11 +6,11 @@
     networks:
       - network: external
         subnet: external_subnet
-      - network: internal_api
+      - network: internalapi
         subnet: internal_api_subnet01
       - network: storage
         subnet: storage_subnet01
-      - network: storage_mgmt
+      - network: storagemgmt
         subnet: storage_mgmt_subnet01
       - network: tenant
         subnet: tenant_subnet01
@@ -21,7 +21,7 @@
   defaults:
     profile: compute-leaf2
     networks:
-      - network: internal_api
+      - network: internalapi
         subnet: internal_api_subnet02
       - network: tenant
         subnet: tenant_subnet02
