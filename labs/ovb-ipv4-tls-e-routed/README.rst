@@ -16,7 +16,7 @@ Set up OVB environment
 
   git clone https://review.rdoproject.org/r/config $LAB_DIR/config
   cd $LAB_DIR/config
-  git fetch https://review.rdoproject.org/r/config refs/changes/37/30837/1 && git checkout FETCH_HEAD
+  git fetch https://review.rdoproject.org/r/config refs/changes/00/30500/6 && git checkout FETCH_HEAD
   git switch -c routed-networks-support
   cd $LAB_DIR 
 
