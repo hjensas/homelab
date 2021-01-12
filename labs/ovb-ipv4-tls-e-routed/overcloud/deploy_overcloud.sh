@@ -8,6 +8,7 @@ openstack overcloud deploy --templates /home/centos/tripleo-heat-templates \
   -r /home/centos/overcloud/roles_data.yaml \
   -e /home/centos/tripleo-heat-templates/environments/enable-swap.yaml \
   -e /home/centos/tripleo-heat-templates/environments/network-isolation.yaml \
+  -e /home/centos/tripleo-heat-templates/environments/network-environment.yaml \
   -e /home/centos/tripleo-heat-templates/environments/ssl/enable-internal-tls.yaml \
   -e /home/centos/tripleo-heat-templates/environments/ssl/tls-everywhere-endpoints-dns.yaml \
   -e /home/centos/overcloud/node_data.yaml
