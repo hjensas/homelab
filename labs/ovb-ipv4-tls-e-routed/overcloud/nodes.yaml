@@ -2,7 +2,7 @@ resource_registry:
   OS::TripleO::Controller::Net::SoftwareConfig: /home/cloud-user/overcloud/controller-nic-config.yaml
   OS::TripleO::Compute::Net::SoftwareConfig: /home/cloud-user/overcloud/compute-nic-config.yaml
 
-parameters_default:
+parameter_defaults:
   ControllerCount: 1
   OvercloudControllerFlavor: control
   ComputeCount: 1
