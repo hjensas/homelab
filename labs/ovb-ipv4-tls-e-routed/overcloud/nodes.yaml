@@ -1,4 +1,31 @@
+resource_registry:
+  OS::TripleO::Controller::Net::SoftwareConfig: /home/cloud-user/overcloud/controller-nic-config.yaml
+  OS::TripleO::Compute::Net::SoftwareConfig: /home/cloud-user/overcloud/compute-nic-config.yaml
+
 parameters_default:
+  ControllerCount: 1
+  OvercloudControllerFlavor: control
+  ComputeCount: 1
+  OvercloudComputeFlavor: compute
+
   ComputeControlPlaneSubnet: ctlplane-leaf2
   NetworkDeploymentActions: ['CREATE','UPDATE']
+  ComputeServiceNetMap:
+    NeutronTenantNetwork: tenant1
+    NovaApiNetwork: internal_api1
+    NovaLibvirtNetwork: internal_api1
+    NovaVncProxyNetwork: internal_api1
+  InternalApiSuperNet: 172.17.0.0/16
+  StorageSuperNet: 172.18.0.0/16
+  StorageMgmtSuperNet: 172.19.0.0/16
+  TenantSuperNet: 172.16.0.0/16
+  CtlplaneSuperNet: 192.168.0.0/16
+  InternalApiRouter: 172.19.0.254
+  InternalApi1Router: 172.19.1.254
+  StorageRouter: 172.18.0.254
+  Storage1Router: 172.18.1.254
+  StorageMgmtRouter: 172.19.0.254
+  StorageMgmt1Router: 172.19.1.254
+  TenantRouter: 172.16.0.254
+  Tenant1Router: 172.16.1.254
 
