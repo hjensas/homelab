@@ -30,7 +30,7 @@ Set up OVB environment
 
   ID_NUM=$(cat $LAB_DIR/ovb_working_dir/idnum)
   OVB_UNDERCLOUD=$(openstack stack output show baremetal_$ID_NUM undercloud_host_floating_ip -f value -c output_value)
-  OVB_UNDERCLOUD_PUBLIC=10.0.0.254
+  OVB_UNDERCLOUD_PUBLIC=10.0.0.1
 
   FREEIPA=$(openstack port list --server baremetal-$ID_NUM-extra_0 --network private -f json -c "Fixed IP Addresses" | jq '.[0]."Fixed IP Addresses"[0]."ip_address"' --raw-output)
   FREEIPA_CTLPLANE=$(openstack port list --server baremetal-$ID_NUM-extra_0 --network ctlplane-$ID_NUM -f json -c "Fixed IP Addresses" | jq '.[0]."Fixed IP Addresses"[0]."ip_address"' --raw-output)

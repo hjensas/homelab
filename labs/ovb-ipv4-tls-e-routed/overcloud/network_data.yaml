@@ -3,7 +3,7 @@
   name_lower: external
   ip_subnet: '10.0.0.0/24'
   allocation_pools: [{'start': '10.0.0.4', 'end': '10.0.0.250'}]
-  gateway_ip: '10.0.0.1'
+  gateway_ip: '10.0.0.254'
 
 - name: InternalApi
   name_lower: internal_api
