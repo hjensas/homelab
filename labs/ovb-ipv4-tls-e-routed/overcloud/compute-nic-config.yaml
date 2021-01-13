@@ -163,7 +163,7 @@ resources:
                   next_hop:
                     get_param: ControlPlaneDefaultRoute
               - type: interface
-                name: nic4
+                name: nic3
                 use_dhcp: false
                 addresses:
                 - ip_netmask:
@@ -174,7 +174,7 @@ resources:
                   next_hop:
                     get_param: InternalApi1Router
               - type: interface
-                name: nic6
+                name: nic4
                 use_dhcp: false
                 addresses:
                 - ip_netmask:
@@ -185,7 +185,7 @@ resources:
                   next_hop:
                     get_param: Storage1Router
               - type: interface
-                name: nic10
+                name: nic6
                 use_dhcp: false
                 addresses:
                 - ip_netmask:

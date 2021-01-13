@@ -190,7 +190,7 @@ resources:
                   next_hop:
                     get_param: InternalApiRouter
               - type: interface
-                name: nic5
+                name: nic4
                 use_dhcp: false
                 addresses:
                 - ip_netmask:
@@ -201,7 +201,7 @@ resources:
                   next_hop:
                     get_param: StorageRouter
               - type: interface
-                name: nic7
+                name: nic5
                 use_dhcp: false
                 addresses:
                 - ip_netmask:
@@ -226,7 +226,7 @@ resources:
                     get_param: TenantRouter
                 members:
                 - type: interface
-                  name: nic9
+                  name: nic6
                   use_dhcp: false
                   primary: true
 outputs:
