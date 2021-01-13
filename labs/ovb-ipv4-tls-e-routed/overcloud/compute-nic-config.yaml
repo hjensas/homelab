@@ -157,11 +157,9 @@ resources:
                     get_param: EC2MetadataIp
                 - ip_netmask:
                     get_param: CtlplaneSuperNet
-                  next_hop:
-                    get_param: 192.168.26.254
+                  next_hop: 192.168.26.254
                 - default: true
-                  next_hop:
-                    get_param: 192.168.26.254
+                  next_hop: 192.168.26.254
               - type: interface
                 name: nic3
                 use_dhcp: false
