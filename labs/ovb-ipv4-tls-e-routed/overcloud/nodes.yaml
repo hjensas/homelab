@@ -3,6 +3,8 @@ resource_registry:
   OS::TripleO::Compute::Net::SoftwareConfig: /home/cloud-user/overcloud/compute-nic-config.yaml
 
 parameter_defaults:
+  DnsServers:
+    - 192.168.24.129
   ControllerCount: 1
   OvercloudControllerFlavor: control
   ComputeCount: 1
