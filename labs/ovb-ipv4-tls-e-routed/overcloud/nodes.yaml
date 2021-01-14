@@ -5,6 +5,15 @@ resource_registry:
 parameter_defaults:
   CloudName: overclod.tls.example.com
   CloudDomain: tls.example.com
+  CloudNameInternal: overcloud.internalapi.tls.example.com
+  CloudNameInternalApi1: overcloud.internalapi1.tls.example.com
+  CloudNameStorageManagement: overcloud.storagemgmt.tls.example.com
+  CloudNameStorageMgmt1: overcloud.storagemgmt1.tls.example.com
+  CloudNameStorage: overcloud.storage.tls.example.com
+  CloudNameStorage1: overcloud.storage1.tls.example.com
+  CloudNameTenant: overcloud.tenant.tls.example.com
+  CloudNameTenant1: overcloud.tenant1.tls.example.com
+
   DnsServers:
     - 192.168.24.129
   ControllerCount: 1
