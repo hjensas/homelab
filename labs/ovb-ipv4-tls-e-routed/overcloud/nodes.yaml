@@ -23,6 +23,8 @@ parameter_defaults:
 
   ComputeControlPlaneSubnet: ctlplane-leaf2
   NetworkDeploymentActions: ['CREATE','UPDATE']
+  ServiceNetMap:
+    ComputeHostnameResolveNetwork: internal_api1
   ComputeServiceNetMap:
     NeutronTenantNetwork: tenant1
     NovaApiNetwork: internal_api1
