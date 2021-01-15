@@ -3,7 +3,7 @@ resource_registry:
   OS::TripleO::Compute::Net::SoftwareConfig: /home/cloud-user/overcloud/compute-nic-config.yaml
 
 parameter_defaults:
-  CloudName: overclod.tls.example.com
+  CloudName: overcloud.tls.example.com
   CloudDomain: tls.example.com
   CloudNameInternal: overcloud.internalapi.tls.example.com
   CloudNameInternalApi1: overcloud.internalapi1.tls.example.com
