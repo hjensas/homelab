@@ -11,5 +11,6 @@ openstack overcloud deploy --templates /home/cloud-user/tripleo-heat-templates \
   -e /home/cloud-user/tripleo-heat-templates/environments/network-environment.yaml \
   -e /home/cloud-user/tripleo-heat-templates/environments/ssl/enable-internal-tls.yaml \
   -e /home/cloud-user/tripleo-heat-templates/environments/ssl/tls-everywhere-endpoints-dns.yaml \
+  -e /home/cloud-user/tripleo-heat-templates/environments/services/haproxy-public-tls-certmonger.yaml \
   -e /home/cloud-user/overcloud/nodes.yaml
 
