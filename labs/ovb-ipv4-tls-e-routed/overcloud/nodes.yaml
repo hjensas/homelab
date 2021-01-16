@@ -35,8 +35,8 @@ parameter_defaults:
   StorageMgmtSuperNet: 172.19.0.0/16
   TenantSuperNet: 172.16.0.0/16
   CtlplaneSuperNet: 192.168.0.0/16
-  InternalApiRouter: 172.19.0.254
-  InternalApi1Router: 172.19.1.254
+  InternalApiRouter: 172.17.0.254
+  InternalApi1Router: 172.17.1.254
   StorageRouter: 172.18.0.254
   Storage1Router: 172.18.1.254
   StorageMgmtRouter: 172.19.0.254
