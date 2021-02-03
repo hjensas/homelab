@@ -51,14 +51,13 @@
   - name: Unconditionally reboot the machine with all defaults
     become: yes
     reboot:
-  - name: Install tripleo client and ceph-ansible
+  - name: Install tripleo client
     become: yes
     yum:
       name: "{{ packages }}"
     vars:
       packages:
         - python3-tripleoclient
-        - ceph-ansible
   - name: Git checkout labs
     git:
       repo: https://github.com/hjensas/homelab.git
