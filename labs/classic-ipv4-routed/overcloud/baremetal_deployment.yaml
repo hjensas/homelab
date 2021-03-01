@@ -1,5 +1,5 @@
 - name: Controller
-  count: 1
+  count: 3
   hostname_format: controller-%index%
   defaults:
     profile: control
