@@ -15,7 +15,7 @@
       - network: tenant
         subnet: tenant_subnet01
     network_config:
-      template: templates/multiple_nics/multiple_nics_dvr.j2 
+      template: templates/multiple_nics/multiple_nics_dvr.j2
       default_route_network:
         - external
 
@@ -32,4 +32,4 @@
       - network: storage
         subnet: storage_subnet02
     network_config:
-      template: templates/multiple_nics/multiple_nics_dvr.j2 
+      template: templates/multiple_nics/multiple_nics_dvr.j2

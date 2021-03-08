@@ -12,8 +12,6 @@
 - name: InternalApi
   mtu: 1442
   vip: true
-  vip_spec:
-    fixed_ip: 172.17.1.251
   subnets:
     internal_api_subnet01:
       ip_subnet: 172.17.0.0/24
@@ -32,8 +30,6 @@
 - name: Storage
   mtu: 1442
   vip: true
-  vip_spec:
-    subnet: storage_subnet01
   subnets:
     storage_subnet01:
       ip_subnet: 172.18.0.0/24
@@ -52,8 +48,6 @@
 - name: StorageMgmt
   mtu: 1442
   vip: true
-  vip_spec:
-    subnet: storage_mgmt_subnet02
   subnets:
     storage_mgmt_subnet01:
       ip_subnet: 172.19.0.0/24
