@@ -14,6 +14,10 @@
         subnet: storage_mgmt_subnet01
       - network: tenant
         subnet: tenant_subnet01
+    network_config:
+      template: templates/multiple_nics/multiple_nics_dvr.j2 
+      default_route_network:
+        - external
 
 - name: Compute
   count: 1
@@ -27,3 +31,5 @@
         subnet: tenant_subnet02
       - network: storage
         subnet: storage_subnet02
+    network_config:
+      template: templates/multiple_nics/multiple_nics_dvr.j2 
