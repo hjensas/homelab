@@ -66,10 +66,6 @@ Deploy the overcloud
 
 Log into the ovb undercloud node, user: cloud-user.
 
-To deploy without routed networks first::
-
-  bash ~/overcloud/deploy_overcloud_pre_update.sh
-
-Deploy (or update) with routed networks::
+Deploy with routed networks::
 
   bash ~/overcloud/deploy_overcloud.sh
