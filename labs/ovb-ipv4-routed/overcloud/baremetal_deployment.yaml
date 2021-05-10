@@ -1,7 +1,7 @@
 - name: Controller
   count: 1
   hostname_format: controller-%index%
-  playbooks:
+  ansible_playbooks:
     - playbook: bm-deploy-playbook.yaml
   defaults:
     profile: control
@@ -24,7 +24,7 @@
 - name: Compute
   count: 1
   hostname_format: compute-%index%
-  playbooks:
+  ansible_playbooks:
     - playbook: bm-deploy-playbook.yaml
   defaults:
     profile: compute-leaf2
