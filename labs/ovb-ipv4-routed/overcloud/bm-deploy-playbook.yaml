@@ -1,0 +1,11 @@
+- name: Overcloud Node Network Config
+  hosts: allovercloud
+  any_errors_fatal: true
+  gather_facts: false
+  tasks:
+  - name: Set up container-tools:3.0
+    shell: |
+      sudo dnf module disable container-tools:rhel8 -y;
+      sudo dnf module enable container-tools:3.0 -y;
+      sudo dnf clean metadata
+
