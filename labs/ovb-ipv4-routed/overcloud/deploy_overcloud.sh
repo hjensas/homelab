@@ -13,7 +13,6 @@ openstack overcloud deploy --templates /home/centos/tripleo-heat-templates \
   -e /home/centos/overcloud-networks-deployed.yaml \
   -e /home/centos/overcloud-vips-deployed.yaml \
   -e /home/centos/tripleo-heat-templates/environments/enable-swap.yaml \
-  -e /home/centos/tripleo-heat-templates/environments/network-isolation.yaml \
   -e /home/centos/tripleo-heat-templates/environments/net-multiple-nics.yaml \
   -e /home/centos/overcloud/node_data.yaml
 
