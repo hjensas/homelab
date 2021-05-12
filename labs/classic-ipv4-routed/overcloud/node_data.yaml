@@ -1,4 +1,6 @@
 parameter_defaults:
+  OvercloudControllerFlavor: control
+  OvercloudComputeFlavor: compute
   ControlPlaneSubnet: ctlplane-leaf1
   ControllerControlPlaneSubnet: ctlplane-leaf1
   ComputeControlPlaneSubnet: ctlplane-leaf2
