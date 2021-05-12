@@ -87,7 +87,7 @@
     file:
       dest: "{{ ansible_env.HOME }}/images"
       state: directory
-  - name: Build Images - async task
+  - name: Build Images
     shell: |
       cd {{ ansible_env.HOME }}/images
       curl -O https://cloud.centos.org/centos/8-stream/x86_64/images/CentOS-Stream-GenericCloud-8-20210210.0.x86_64.qcow2
