@@ -10,6 +10,7 @@
           end: 10.0.0.250
       vlan: 100
 - name: InternalApi
+  name_lower: internal_api
   mtu: 1442
   vip: true
   subnets:
@@ -46,6 +47,7 @@
           end: 172.18.1.250
       vlan: 18
 - name: StorageMgmt
+  name_lower: storage_mgmt
   mtu: 1442
   vip: true
   subnets:
