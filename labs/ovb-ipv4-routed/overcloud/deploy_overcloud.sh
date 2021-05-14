@@ -6,7 +6,6 @@ cd /home/centos
 openstack overcloud deploy --stack my_overcloud \
   --templates /home/centos/tripleo-heat-templates \
   --deployed-server \
-  --disable-validations \
   -n /home/centos/overcloud/network_data_v2.yaml \
   -r /home/centos/overcloud/my_roles_data.yaml \
   -e /home/centos/tripleo-heat-templates/environments/deployed-server-environment.yaml \
