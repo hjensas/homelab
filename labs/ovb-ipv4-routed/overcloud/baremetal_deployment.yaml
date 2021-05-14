@@ -29,7 +29,7 @@
   defaults:
     profile: compute-leaf2
     networks:
-      - network: internalapi
+      - network: internal_api
         subnet: internal_api_subnet02
       - network: tenant
         subnet: tenant_subnet02
