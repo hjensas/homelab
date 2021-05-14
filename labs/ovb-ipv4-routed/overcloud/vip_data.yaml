@@ -1,6 +1,6 @@
-- network: storagemgmt
+- network: storage_mgmt
   subnet: storage_mgmt_subnet01
-- network: internalapi
+- network: internal_api
   subnet: internal_api_subnet01
 - network: storage
   subnet: storage_subnet01
