@@ -8,11 +8,11 @@
     networks:
       - network: external
         subnet: external_subnet
-      - network: internalapi
+      - network: internal_api
         subnet: internal_api_subnet01
       - network: storage
         subnet: storage_subnet01
-      - network: storagemgmt
+      - network: storage_mgmt
         subnet: storage_mgmt_subnet01
       - network: tenant
         subnet: tenant_subnet01
