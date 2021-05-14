@@ -8,4 +8,6 @@ parameter_defaults:
     Storage: storage_subnet01
     StorageMgmt: storage_mgmt_subnet01
     InternalApi: internal_api_subnet01
+    redis: internal_api_subnet01
+    ovn_dbs: internal_api_subnet01
 
