@@ -1,6 +1,7 @@
 openstack overcloud deploy \
   --stack ng_overcloud \
   --templates \
+  --roles-file ~/overcloud/my_roles_data.yaml \
   --networks-file ~/overcloud/network_data_v2.yaml \
   --vip-file ~/overcloud/vip_data.yaml \
   --baremetal-deployment ~/overcloud/baremetal_deployment.yaml \
