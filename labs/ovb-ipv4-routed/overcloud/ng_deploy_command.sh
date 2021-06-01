@@ -6,7 +6,7 @@ openstack overcloud deploy \
   --baremetal-deployment ~/overcloud/baremetal_deployment.yaml \
   --network-config \
   --deployed-server \
-  -e /home/centos/tripleo-heat-templates/environments/enable-swap.yaml \
-  -e /home/centos/tripleo-heat-templates/environments/net-multiple-nics.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/enable-swap.yaml \
+  -e /usr/share/openstack-tripleo-heat-templates/environments/net-multiple-nics.yaml \
   -e /home/centos/overcloud/node_data.yaml
 
