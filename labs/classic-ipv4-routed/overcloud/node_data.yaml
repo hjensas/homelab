@@ -11,6 +11,8 @@ parameter_defaults:
     Storage: storage_subnet
     StorageMgmt: storage_mgmt_subnet
     InternalApi: internal_api_subnet
+    ovn_dbs: internal_api_subnet
+    redis: internal_api_subnet
 
 resource_registry:
   OS::TripleO::Services::Redis: /home/centos/tripleo-heat-templates/deployment/database/redis-pacemaker-puppet.yaml
