@@ -1,0 +1,106 @@
+- hosts: undercloud
+  tasks:
+  - name: Set up some swap space
+    become: yes
+    shell: |
+      dd if=/dev/zero of=/opt/8GB.swap bs=8192 count=1048576
+      mkswap /opt/8GB.swap
+      swapon /opt/8GB.swap
+      echo "/opt/8GB.swap swap                                    swap    defaults 0 0" >> /etc/fstab
+  - name: Set up public interface
+    become: yes
+    copy:
+      content: | 
+        NAME=eth2
+        DEVICE=eth2
+        BOOTPROTO=static
+        IPADDR={{ undercloud_public_ip }}
+        PREFIX=24
+        MTU=1442
+      dest: /etc/sysconfig/network-scripts/ifcfg-eth2
+  - name: Bring up public interface
+    become: yes
+    command: ifup eth2
+  - name: Install packages
+    become: yes
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+        - git
+        - tmux
+        - vim-enhanced
+  - name: Git checkout tripleo-repos
+    git:
+      repo: https://opendev.org/openstack/tripleo-repos.git
+      dest: "{{ ansible_env.HOME }}/tripleo-repos"
+  - name: Install tripleo repos rpm
+    become: yes
+    shell: |
+      cd {{ ansible_env.HOME }}/tripleo-repos
+      /usr/libexec/platform-python setup.py install
+  - name: Set up tripleo repos
+    become: yes
+    shell: |
+      /usr/local/bin/tripleo-repos current-tripleo-dev ceph
+      dnf module enable container-tools:3.0 -y
+  - name: upgrade all packages
+    become: yes
+    yum:
+      name: '*'
+      state: latest
+  - name: Unconditionally reboot the machine with all defaults
+    become: yes
+    reboot:
+  - name: Install tripleo client
+    become: yes
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+        - python3-tripleoclient
+  - name: Git checkout labs
+    git:
+      repo: https://github.com/hjensas/homelab.git
+      dest: "{{ ansible_env.HOME }}/homelab"
+  - name: Git checkout tripleo-heat-templates
+    git:
+      repo: https://opendev.org/openstack/tripleo-heat-templates.git
+      dest: "{{ ansible_env.HOME }}/tripleo-heat-templates"
+      # refspec: refs/changes/49/619649/10
+      # version: FETCH_HEAD
+  - name: Create symlinks
+    file:
+      src: "{{ ansible_env.HOME }}/homelab/labs/pre-deployed-nodes/{{ item }}"
+      dest: "{{ ansible_env.HOME }}/{{ item }}"
+      state: link
+    with_items:
+      - overcloud
+  - name: Create symlinks undercloud
+    file:
+      src: "{{ ansible_env.HOME }}/homelab/labs/pre-deployed-nodes/undercloud/{{ item }}"
+      dest: "{{ ansible_env.HOME }}/{{ item }}"
+      state: link
+    with_items:
+      - undercloud.conf
+  - name: Create images directory
+    file:
+      dest: "{{ ansible_env.HOME }}/images"
+      state: directory
+  - name: Build Images
+    shell: |
+      cd {{ ansible_env.HOME }}/images
+      curl -O https://cloud.centos.org/centos/8-stream/x86_64/images/CentOS-Stream-GenericCloud-8-20210210.0.x86_64.qcow2
+      export DIB_YUM_REPO_CONF="/etc/yum.repos.d/delorean* /etc/yum.repos.d/tripleo-centos-*"
+      export DIB_LOCAL_IMAGE={{ ansible_env.HOME }}/images/CentOS-Stream-GenericCloud-8-20210210.0.x86_64.qcow2
+      export DIB_DNF_MODULE_STREAMS='container-tools:3.0'
+      openstack overcloud image build --config-file /usr/share/openstack-tripleo-common/image-yaml/overcloud-images-python3.yaml --config-file /usr/share/openstack-tripleo-common/image-yaml/overcloud-images-centos8.yaml
+  - name: Install Undercloud
+    shell:
+      openstack undercloud install
+  - name: Upload overcloud images
+    shell: |
+      source {{ ansible_env.HOME }}/stackrc
+      cd {{ ansible_env.HOME }}/images
+      openstack overcloud image upload
+
