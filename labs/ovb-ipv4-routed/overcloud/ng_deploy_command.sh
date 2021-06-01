@@ -2,7 +2,7 @@ openstack overcloud deploy \
   --stack ng_overcloud \
   --templates \
   --networks-file ~/overcloud/network_data_v2.yaml \
-  --vips-file ~/overcloud/vip_data.yaml \
+  --vip-file ~/overcloud/vip_data.yaml \
   --baremetal-deployment ~/overcloud/baremetal_deployment.yaml \
   --network-config \
   --deployed-server \
