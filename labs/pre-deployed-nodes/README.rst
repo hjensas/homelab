@@ -16,15 +16,14 @@ Set up OVB environment
 
   git clone https://review.rdoproject.org/r/config $LAB_DIR/config
   cd $LAB_DIR/config
-  git fetch https://review.rdoproject.org/r/config refs/changes/36/33636/1 && git checkout FETCH_HEAD
-  git switch -c routed-networks-support
+  git fetch "https://review.rdoproject.org/r/config" refs/changes/94/33994/3 && git checkout FETCH_HEAD
+  git switch -c config-drive
   cd $LAB_DIR
 
   mkdir $LAB_REPO_DIR/roles
   scp -r $LAB_DIR/config/roles/ovb-manage $LAB_REPO_DIR/roles
 
   ansible-playbook --inventory $LAB_REPO_DIR/inventory.yaml $LAB_REPO_DIR/create-ovb-stack.yaml -e lab_dir=$LAB_DIR
-
 
 ::
 
@@ -35,14 +34,18 @@ Set up OVB environment
   OVB_BAREMETAL_LEAF2_0=$(jq --raw-output ".network_details.\"baremetal-$ID_NUM-leaf2_0\".ips.\"ctlplane-leaf2-$ID_NUM\"[0].addr" $LAB_DIR/ovb_working_dir/instackenv.json)
   cat << EOF > inventory.ini
   [undercloud]
-  $OVB_UNDERCLOUD ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' undercloud_public_ip=$OVB_UNDERCLOUD_PUBLIC idnum=$ID_NUM
+  undercloud-host ansible_host=$OVB_UNDERCLOUD ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' undercloud_public_ip=$OVB_UNDERCLOUD_PUBLIC idnum=$ID_NUM
 
   [overcloud]
-  $OVB_BAREMETAL_LEAF1_0 ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
-  $OVB_BAREMETAL_LEAF2_0 ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
+  baremetal-leaf1-0 ansible_host=$OVB_BAREMETAL_LEAF1_0 ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' gateway=192.168.25.254
+  baremetal-leaf2-0 ansible_host=$OVB_BAREMETAL_LEAF2_0 ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' gateway=192.168.26.254
   EOF
+
+  ansible -i inventory.ini baremetal-leaf1-0 -a "ip route add default via 192.168.25.254" --become
+  ansible -i inventory.ini baremetal-leaf2-0 -a "ip route add default via 192.168.26.254" --become
 
   ansible-playbook -i inventory.ini $LAB_DIR/homelab/labs/playbooks/ssh_hardening.yaml
   scp -o StrictHostKeyChecking=no $LAB_DIR/ovb_working_dir/instackenv.json centos@$OVB_UNDERCLOUD:
+  ansible-playbook -i inventory.ini $LAB_REPO_DIR/prep-pre-deployed-nodes.yaml
   ansible-playbook -i inventory.ini $LAB_REPO_DIR/deploy_undercloud.yaml
 

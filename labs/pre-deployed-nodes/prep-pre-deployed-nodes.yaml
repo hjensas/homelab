@@ -1,0 +1,104 @@
+- hosts: overcloud
+  tasks:
+  - name: Delete ifcfg files
+    become: true
+    file:
+      dest: "{{ item }}"
+      state: absent
+    with_fileglob: /etc/sysconfig/network-scripts/ifcfg-ens*
+  - name: Set up dns nameservers
+    become: true
+    lineinfile:
+      path: /etc/sysconfig/network-scripts/ifcfg-eth0
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    with_items:
+      - {regexp: '^DNS1=', line: 'DNS1=8.8.8.8'}
+      - {regexp: '^DNS2=', line: 'DNS2=8.8.8.8'}
+  - name: Add default route
+    become: true
+    lineinfile:
+      create: true
+      path: /etc/sysconfig/network-scripts/route-eth0
+      line: "default via {{ gateway }} dev eth0"
+  - name: Restart networking
+    become: true
+    shell: |
+      nmcli connection reload
+      nmcli connection up "System eth0"
+  - name: Set up some swap space
+    become: yes
+    shell: |
+      dd if=/dev/zero of=/opt/8GB.swap bs=8192 count=1048576
+      mkswap /opt/8GB.swap
+      swapon /opt/8GB.swap
+      echo "/opt/8GB.swap swap"
+  - name: Install packages
+    become: yes
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+        - git
+        - tmux
+        - vim-enhanced
+  - name: Git checkout tripleo-repos
+    git:
+      repo: https://opendev.org/openstack/tripleo-repos.git
+      dest: "{{ ansible_env.HOME }}/tripleo-repos"
+  - name: Install tripleo repos rpm
+    become: yes
+    shell: |
+      cd {{ ansible_env.HOME }}/tripleo-repos
+      /usr/libexec/platform-python setup.py install
+  - name: Set up tripleo repos
+    become: yes
+    shell: |
+      /usr/local/bin/tripleo-repos current-tripleo-dev ceph
+      dnf module enable container-tools:3.0 -y
+  - name: upgrade all packages
+    become: yes
+    yum:
+      name: '*'
+      state: latest
+  - name: Unconditionally reboot the machine with all defaults
+    become: yes
+    reboot:
+  - name: Read cert from undercloud
+    slurp:
+      src: /etc/pki/ca-trust/source/anchors/cm-local-ca.pem
+    delegate_to: undercloud-host
+    register: undercloud_cert
+  - name: Copy cert to nodes
+    become: true
+    copy:
+      content: "{{ undercloud_cert.content | b64decode }}"
+      dest: /etc/pki/ca-trust/source/anchors/cm-local-ca.pem
+  - name: Update CA trusts
+    become: true
+    shell: |
+      update-ca-trust extract
+  - name: Create heat-admin user
+    become: true
+    user:
+      name: heat-admin
+      shell: /bin/bash
+  - name: Create heat-admin sudoers file
+    become: true
+    copy:
+      mode: 0440
+      dest: /etc/sudoers.d/91-heat-admin
+      content: |
+        # User rules for heat-admin
+        heat-admin ALL=(ALL) NOPASSWD:ALL
+  - name: Get underloud public key
+    delegate_to: undercloud-host
+    slurp:
+      src: "{{ ansible_env.HOME}}/.ssh/id_rsa.pub"
+    register: undercloud_private_key
+  - name: Add undercloud key to authorized keys
+    become: true
+    authorized_key:
+      user: heat-admin
+      state: present
+      key: "{{ undercloud_private_key.content  | b64decode }}"

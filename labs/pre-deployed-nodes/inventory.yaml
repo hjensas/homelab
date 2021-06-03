@@ -33,4 +33,5 @@ all:
           dhcp_relay_image: CentOS-7-x86_64-GenericCloud
           dhcp_relay_flavor: m1.small
           external_net: provider
+          baremetal_config_drive: true
 

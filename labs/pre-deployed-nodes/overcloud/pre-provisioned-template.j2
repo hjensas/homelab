@@ -23,11 +23,11 @@
   instances:
     - hostname: controller-0
       managed: false
-      management_ip: <% CONTROLLER-0-PROVISION-IP %>
+      management_ip: {{ hostvars['baremetal-leaf1-0']['ansible_host'] }}
       networks:
         - network: ctlplane
           vif: false
-          fixed_ip: <% CONTROLLER-0-PROVISION-IP %>
+          fixed_ip: {{ hostvars['baremetal-leaf1-0']['ansible_host'] }}
 
 - name: Compute
   count: 1
@@ -48,9 +48,8 @@
   instances:
     - hostname: compute-0
       managed: false
-      management_ip: <% COMPUTE-0-PROVISION-IP %>
+      management_ip: {{ hostvars['baremetal-leaf2-0']['ansible_host'] }}
       networks:
         - network: ctlplane
           vif: false
-          fixed_ip: <% COMPUTE-0-PROVISION-IP %>
-
+          fixed_ip: {{ hostvars['baremetal-leaf2-0']['ansible_host'] }}

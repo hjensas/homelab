@@ -103,4 +103,10 @@
       source {{ ansible_env.HOME }}/stackrc
       cd {{ ansible_env.HOME }}/images
       openstack overcloud image upload
+  - name: Write baremetal pre-provisioned YAML definition
+    delegate_to: undercloud-host
+    template:
+      dest: "{{ ansible_env.HOME }}/overcloud/baremetal_deployment.yaml"
+      src: "{{ ansible_env.HOME }}/overcloud/pre-provisioned-template.j2"
+      remote_src: true
 
