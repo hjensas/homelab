@@ -31,10 +31,15 @@ Set up OVB environment
   ID_NUM=$(cat $LAB_DIR/ovb_working_dir/idnum)
   OVB_UNDERCLOUD=$(openstack stack output show baremetal_$ID_NUM undercloud_host_floating_ip -f value -c output_value)
   OVB_UNDERCLOUD_PUBLIC=10.0.0.254
-
+  OVB_BAREMETAL_LEAF1_0=$(jq --raw-output ".network_details.\"baremetal-$ID_NUM-leaf1_0\".ips.\"ctlplane-leaf1-$ID_NUM\"[0].addr" $LAB_DIR/ovb_working_dir/instackenv.json)
+  OVB_BAREMETAL_LEAF2_0=$(jq --raw-output ".network_details.\"baremetal-$ID_NUM-leaf2_0\".ips.\"ctlplane-leaf2-$ID_NUM\"[0].addr" $LAB_DIR/ovb_working_dir/instackenv.json)
   cat << EOF > inventory.ini
   [undercloud]
   $OVB_UNDERCLOUD ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' undercloud_public_ip=$OVB_UNDERCLOUD_PUBLIC idnum=$ID_NUM
+
+  [overcloud]
+  $OVB_BAREMETAL_LEAF1_0 ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
+  $OVB_BAREMETAL_LEAF2_0 ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
   EOF
 
   ansible-playbook -i inventory.ini $LAB_DIR/homelab/labs/playbooks/ssh_hardening.yaml
