@@ -37,8 +37,8 @@ Set up OVB environment
   undercloud-host ansible_host=$OVB_UNDERCLOUD ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' undercloud_public_ip=$OVB_UNDERCLOUD_PUBLIC idnum=$ID_NUM
 
   [overcloud]
-  baremetal-leaf1-0 ansible_host=$OVB_BAREMETAL_LEAF1_0 ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' gateway=192.168.25.254
-  baremetal-leaf2-0 ansible_host=$OVB_BAREMETAL_LEAF2_0 ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no' gateway=192.168.26.254
+  baremetal-leaf1-0 ansible_host=$OVB_BAREMETAL_LEAF1_0 ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no -J centos@$OVB_UNDERCLOUD,centos@192.168.24.253' gateway=192.168.25.254
+  baremetal-leaf2-0 ansible_host=$OVB_BAREMETAL_LEAF2_0 ansible_user=centos ansible_ssh_extra_args='-o StrictHostKeyChecking=no -J centos@$OVB_UNDERCLOUD,centos@192.168.24.253' gateway=192.168.26.254
   EOF
 
   ansible -i inventory.ini baremetal-leaf1-0 -a "ip route add default via 192.168.25.254" --become
