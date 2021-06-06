@@ -107,6 +107,5 @@
     delegate_to: undercloud-host
     template:
       dest: "{{ ansible_env.HOME }}/overcloud/baremetal_deployment.yaml"
-      src: "{{ ansible_env.HOME }}/overcloud/pre-provisioned-template.j2"
-      remote_src: true
+      src: "{{ playbook_dir }}/overcloud/pre-provisioned-template.j2"
 
