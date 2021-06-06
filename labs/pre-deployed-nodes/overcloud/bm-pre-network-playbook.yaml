@@ -5,7 +5,7 @@
   tasks:
   - name: Install packages
     dnf:
-      name: {{ item }}
+      name: "{{ item }}"
       state: present
     with_items:
       - openvswitch
