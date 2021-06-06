@@ -46,6 +46,7 @@ Set up OVB environment
 
   ansible-playbook -i inventory.ini $LAB_DIR/homelab/labs/playbooks/ssh_hardening.yaml
   scp -o StrictHostKeyChecking=no $LAB_DIR/ovb_working_dir/instackenv.json centos@$OVB_UNDERCLOUD:
-  ansible-playbook -i inventory.ini $LAB_REPO_DIR/prep-pre-deployed-nodes.yaml
   ansible-playbook -i inventory.ini $LAB_REPO_DIR/deploy_undercloud.yaml
+  ansible-playbook -i inventory.ini $LAB_REPO_DIR/prep-pre-deployed-nodes.yaml
+
 
