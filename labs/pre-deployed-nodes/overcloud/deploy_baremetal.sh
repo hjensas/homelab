@@ -1,7 +1,7 @@
 source /home/centos/stackrc
 
 openstack overcloud node provision \
-	--stack overcloud \
+	--stack my_overcloud \
 	--network-ports \
 	--network-config \
 	--output ~/overcloud-baremetal-deployed.yaml \
