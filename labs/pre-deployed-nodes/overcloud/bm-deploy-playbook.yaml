@@ -8,4 +8,3 @@
       sudo dnf module disable container-tools:rhel8 -y;
       sudo dnf module enable container-tools:3.0 -y;
       sudo dnf clean metadata
-

@@ -1,0 +1,12 @@
+- name: Overcloud Node Network Config
+  hosts: allovercloud
+  any_errors_fatal: true
+  gather_facts: false
+  tasks:
+  - name: Install packages
+    dnf:
+      name: {{ item }}
+      state: present
+    with_items:
+      - openvswitch
+      - os-net-config

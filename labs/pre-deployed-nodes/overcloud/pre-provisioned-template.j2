@@ -2,6 +2,8 @@
   count: 1
   hostname_format: controller-%index%
   ansible_playbooks:
+    - playbook: bm-pre-network-playbook.yaml
+      pre_network: true
     - playbook: bm-deploy-playbook.yaml
   defaults:
     profile: control
@@ -33,6 +35,8 @@
   count: 1
   hostname_format: compute-%index%
   ansible_playbooks:
+    - playbook: bm-pre-network-playbook.yaml
+      pre_network: true
     - playbook: bm-deploy-playbook.yaml
   defaults:
     profile: compute-leaf2
