@@ -4,6 +4,7 @@
   gather_facts: false
   tasks:
   - name: Install packages
+    become: true
     dnf:
       name: "{{ item }}"
       state: present
