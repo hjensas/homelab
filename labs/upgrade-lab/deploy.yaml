@@ -42,7 +42,7 @@
   - name: Set up tripleo repos
     become: yes
     shell: |
-      /usr/local/bin/tripleo-repos -b train current
+      /usr/local/bin/tripleo-repos -b wallaby current
       dnf module enable container-tools:3.0 -y
   - name: upgrade all packages
     become: yes
@@ -115,4 +115,17 @@
       openstack baremetal node set --property capabilities='profile:control,boot_option:local' baremetal-{{ idnum }}-leaf1-2
       openstack baremetal node set --property capabilities='profile:compute,boot_option:local' baremetal-{{ idnum }}-leaf2-0
       #openstack baremetal node set --property capabilities='profile:compute,boot_option:local' baremetal-{{ idnum }}-leaf2-1
+  - name: Deploy the classic overcloud
+    shell: |
+      source {{ ansible_env.HOME }}/stackrc
+      cd {{ ansible_env.HOME }}
 
+      openstack overcloud deploy --templates \
+        -n {{ ansible_env.HOME }}/overcloud/network_data_v1.yaml \
+        -r {{ ansible_env.HOME }}/overcloud/my_roles_data.yaml \
+        -e /usr/share/openstack-tripleo-heat-templates/environments/enable-swap.yaml \
+        -e /usr/share/openstack-tripleo-heat-templates/environments/network-isolation.yaml \
+        -e /usr/share/openstack-tripleo-heat-templates/environments/network-environment.yaml \
+        -e /usr/share/openstack-tripleo-heat-templates/environments/net-multiple-nics.yaml \
+        -e /usr/share/openstack-tripleo-heat-templates/environments/services/zaqar.yaml
+        -e {{ ansible_env.HOME }}/overcloud/node_data.yaml

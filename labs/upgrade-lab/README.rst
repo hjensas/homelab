@@ -1,5 +1,5 @@
-train-master-upgrade-lab
-========================
+upgrade-lab
+===========
 
 Set up OVB environment
 ----------------------
@@ -8,7 +8,7 @@ Set up OVB environment
 
   export OS_CLOUD=homelab
 
-  export LAB_NAME=train-master-upgrade-lab
+  export LAB_NAME=upgrade-lab
   export LAB_DIR=~/$LAB_NAME
   mkdir $LAB_DIR
   git clone https://github.com/hjensas/homelab.git $LAB_DIR/homelab
@@ -39,5 +39,5 @@ Set up OVB environment
 
   ansible-playbook -i inventory.ini $LAB_DIR/homelab/labs/playbooks/ssh_hardening.yaml
   scp -o StrictHostKeyChecking=no $LAB_DIR/ovb_working_dir/instackenv.json centos@$OVB_UNDERCLOUD:
-  ansible-playbook -i inventory.ini $LAB_REPO_DIR/deploy_undercloud.yaml
+  ansible-playbook -i inventory.ini $LAB_REPO_DIR/deploy.yaml
 
