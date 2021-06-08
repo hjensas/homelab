@@ -128,4 +128,19 @@
         -e /usr/share/openstack-tripleo-heat-templates/environments/network-environment.yaml \
         -e /usr/share/openstack-tripleo-heat-templates/environments/net-multiple-nics.yaml \
         -e {{ ansible_env.HOME }}/overcloud/node_data.yaml \
-        2>&1 | tee {{ ansible_env.HOME }}/overcloud-deploy.log
+        | tee {{ ansible_env.HOME }}/overcloud-deploy.log
+  - name: Change repos to master
+    become: true
+    shell: |
+      rm /etc/yum.repos.d/delorean*
+      /usr/local/bin/tripleo-repos -b current-tripleo-dev ceph
+      dnf module enable container-tools:3.0 -y
+  - name: Update packages
+    become: yes
+    dnf:
+      name:
+        - python3-tripleoclient
+        - openstack-tripleo-common
+        - openstack-tripleo-heat-templates
+      state: latest
+      update_cache: true
