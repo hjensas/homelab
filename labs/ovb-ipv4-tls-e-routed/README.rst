@@ -6,7 +6,7 @@ Set up OVB environment
 
 ::
 
-  export OS_CLOUD=homelab
+  export OS_CLOUD=qeproject
 
   export LAB_NAME=ovb-ipv4-tls-e-routed
   export LAB_DIR=~/$LAB_NAME
