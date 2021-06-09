@@ -20,7 +20,7 @@ all:
       env_args: >-
        -e {{ ovb_working_dir }}/env-{{ idnum }}-base.yaml
        -e {{ ovb_repo_directory }}/environments/bmc-use-cache.yaml
-      virtualenv_python: python3.6
+      ovb_virtualenv_python: python3.6
       cloud_settings:
         homelab:
           public_ip_net: public
