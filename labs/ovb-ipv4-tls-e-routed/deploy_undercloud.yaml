@@ -26,19 +26,11 @@
   - name: Bring up public interface
     become: yes
     command: ifup eth2
-  - name: Register node
-    become: yes
-    shell: |
-      subscription-manager register --username {{ rhn_username }} --password {{ rhn_password }}
-      subscription-manager role --set="Red Hat Enterprise Linux Server"
-      subscription-manager service-level --set="Self-Support"
-      subscription-manager usage --set="Development/Test"
-      subscription-manager attach --pool=8a85f98c60c2c2b40160c324e5d21d70
   - name: Set up repos
     become: yes
     shell: |
       sudo dnf install http://rhos-release.virt.bos.redhat.com/repos/rhos-release/rhos-release-latest.noarch.rpm -y
-      rhos-release -p   13
+      rhos-release 13
   - name: Install packages
     become: yes
     yum:
