@@ -14,7 +14,7 @@ all:
       net_iso: multi-nic
       key_name: default
       create_clouds_yaml: false
-      cloud_name: homelab
+      cloud_name: qeproject
       baremetal_image_name: ipxe-boot
       bmc_template_name: CentOS-7-x86_64-GenericCloud
       env_args: >-
@@ -25,7 +25,7 @@ all:
       extra_node_key_name: default
       ovb_virtualenv_python: python3.6
       cloud_settings:
-        homelab:
+        qeproject:
           public_ip_net: public
           undercloud_flavor: m1.large # not used
           baremetal_flavor: m1.large
