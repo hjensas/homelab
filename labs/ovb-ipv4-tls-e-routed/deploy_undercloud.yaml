@@ -30,7 +30,21 @@
     become: yes
     shell: |
       sudo dnf install http://rhos-release.virt.bos.redhat.com/repos/rhos-release/rhos-release-latest.noarch.rpm -y
-      rhos-release 13
+      rhos-release -p OpenStack-13.0-RHEL-7-20210513.1 13
+  - name: Write container-prepare
+    copy:
+      content: |
+        parameter_defaults:
+          ContainerImagePrepare:
+          - set:
+              namespace: registry-proxy.engineering.redhat.com/rh-osbs
+              prefix: rhosp13-openstack-
+              tag: 20210513.1
+              ceph-namespace: registry.access.redhat.com/rhceph
+              ceph-image: rhceph-3-rhel7
+              ceph-tag: 3-51
+            tag_from_label: '{version}-{release}'
+      dest: "{{ ansible_env.HOME }}/containers-prepare-parameters.yaml"
   - name: Install packages
     become: yes
     yum:
