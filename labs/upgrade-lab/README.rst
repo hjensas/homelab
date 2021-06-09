@@ -18,6 +18,12 @@ Set up OVB environment
   cd $LAB_DIR/config
   git fetch https://review.rdoproject.org/r/config refs/changes/36/33636/1 && git checkout FETCH_HEAD
   git switch -c routed-networks-support
+  git rebase master
+  git checkout master
+  git fetch "https://review.rdoproject.org/r/config" refs/changes/34/34034/3 && git checkout FETCH_HEAD
+  git switch -c virtualenv-python
+  git rebase master
+  git rebase routed-networks-support
   cd $LAB_DIR
 
   mkdir $LAB_REPO_DIR/roles
