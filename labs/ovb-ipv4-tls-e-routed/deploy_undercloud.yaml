@@ -30,7 +30,7 @@
     become: yes
     shell: |
       sudo yum install http://rhos-release.virt.bos.redhat.com/repos/rhos-release/rhos-release-latest.noarch.rpm -y
-      rhos-release -p OpenStack-13.0-RHEL-7-20210513.1 13
+      rhos-release -p passed_phase2 13
   - name: Write container-prepare
     copy:
       content: |
