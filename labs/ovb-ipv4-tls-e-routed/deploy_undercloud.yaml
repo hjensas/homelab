@@ -75,12 +75,6 @@
     git:
       repo: https://github.com/hjensas/homelab.git
       dest: "{{ ansible_env.HOME }}/homelab"
-  - name: Git checkout tripleo-heat-templates
-    git:
-      repo: https://opendev.org/openstack/tripleo-heat-templates.git
-      dest: "{{ ansible_env.HOME }}/tripleo-heat-templates"
-      # refspec: refs/changes/49/619649/10
-      # version: FETCH_HEAD
   - name: Create symlinks
     file:
       src: "{{ ansible_env.HOME }}/homelab/labs/ovb-ipv4-tls-e-routed/{{ item }}"
@@ -167,13 +161,13 @@
         --property resources:MEMORY_MB='0' \
         --property resources:VCPU='0'
       openstack flavor create leaf1 \
-      --disk 40 --public --ram 4096 --vcpus 1 --rxtx-factor 1.0 \
-      --property capabilities:boot_option='local' \
-      --property capabilities:profile='leaf1' \
-      --property resources:CUSTOM_BAREMETAL='1' \
-      --property resources:DISK_GB='0' \
-      --property resources:MEMORY_MB='0' \
-      --property resources:VCPU='0'
+        --disk 40 --public --ram 4096 --vcpus 1 --rxtx-factor 1.0 \
+        --property capabilities:boot_option='local' \
+        --property capabilities:profile='leaf1' \
+        --property resources:CUSTOM_BAREMETAL='1' \
+        --property resources:DISK_GB='0' \
+        --property resources:MEMORY_MB='0' \
+        --property resources:VCPU='0'
       openstack baremetal node set baremetal-38162-0 \
         --property capabilities='profile:leaf0,boot_option:local' 
       openstack baremetal node set baremetal-38162-leaf1-0 \

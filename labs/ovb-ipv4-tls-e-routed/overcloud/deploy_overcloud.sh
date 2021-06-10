@@ -3,7 +3,7 @@
 source /home/cloud-user/stackrc
 cd /home/cloud-user
 
-openstack overcloud deploy --templates /home/cloud-user/tripleo-heat-templates \
+openstack overcloud deploy --templates \
   -n /home/cloud-user/overcloud/network_data.yaml \
   -r /home/cloud-user/overcloud/roles_data.yaml \
   -e /home/cloud-user/tripleo-heat-templates/environments/enable-swap.yaml \
