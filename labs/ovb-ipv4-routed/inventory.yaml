@@ -16,7 +16,7 @@ all:
       create_clouds_yaml: false
       cloud_name: homelab
       baremetal_image_name: ipxe-boot
-      bmc_template_name: CentOS-7-x86_64-GenericCloud
+      bmc_template_name: bmc-image
       env_args: >-
        -e {{ ovb_working_dir }}/env-{{ idnum }}-base.yaml
        -e {{ ovb_repo_directory }}/environments/bmc-use-cache.yaml
