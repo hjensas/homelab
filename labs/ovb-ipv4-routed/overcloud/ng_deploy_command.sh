@@ -1,5 +1,5 @@
 openstack overcloud deploy \
-  --stack ng_overcloud \
+  --stack my_overcloud \
   --templates \
   --roles-file ~/overcloud/my_roles_data.yaml \
   --networks-file ~/overcloud/network_data_v2.yaml \
