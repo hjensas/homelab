@@ -28,7 +28,7 @@ Set up OVB environment
 
   ID_NUM=$(cat $LAB_DIR/ovb_working_dir/idnum)
   OVB_UNDERCLOUD=$(openstack stack output show baremetal_$ID_NUM undercloud_host_floating_ip -f value -c output_value)
-  OVB_UNDERCLOUD_PUBLIC=10.0.0.254
+  OVB_UNDERCLOUD_PUBLIC=2001:db8:fd00:1000::fffe/64
 
   cat << EOF > inventory.ini
   [undercloud]
