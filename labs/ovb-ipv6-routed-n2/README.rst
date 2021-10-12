@@ -14,6 +14,8 @@ Set up OVB environment
   git clone https://github.com/hjensas/homelab.git $LAB_DIR/homelab
   export LAB_REPO_DIR=$LAB_DIR/homelab/labs/$LAB_NAME
 
+  git clone https://review.rdoproject.org/r/config $LAB_DIR/config
+
   mkdir $LAB_REPO_DIR/roles
   scp -r $LAB_DIR/config/roles/ovb-manage $LAB_REPO_DIR/roles
 
