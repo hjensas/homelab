@@ -14,13 +14,6 @@ Set up OVB environment
   git clone https://github.com/hjensas/homelab.git $LAB_DIR/homelab
   export LAB_REPO_DIR=$LAB_DIR/homelab/labs/$LAB_NAME
 
-  git clone https://review.rdoproject.org/r/config $LAB_DIR/config
-  cd $LAB_DIR/config
-  git fetch "https://review.rdoproject.org/r/config" refs/changes/34/34034/4 && git checkout FETCH_HEAD
-  git switch -c virtualenv-python
-  git rebase master
-  cd $LAB_DIR
-
   mkdir $LAB_REPO_DIR/roles
   scp -r $LAB_DIR/config/roles/ovb-manage $LAB_REPO_DIR/roles
 

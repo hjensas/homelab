@@ -1,0 +1,41 @@
+all:
+  hosts:
+    localhost:
+      ovb_working_dir: "{{ lab_dir }}/ovb_working_dir"
+      ovb_clone: true
+      ovb_repo_version: master
+      ovb_repo_directory: "{{ lab_dir }}/openstack-virtual-baremetal"
+      create_undercloud: true
+      attach_to_ovb_networks: false
+      routed_networks: true
+      ipv6: true
+      public_net_allocation_pools:
+        start: fd12:3456:789a:ffff::300
+        end: fd12:3456:789a:ffff::499
+      nodes: zero_nodes
+      nodes_leaf1: 1
+      nodes_leaf2: 1
+      net_iso: multi-nic
+      key_name: default
+      create_clouds_yaml: false
+      cloud_name: homelab
+      baremetal_image_name: ipxe-boot
+      bmc_template_name: bmc-image
+      env_args: >-
+       -e {{ ovb_working_dir }}/env-{{ idnum }}-base.yaml
+       -e {{ ovb_repo_directory }}/environments/bmc-use-cache.yaml
+      ovb_virtualenv_python: python3.6
+      cloud_settings:
+        homelab:
+          public_ip_net: public
+          undercloud_flavor: m1.large # not used
+          baremetal_flavor: m1.large
+          bmc_flavor: m1.small
+          extra_node_flavor: m1.small
+          baremetal_image: CentOS-Stream-GenericCloud-8
+          radvd_flavor: m1.small
+          radvd_image: CentOS-7-x86_64-GenericCloud
+          dhcp_relay_image: CentOS-7-x86_64-GenericCloud
+          dhcp_relay_flavor: m1.small
+          external_net: provider
+

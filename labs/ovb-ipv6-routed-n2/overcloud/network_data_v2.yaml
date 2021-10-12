@@ -1,0 +1,75 @@
+- name: External
+  mtu: 1442
+  vip: true
+  subnets:
+    external_subnet:
+      ip_subnet: fd12:3456:789a:ffff::/64
+      gateway_ip: fd12:3456:789a:ffff::fffe
+      allocation_pools:
+        - start: fd12:3456:789a:ffff::500
+          end: fd12:3456:789a:ffff::999
+- name: InternalApi
+  name_lower: internal_api
+  mtu: 1442
+  vip: true
+  subnets:
+    internal_api_subnet01:
+      ip_subnet: fd12:3456:789a:21::/64
+      gateway_ip: fd12:3456:789a:21::fffe
+      allocation_pools:
+        - start: fd12:3456:789a:21::500
+          end: fd12:3456:789a:21::999
+    internal_api_subnet02:
+      ip_subnet: fd12:3456:789a:22::/64
+      gateway_ip: fd12:3456:789a:22::fffe
+      allocation_pools:
+        - start: fd12:3456:789a:22::500
+          end: fd12:3456:789a:22::999
+- name: Storage
+  mtu: 1442
+  vip: true
+  subnets:
+    storage_subnet01:
+      ip_subnet: fd12:3456:789a:31::/64
+      gateway_ip: fd12:3456:789a:31::fffe
+      allocation_pools:
+        - start: fd12:3456:789a:31::500
+          end: fd12:3456:789a:31::999
+    storage_subnet02:
+      ip_subnet: fd12:3456:789a:32::/64
+      gateway_ip: fd12:3456:789a:32::fffe
+      allocation_pools:
+        - start: fd12:3456:789a:32::500
+          end: fd12:3456:789a:32::999
+- name: StorageMgmt
+  name_lower: storage_mgmt
+  mtu: 1442
+  vip: true
+  subnets:
+    storage_mgmt_subnet01:
+      ip_subnet: fd12:3456:789a:41::/64
+      gateway_ip: fd12:3456:789a:41::fffe
+      allocation_pools:
+        - start: fd12:3456:789a:41::500
+          end: fd12:3456:789a:41::999
+    storage_mgmt_subnet02:
+      ip_subnet: fd12:3456:789a:42::/64
+      gateway_ip: fd12:3456:789a:42::fffe
+      allocation_pools:
+        - start: fd12:3456:789a:42::500
+          end: fd12:3456:789a:42::999
+- name: Tenant
+  mtu: 1442
+  subnets:
+    tenant_subnet01:
+      ip_subnet: fd12:3456:789a:51::/64
+      gateway_ip: fd12:3456:789a:51::fffe
+      allocation_pools:
+        - start: fd12:3456:789a:51::500
+          end: fd12:3456:789a:51::999
+    tenant_subnet02:
+      ip_subnet: fd12:3456:789a:52::/64
+      gateway_ip: fd12:3456:789a:52::fffe
+      allocation_pools:
+        - start: fd12:3456:789a:52::500
+          end: fd12:3456:789a:52::999
