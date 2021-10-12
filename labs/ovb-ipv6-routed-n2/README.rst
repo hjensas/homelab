@@ -15,6 +15,9 @@ Set up OVB environment
   export LAB_REPO_DIR=$LAB_DIR/homelab/labs/$LAB_NAME
 
   git clone https://review.rdoproject.org/r/config $LAB_DIR/config
+  cd $LAB_DIR/config
+  git fetch "https://review.rdoproject.org/r/config" refs/changes/27/36227/1 && git checkout FETCH_HEAD
+  git switch -c ovb-manage-ipv6
 
   mkdir $LAB_REPO_DIR/roles
   scp -r $LAB_DIR/config/roles/ovb-manage $LAB_REPO_DIR/roles

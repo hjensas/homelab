@@ -13,9 +13,9 @@
       content: | 
         NAME=eth2
         DEVICE=eth2
-        BOOTPROTO=static
-        IPADDR={{ undercloud_public_ip }}
-        PREFIX=24
+        BOOTPROTO=none
+        IPV6INIT=yes
+        IPV6ADDR={{ undercloud_public_ip }}/54
         MTU=1442
       dest: /etc/sysconfig/network-scripts/ifcfg-eth2
   - name: Bring up public interface
