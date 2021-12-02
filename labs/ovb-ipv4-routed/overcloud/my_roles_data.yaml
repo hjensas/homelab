@@ -40,6 +40,7 @@
     - OS::TripleO::Services::CACerts
     - OS::TripleO::Services::CeilometerAgentCentral
     - OS::TripleO::Services::CeilometerAgentNotification
+    - OS::TripleO::Services::CephClient
     - OS::TripleO::Services::CephExternal
     - OS::TripleO::Services::CephGrafana
     - OS::TripleO::Services::CephMds
@@ -47,7 +48,6 @@
     - OS::TripleO::Services::CephMon
     - OS::TripleO::Services::CephRbdMirror
     - OS::TripleO::Services::CephRgw
-    - OS::TripleO::Services::CertmongerUser
     - OS::TripleO::Services::CinderApi
     - OS::TripleO::Services::CinderBackendDellSc
     - OS::TripleO::Services::CinderBackendDellEMCPowerFlex
@@ -75,8 +75,10 @@
     - OS::TripleO::Services::DesignateWorker
     - OS::TripleO::Services::DesignateMDNS
     - OS::TripleO::Services::DesignateSink
+    - OS::TripleO::Services::DesignateBind
     - OS::TripleO::Services::Etcd
     - OS::TripleO::Services::ExternalSwiftProxy
+    - OS::TripleO::Services::Frr
     - OS::TripleO::Services::GlanceApi
     - OS::TripleO::Services::GnocchiApi
     - OS::TripleO::Services::GnocchiMetricd
@@ -100,6 +102,7 @@
     - OS::TripleO::Services::LoginDefs
     - OS::TripleO::Services::ManilaApi
     - OS::TripleO::Services::ManilaBackendCephFs
+    - OS::TripleO::Services::ManilaBackendFlashBlade
     - OS::TripleO::Services::ManilaBackendIsilon
     - OS::TripleO::Services::ManilaBackendNetapp
     - OS::TripleO::Services::ManilaBackendUnity
@@ -109,10 +112,6 @@
     - OS::TripleO::Services::ManilaShare
     - OS::TripleO::Services::Memcached
     - OS::TripleO::Services::MetricsQdr
-    - OS::TripleO::Services::MistralApi
-    - OS::TripleO::Services::MistralEngine
-    - OS::TripleO::Services::MistralExecutor
-    - OS::TripleO::Services::MistralEventEngine
     - OS::TripleO::Services::Multipathd
     - OS::TripleO::Services::MySQL
     - OS::TripleO::Services::MySQLClient
@@ -166,8 +165,8 @@
     - OS::TripleO::Services::TripleoFirewall
     - OS::TripleO::Services::TripleoPackages
     - OS::TripleO::Services::Tuned
+    - OS::TripleO::Services::Unbound
     - OS::TripleO::Services::Vpp
-    - OS::TripleO::Services::Zaqar
 ###############################################################################
 # Role: Compute                                                               #
 ###############################################################################
@@ -196,13 +195,13 @@
     - OS::TripleO::Services::CACerts
     - OS::TripleO::Services::CephClient
     - OS::TripleO::Services::CephExternal
-    - OS::TripleO::Services::CertmongerUser
     - OS::TripleO::Services::Collectd
     - OS::TripleO::Services::ComputeCeilometerAgent
     - OS::TripleO::Services::ComputeNeutronCorePlugin
     - OS::TripleO::Services::ComputeNeutronL3Agent
     - OS::TripleO::Services::ComputeNeutronMetadataAgent
     - OS::TripleO::Services::ComputeNeutronOvsAgent
+    - OS::TripleO::Services::Frr
     - OS::TripleO::Services::IpaClient
     - OS::TripleO::Services::Ipsec
     - OS::TripleO::Services::Iscsid
