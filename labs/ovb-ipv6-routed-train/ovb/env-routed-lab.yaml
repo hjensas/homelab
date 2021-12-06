@@ -1,0 +1,43 @@
+# *******************************************************************
+# This file was created automatically by the sample environment
+# generator. Developers should use `tox -e genconfig` to update it.
+# Users are recommended to make changes to a copy of the file instead
+# of the original, if any customizations are needed.
+# *******************************************************************
+# title: Base Configuration Options
+# description: |
+#   Basic configuration options needed for all OVB environments
+parameter_defaults:
+  baremetal_flavor: m1.large
+  baremetal_image: ipxe-boot
+  baremetal_prefix: baremetal
+  bmc_flavor: m1.small
+  bmc_image: CentOS-7-x86_64-GenericCloud
+  bmc_prefix: bmc
+  external_net: provider
+  key_name: default
+  node_count: 0
+  private_net: private
+  provision_net: ctlplane
+  provision_net2: ctlplane-leaf1
+  provision_net3: ctlplane-leaf2
+  provision_net_shared: False
+  public_net: public
+  public_net_shared: False
+
+  # The default role for nodes in this environment.  This parameter is
+  # ignored by Heat, but used by build-nodes-json.
+  # Type: string
+  role: ''
+
+  undercloud_flavor: m1.xlarge
+  undercloud_image: CentOS-8-GenericCloud
+  undercloud_name: undercloud
+
+  dhcp_relay_image: CentOS-7-x86_64-GenericCloud
+  dhcp_relay_flavor: m1.small
+
+
+resource_registry:
+  # Comment this if node_count != 0 above.
+  OS::OVB::BMC: templates/bmc-none.yaml

@@ -1,0 +1,56 @@
+- name: Storage
+  vip: true
+  name_lower: storage
+  ip_subnet: fd12:3456:789a:31::/64
+  allocation_pools: [{'start': 'fd12:3456:789a:31::500', 'end': 'fd12:3456:789a:31::999'}]
+  gateway_ip: fd12:3456:789a:31::fffe
+  mtu: 1445
+  subnets:
+    leaf1:
+      ip_subnet: fd12:3456:789a:32::/64
+      allocation_pools: [{'start': 'fd12:3456:789a:32::500', 'end': 'fd12:3456:789a:32::999'}]
+      gateway_ip: fd12:3456:789a:32::fffe
+- name: StorageMgmt
+  name_lower: storage_mgmt
+  vip: true
+  ip_subnet: fd12:3456:789a:41::/64
+  allocation_pools: [{'start': 'fd12:3456:789a:41::500', 'end': 'fd12:3456:789a:41::999'}]
+  gateway_ip: fd12:3456:789a:41::fffe
+  mtu: 1445
+  subnets:
+    leaf1:
+      ip_subnet: fd12:3456:789a:42::/64
+      allocation_pools: [{'start': 'fd12:3456:789a:42::500', 'end': 'fd12:3456:789a:42::999'}]
+      gateway_ip: fd12:3456:789a:42::fffe
+- name: InternalApi
+  name_lower: internal_api
+  vip: true
+  ip_subnet: fd12:3456:789a:21::/64
+  allocation_pools: [{'start': 'fd12:3456:789a:21::500', 'end': 'fd12:3456:789a:21::999'}]
+  gateway_ip: fd12:3456:789a:21::fffe
+  mtu: 1445
+  subnets:
+    leaf1:
+      ip_subnet: fd12:3456:789a:22::/64
+      allocation_pools: [{'start': 'fd12:3456:789a:22::500', 'end': 'fd12:3456:789a:22::999'}]
+      gateway_ip: fd12:3456:789a:22::fffe
+- name: Tenant
+  vip: false  # Tenant network does not use VIPs
+  name_lower: tenant
+  ip_subnet: fd12:3456:789a:51::/64
+  allocation_pools: [{'start': 'fd12:3456:789a:51::500', 'end': 'fd12:3456:789a:51::999'}]
+  gateway_ip: fd12:3456:789a:51::fffe
+  mtu: 1445
+  subnets:
+    leaf1:
+    ip_subnet: fd12:3456:789a:52::/64
+    allocation_pools: [{'start': 'fd12:3456:789a:52::500', 'end': 'fd12:3456:789a:52::999'}]
+    gateway_ip: fd12:3456:789a:52::fffe
+- name: External
+  vip: true
+  name_lower: external
+  ip_subnet: fd12:3456:789a:ffff::/64
+  allocation_pools: [{'start': 'fd12:3456:789a:ffff::500', 'end': 'fd12:3456:789a:ffff::999'}]
+  gateway_ip:  fd12:3456:789a:ffff::fffe
+  mtu: 1445
+
