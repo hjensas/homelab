@@ -3,9 +3,9 @@
   vip: true
   subnets:
     external_subnet:
-      ip_subnet: 2001:db8:fd00:1000::/64
-      gateway_ip: 2001:db8:fd00:1000::1
-      allocation_pools:
+      ipv6_subnet: 2001:db8:fd00:1000::/64
+      gateway_ipv6: 2001:db8:fd00:1000::1
+      ipv6_allocation_pools:
         - start: 2001:db8:fd00:1000::2000
           end: 2001:db8:fd00:1000::2999
 - name: InternalApi
@@ -14,15 +14,15 @@
   vip: true
   subnets:
     internal_api_subnet01:
-      ip_subnet: fd00:fd00:fd00:1000::/64
-      gateway_ip: fd00:fd00:fd00:1000::1
-      allocation_pools:
+      ipv6_subnet: fd00:fd00:fd00:1000::/64
+      gateway_ipv6: fd00:fd00:fd00:1000::1
+      ipv6_allocation_pools:
         - start: fd00:fd00:fd00:1000::2000
           end: fd00:fd00:fd00:1000::2999
     internal_api_subnet02:
-      ip_subnet: fd00:fd00:fd00:1001::/64
-      gateway_ip: fd00:fd00:fd00:1001::1
-      allocation_pools:
+      ipv6_subnet: fd00:fd00:fd00:1001::/64
+      gateway_ipv6: fd00:fd00:fd00:1001::1
+      ipv6_allocation_pools:
         - start:  fd00:fd00:fd00:1001::2000
           end:  fd00:fd00:fd00:1001::2999
 - name: Storage
@@ -30,15 +30,15 @@
   vip: true
   subnets:
     storage_subnet01:
-      ip_subnet: fd00:fd00:fd00:2000::/64
-      gateway_ip: fd00:fd00:fd00:2000::1
-      allocation_pools:
+      ipv6_subnet: fd00:fd00:fd00:2000::/64
+      gateway_ipv6: fd00:fd00:fd00:2000::1
+      ipv6_allocation_pools:
         - start: fd00:fd00:fd00:2000::2000
           end: fd00:fd00:fd00:2000::2999
     storage_subnet02:
-      ip_subnet: fd00:fd00:fd00:2001::/64
-      gateway_ip: fd00:fd00:fd00:2001::1
-      allocation_pools:
+      ipv6_subnet: fd00:fd00:fd00:2001::/64
+      gateway_ipv6: fd00:fd00:fd00:2001::1
+      ipv6_allocation_pools:
         - start: fd00:fd00:fd00:2001::2000
           end: fd00:fd00:fd00:2001::2999
 - name: StorageMgmt
@@ -47,29 +47,29 @@
   vip: true
   subnets:
     storage_mgmt_subnet01:
-      ip_subnet: fd00:fd00:fd00:3000::/64
-      gateway_ip: fd00:fd00:fd00:3000::1
-      allocation_pools:
+      ipv6_subnet: fd00:fd00:fd00:3000::/64
+      gateway_ipv6: fd00:fd00:fd00:3000::1
+      ipv6_allocation_pools:
         - start: fd00:fd00:fd00:3000::2000
           end: fd00:fd00:fd00:3000::2999
     storage_mgmt_subnet02:
-      ip_subnet: fd00:fd00:fd00:3001::/64
-      gateway_ip: fd00:fd00:fd00:3001::1
-      allocation_pools:
+      ipv6_subnet: fd00:fd00:fd00:3001::/64
+      gateway_ipv6: fd00:fd00:fd00:3001::1
+      ipv6_allocation_pools:
         - start: fd00:fd00:fd00:3001::2000
           end: fd00:fd00:fd00:3001::2999
 - name: Tenant
   mtu: 1442
   subnets:
     tenant_subnet01:
-      ip_subnet: fd00:fd00:fd00:4000::/64
-      gateway_ip: fd00:fd00:fd00:4000::1
-      allocation_pools:
+      ipv6_subnet: fd00:fd00:fd00:4000::/64
+      gateway_ipv6: fd00:fd00:fd00:4000::1
+      ipv6_allocation_pools:
         - start: fd00:fd00:fd00:4000::2000
           end: fd00:fd00:fd00:4000::2999
     tenant_subnet02:
-      ip_subnet: fd00:fd00:fd00:4001::/64
-      gateway_ip: fd00:fd00:fd00:4001::1
-      allocation_pools:
+      ipv6_subnet: fd00:fd00:fd00:4001::/64
+      gateway_ipv6: fd00:fd00:fd00:4001::1
+      ipv6_allocation_pools:
         - start: fd00:fd00:fd00:4001::2000
           end: fd00:fd00:fd00:4001::2999
