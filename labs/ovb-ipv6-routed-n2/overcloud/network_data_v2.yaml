@@ -1,6 +1,7 @@
 - name: External
   mtu: 1442
   vip: true
+  ipv6: true
   subnets:
     external_subnet:
       ipv6_subnet: 2001:db8:fd00:1000::/64
@@ -12,6 +13,7 @@
   name_lower: internal_api
   mtu: 1442
   vip: true
+  ipv6: true
   subnets:
     internal_api_subnet01:
       ipv6_subnet: fd00:fd00:fd00:1000::/64
@@ -28,6 +30,7 @@
 - name: Storage
   mtu: 1442
   vip: true
+  ipv6: true
   subnets:
     storage_subnet01:
       ipv6_subnet: fd00:fd00:fd00:2000::/64
@@ -45,6 +48,7 @@
   name_lower: storage_mgmt
   mtu: 1442
   vip: true
+  ipv6: true
   subnets:
     storage_mgmt_subnet01:
       ipv6_subnet: fd00:fd00:fd00:3000::/64
@@ -60,6 +64,7 @@
           end: fd00:fd00:fd00:3001::2999
 - name: Tenant
   mtu: 1442
+  ipv6: true
   subnets:
     tenant_subnet01:
       ipv6_subnet: fd00:fd00:fd00:4000::/64
