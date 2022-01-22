@@ -42,7 +42,7 @@
   - name: Set up tripleo repos
     become: yes
     shell: |
-      /usr/local/bin/tripleo-repos -b train current ceph
+      /usr/local/bin/tripleo-repos -b train current
       dnf module enable container-tools:3.0 -y
   - name: upgrade all packages
     become: yes
