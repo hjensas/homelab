@@ -14,10 +14,16 @@
         NAME=eth2
         DEVICE=eth2
         BOOTPROTO=none
+        NM_CONTROLLED=no
+        ONBOOT=yes
         IPV6INIT=yes
         IPV6ADDR={{ undercloud_public_ip }}
         MTU=1442
       dest: /etc/sysconfig/network-scripts/ifcfg-eth2
+  - name: NUKE ifcfg files from cloud-image
+    become: yes
+    shell: |
+      rm -f /etc/sysconfig/network-scripts/ifcfg-ens*
   - name: Bring up public interface
     become: yes
     command: ifup eth2
