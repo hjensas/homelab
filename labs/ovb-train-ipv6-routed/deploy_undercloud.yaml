@@ -128,7 +128,14 @@
       #openstack baremetal node set --property capabilities='profile:control,boot_option:local,boot_mode:bios' baremetal-{{ idnum }}-leaf1-2
       openstack baremetal node set --property capabilities='profile:compute,boot_option:local,boot_mode:bios' baremetal-{{ idnum }}-leaf2-0
       #openstack baremetal node set --property capabilities='profile:compute-leaf2,boot_option:local,boot_mode:bios' baremetal-{{ idnum }}-leaf2-1
+      for port in $(openstack baremetal port list --node baremetal-{{ idnum }}-leaf1-0 -c UUID -f value); do
+          openstack baremetal port set --local-link-connection port_id=p0 --local-link-connection switch_id=00:11:22:33:44:55 $port
+      done
+      for port in $(openstack baremetal port list --node baremetal-{{ idnum }}-leaf2-0 -c UUID -f value); do
+          openstack baremetal port set --local-link-connection port_id=p1 --local-link-connection switch_id=00:11:22:33:44:55 $port
+      done
   - name: Introspect and provide nodes
     shell: |
       source {{ ansible_env.HOME }}/stackrc
       openstack overcloud node introspect --all-manageable --provide
+
