@@ -126,7 +126,7 @@
       openstack baremetal node set --property capabilities='profile:control,boot_option:local,boot_mode:bios' baremetal-{{ idnum }}-leaf1-0
       #openstack baremetal node set --property capabilities='profile:control,boot_option:local,boot_mode:bios' baremetal-{{ idnum }}-leaf1-1
       #openstack baremetal node set --property capabilities='profile:control,boot_option:local,boot_mode:bios' baremetal-{{ idnum }}-leaf1-2
-      openstack baremetal node set --property capabilities='profile:compute-leaf2,boot_option:local,boot_mode:bios' baremetal-{{ idnum }}-leaf2-0
+      openstack baremetal node set --property capabilities='profile:compute,boot_option:local,boot_mode:bios' baremetal-{{ idnum }}-leaf2-0
       #openstack baremetal node set --property capabilities='profile:compute-leaf2,boot_option:local,boot_mode:bios' baremetal-{{ idnum }}-leaf2-1
   - name: Introspect and provide nodes
     shell: |

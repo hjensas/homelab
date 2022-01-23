@@ -1,9 +1,9 @@
 parameter_defaults:
   OvercloudControllerFlavor: control
   OvercloudComputeFlavor: compute
-  ControlPlaneSubnet: leaf1
-  ControllerControlPlaneSubnet: leaf1
-  ComputeControlPlaneSubnet: leaf2
+  ControlPlaneSubnet: ctlplane-leaf1
+  ControllerControlPlaneSubnet: ctlplane-leaf1
+  ComputeControlPlaneSubnet: ctlplane-leaf2
   NetworkDeploymentActions: ['CREATE','UPDATE']
   VipSubnetMap:
     ctlplane: leaf1
