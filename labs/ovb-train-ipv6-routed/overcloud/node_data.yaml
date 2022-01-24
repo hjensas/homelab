@@ -1,4 +1,8 @@
 parameter_defaults:
+  DockerInsecureRegistryAddress:
+    - undercloud.ctlplane.localdomain:8787
+  NtpServer:
+  - fd00:fd00:fd00::fffe  # rdo/config/roles/ovb-manage default
   OvercloudControllerFlavor: control
   OvercloudComputeFlavor: compute
   ControlPlaneSubnet: ctlplane-leaf1
