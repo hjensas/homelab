@@ -10,7 +10,7 @@ parameter_defaults:
   ComputeControlPlaneSubnet: ctlplane-leaf2
   NetworkDeploymentActions: ['CREATE','UPDATE']
   VipSubnetMap:
-    ctlplane: leaf1
+    ctlplane: ctlplane-leaf1
     External: external_subnet
     Storage: storage_subnet
     StorageMgmt: storage_mgmt_subnet
