@@ -14,7 +14,7 @@
         NAME=eth2
         DEVICE=eth2
         BOOTPROTO=none
-        NM_CONTROLLED=no
+        NM_CONTROLLED=yes
         ONBOOT=yes
         IPV6INIT=yes
         IPV6ADDR={{ undercloud_public_ip }}
