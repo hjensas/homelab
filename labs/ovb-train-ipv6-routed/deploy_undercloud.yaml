@@ -7,26 +7,10 @@
       mkswap /opt/8GB.swap
       swapon /opt/8GB.swap
       echo "/opt/8GB.swap swap                                    swap    defaults 0 0" >> /etc/fstab
-  - name: Set up public interface
-    become: yes
-    copy:
-      content: | 
-        NAME=eth2
-        DEVICE=eth2
-        BOOTPROTO=none
-        NM_CONTROLLED=yes
-        ONBOOT=yes
-        IPV6INIT=yes
-        IPV6ADDR={{ undercloud_public_ip }}
-        MTU=1442
-      dest: /etc/sysconfig/network-scripts/ifcfg-eth2
   - name: NUKE ifcfg files from cloud-image
     become: yes
     shell: |
       rm -f /etc/sysconfig/network-scripts/ifcfg-ens*
-  - name: Bring up public interface
-    become: yes
-    command: ifup eth2
   - name: Install packages
     become: yes
     yum:
@@ -103,6 +87,22 @@
   - name: Install Undercloud
     shell:
       openstack undercloud install
+  - name: Set up public interface
+    become: yes
+    copy:
+      content: | 
+        NAME=eth2
+        DEVICE=eth2
+        BOOTPROTO=none
+        NM_CONTROLLED=no
+        ONBOOT=yes
+        IPV6INIT=yes
+        IPV6ADDR={{ undercloud_public_ip }}
+        MTU=1442
+      dest: /etc/sysconfig/network-scripts/ifcfg-eth2
+  - name: Bring up public interface
+    become: yes
+    command: ifup eth2
   - name: Upload overcloud images
     shell: |
       source {{ ansible_env.HOME }}/stackrc
