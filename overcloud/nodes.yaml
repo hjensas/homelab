@@ -4,9 +4,15 @@ resource_registry:
 parameter_defaults:
   swap_size_megabytes: 8192
   AllInOneCount: 1
-  OvercloudAllInOneFlavor: aio
+  OvercloudAllInOneFlavor: control
 
   NetworkDeploymentActions: ['CREATE','UPDATE']
   NeutronBridgeMappings: datacentre:br-ex
   # NeutronExternalNetworkBridge: 'br-ex'
+
+  NovaLibvirtCPUMode: host-passthrough
+
+  CAMap:
+    undercloud-ca:
+      content: |
 
