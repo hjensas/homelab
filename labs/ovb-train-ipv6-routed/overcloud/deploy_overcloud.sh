@@ -3,7 +3,7 @@
 source /home/centos/stackrc
 cd /home/centos
 
-openstack overcloud deploy --stack my_overcloud \
+openstack overcloud deploy --stack overcloud \
   --templates \
   -n /home/centos/overcloud/network_data.yaml \
   -r /home/centos/overcloud/my_roles_data.yaml \
