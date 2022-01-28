@@ -70,14 +70,14 @@
       # version: FETCH_HEAD
   - name: Create symlinks
     file:
-      src: "{{ ansible_env.HOME }}/homelab/labs/ovb-ipv4-routed/{{ item }}"
+      src: "{{ ansible_env.HOME }}/homelab/labs/ovb-ipv4/{{ item }}"
       dest: "{{ ansible_env.HOME }}/{{ item }}"
       state: link
     with_items:
       - overcloud
   - name: Create symlinks undercloud
     file:
-      src: "{{ ansible_env.HOME }}/homelab/labs/ovb-ipv4-routed/undercloud/{{ item }}"
+      src: "{{ ansible_env.HOME }}/homelab/labs/ovb-ipv4/undercloud/{{ item }}"
       dest: "{{ ansible_env.HOME }}/{{ item }}"
       state: link
     with_items:
