@@ -1,6 +1,6 @@
 parameter_defaults:
   DockerInsecureRegistryAddress:
-    - undercloud.ctlplane.localdomain:8787
+    - 'undercloud.ctlplane.localdomain:8787'
   NtpServer:
   - 'fd00:fd00:fd00::fffe'
   OvercloudControllerFlavor: control
