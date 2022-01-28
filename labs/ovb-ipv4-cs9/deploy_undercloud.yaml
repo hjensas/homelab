@@ -18,9 +18,6 @@
         PREFIX=24
         MTU=1442
       dest: /etc/sysconfig/network-scripts/ifcfg-eth2
-  - name: Bring up public interface
-    become: yes
-    command: ifup eth2
   - name: Install packages
     become: yes
     yum:
@@ -30,19 +27,14 @@
         - git
         - tmux
         - vim-enhanced
-  - name: Git checkout tripleo-repos
-    git:
-      repo: https://opendev.org/openstack/tripleo-repos.git
-      dest: "{{ ansible_env.HOME }}/tripleo-repos"
   - name: Install tripleo repos rpm
     become: yes
     shell: |
-      cd {{ ansible_env.HOME }}/tripleo-repos
-      /usr/libexec/platform-python setup.py install
+      dnf install -y https://trunk.rdoproject.org/centos9/component/tripleo/current/python3-tripleo-repos-0.1.1-0.20220125231326.c5df4a6.el9.noarch.rpm
   - name: Set up tripleo repos
     become: yes
     shell:
-      /usr/local/bin/tripleo-repos current-tripleo-dev ceph
+      tripleo-repos current-tripleo ceph
   - name: upgrade all packages
     become: yes
     yum:
@@ -86,14 +78,13 @@
     file:
       dest: "{{ ansible_env.HOME }}/images"
       state: directory
-  - name: Build Images - async task
+  - name: Downlaod images
     shell: |
       cd {{ ansible_env.HOME }}/images
-      curl -O https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-GenericCloud-9-20220127.0.x86_64.qcow2
-      export DIB_YUM_REPO_CONF="/etc/yum.repos.d/delorean* /etc/yum.repos.d/tripleo-centos-*"
-      export DIB_LOCAL_IMAGE={{ ansible_env.HOME }}/images/https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-GenericCloud-9-20220127.0.x86_64.qcow2
-      export DIB_DNF_MODULE_STREAMS='container-tools:3.0'
-      openstack overcloud image build --config-file /usr/share/openstack-tripleo-common/image-yaml/overcloud-images-python3.yaml --config-file /usr/share/openstack-tripleo-common/image-yaml/overcloud-images-centos9.yaml
+      curl -O https://images.rdoproject.org/centos9/master/rdo_trunk/tripleo-ci-testing/ironic-python-agent.tar
+      curl -O https://images.rdoproject.org/centos9/master/rdo_trunk/tripleo-ci-testing/overcloud-full.tar
+      tar xvf ironic-python-agent.tar
+      tar xvf overcloud-full.tar
   - name: Install Undercloud
     shell:
       openstack undercloud install
