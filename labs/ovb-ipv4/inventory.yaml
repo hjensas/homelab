@@ -24,7 +24,7 @@ all:
         homelab:
           public_ip_net: provider
           undercloud_flavor: m1.large # not used
-          baremetal_flavor: m1.small
+          baremetal_flavor: m1.large
           bmc_flavor: m1.small
           extra_node_flavor: m1.small
           baremetal_image: CentOS-Stream-GenericCloud-8
