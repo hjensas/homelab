@@ -43,9 +43,9 @@
   mtu: 1445
   subnets:
     leaf1:
-    ip_subnet: fd12:3456:789a:52::/64
-    allocation_pools: [{'start': 'fd12:3456:789a:52::500', 'end': 'fd12:3456:789a:52::999'}]
-    gateway_ip: fd12:3456:789a:52::fffe
+      ip_subnet: fd12:3456:789a:52::/64
+      allocation_pools: [{'start': 'fd12:3456:789a:52::500', 'end': 'fd12:3456:789a:52::999'}]
+      gateway_ip: fd12:3456:789a:52::fffe
 - name: External
   vip: true
   name_lower: external
