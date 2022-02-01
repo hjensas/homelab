@@ -191,11 +191,11 @@
     - external_bridge
   networks:
     InternalApi:
-      subnet: leaf1 
+      subnet: internal_api_leaf1 
     Tenant:
-      subnet: leaf1
+      subnet: tenant_leaf1
     Storage:
-      subnet: leaf1
+      subnet: storage_leaf1
   HostnameFormatDefault: '%stackname%-novacompute-%index%'
   RoleParametersDefault:
     TunedProfileName: "virtual-host"
