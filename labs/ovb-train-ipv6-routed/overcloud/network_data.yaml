@@ -1,59 +1,3 @@
-- name: Storage
-  vip: true
-  name_lower: storage
-  ip_subnet: fd12:3456:789a:31::/64
-  allocation_pools: [{'start': 'fd12:3456:789a:31::500', 'end': 'fd12:3456:789a:31::999'}]
-  gateway_ip: fd12:3456:789a:31::fffe
-  mtu: 1445
-  vlan: 10
-  subnets:
-    storage_leaf1:
-      ip_subnet: fd12:3456:789a:32::/64
-      allocation_pools: [{'start': 'fd12:3456:789a:32::500', 'end': 'fd12:3456:789a:32::999'}]
-      gateway_ip: fd12:3456:789a:32::fffe
-      vlan: 10
-- name: StorageMgmt
-  name_lower: storage_mgmt
-  vip: true
-  ip_subnet: fd12:3456:789a:41::/64
-  allocation_pools: [{'start': 'fd12:3456:789a:41::500', 'end': 'fd12:3456:789a:41::999'}]
-  gateway_ip: fd12:3456:789a:41::fffe
-  mtu: 1445
-  vlan: 11
-  subnets:
-    storage_mgmt_leaf1:
-      ip_subnet: fd12:3456:789a:42::/64
-      allocation_pools: [{'start': 'fd12:3456:789a:42::500', 'end': 'fd12:3456:789a:42::999'}]
-      gateway_ip: fd12:3456:789a:42::fffe
-      vlan: 11
-- name: InternalApi
-  name_lower: internal_api
-  vip: true
-  ip_subnet: fd12:3456:789a:21::/64
-  allocation_pools: [{'start': 'fd12:3456:789a:21::500', 'end': 'fd12:3456:789a:21::999'}]
-  gateway_ip: fd12:3456:789a:21::fffe
-  mtu: 1445
-  vlan: 12
-  subnets:
-    internal_api_leaf1:
-      ip_subnet: fd12:3456:789a:22::/64
-      allocation_pools: [{'start': 'fd12:3456:789a:22::500', 'end': 'fd12:3456:789a:22::999'}]
-      gateway_ip: fd12:3456:789a:22::fffe
-      vlan: 12
-- name: Tenant
-  vip: false  # Tenant network does not use VIPs
-  name_lower: tenant
-  ip_subnet: fd12:3456:789a:51::/64
-  allocation_pools: [{'start': 'fd12:3456:789a:51::500', 'end': 'fd12:3456:789a:51::999'}]
-  gateway_ip: fd12:3456:789a:51::fffe
-  mtu: 1445
-  vlan: 13
-  subnets:
-    tenant_leaf1:
-      ip_subnet: fd12:3456:789a:52::/64
-      allocation_pools: [{'start': 'fd12:3456:789a:52::500', 'end': 'fd12:3456:789a:52::999'}]
-      gateway_ip: fd12:3456:789a:52::fffe
-      vlan: 13
 - name: External
   vip: true
   name_lower: external
@@ -62,3 +6,59 @@
   gateway_ip: 2001:db8:fd00:1000::1
   mtu: 1445
   vlan: 14
+- name: InternalApi
+  name_lower: internal_api
+  vip: true
+  ip_subnet: fd00:fd00:fd00:1000::/64
+  allocation_pools: [{'start': 'fd00:fd00:fd00:1000::2000', 'end': 'fd00:fd00:fd00:1000::2fff'}]
+  gateway_ip: fd00:fd00:fd00:1000::1
+  mtu: 1445
+  vlan: 12
+  subnets:
+    internal_api_leaf1:
+      ip_subnet: fd00:fd00:fd00:1001::/64
+      allocation_pools: [{'start': 'fd00:fd00:fd00:1001::2000', 'end': 'fd00:fd00:fd00:1001::2fff'}]
+      gateway_ip: fd00:fd00:fd00:1001::1
+      vlan: 12
+- name: Storage
+  vip: true
+  name_lower: storage
+  ip_subnet: fd00:fd00:fd00:2000::/64
+  allocation_pools: [{'start': 'fd00:fd00:fd00:2000::2000', 'end': 'fd00:fd00:fd00:2000::2fff'}]
+  gateway_ip: fd00:fd00:fd00:2000::1
+  mtu: 1445
+  vlan: 10
+  subnets:
+    storage_leaf1:
+      ip_subnet: fd00:fd00:fd00:2001::/64
+      allocation_pools: [{'start': 'fd00:fd00:fd00:2001::2000', 'end': 'fd00:fd00:fd00:2001::2fff'}]
+      gateway_ip: fd00:fd00:fd00:2001::1
+      vlan: 10
+- name: StorageMgmt
+  name_lower: storage_mgmt
+  vip: true
+  ip_subnet: fd00:fd00:fd00:3000::/64
+  allocation_pools: [{'start': 'fd00:fd00:fd00:3000::2000', 'end': 'fd00:fd00:fd00:3000::2fff'}]
+  gateway_ip: fd12:3456:789a:41::fffe
+  mtu: 1445
+  vlan: 11
+  subnets:
+    storage_mgmt_leaf1:
+      ip_subnet: fd00:fd00:fd00:3001::/64
+      allocation_pools: [{'start': 'fd00:fd00:fd00:3001::2000', 'end': 'fd00:fd00:fd00:3001::2fff'}]
+      gateway_ip: fd00:fd00:fd00:3001::1
+      vlan: 11
+- name: Tenant
+  vip: false  # Tenant network does not use VIPs
+  name_lower: tenant
+  ip_subnet: fd00:fd00:fd00:4000::/64
+  allocation_pools: [{'start': 'fd00:fd00:fd00:4000::2000', 'end': 'fd00:fd00:fd00:4000::2fff'}]
+  gateway_ip: fd00:fd00:fd00:4000::1
+  mtu: 1445
+  vlan: 13
+  subnets:
+    tenant_leaf1:
+      ip_subnet: fd00:fd00:fd00:4001::/64
+      allocation_pools: [{'start': 'fd00:fd00:fd00:4001::2000', 'end': 'fd00:fd00:fd00:4001::2fff'}]
+      gateway_ip: fd00:fd00:fd00:4001::1
+      vlan: 13
