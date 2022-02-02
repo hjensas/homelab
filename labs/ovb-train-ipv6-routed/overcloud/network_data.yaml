@@ -57,8 +57,8 @@
 - name: External
   vip: true
   name_lower: external
-  ip_subnet: fd12:3456:789a:ffff::/64
-  allocation_pools: [{'start': 'fd12:3456:789a:ffff::500', 'end': 'fd12:3456:789a:ffff::999'}]
-  gateway_ip:  fd12:3456:789a:ffff::fffe
+  ip_subnet: 2001:db8:fd00:1000::/64
+  allocation_pools: [{'start': '2001:db8:fd00:1000::2000', 'end': '2001:db8:fd00:1000::2fff'}]
+  gateway_ip: 2001:db8:fd00:1000::1
   mtu: 1445
   vlan: 14
