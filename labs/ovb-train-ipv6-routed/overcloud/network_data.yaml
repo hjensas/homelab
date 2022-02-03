@@ -4,7 +4,7 @@
   ip_subnet: 2001:db8:fd00:1000::/64
   allocation_pools: [{'start': '2001:db8:fd00:1000::2000', 'end': '2001:db8:fd00:1000::2fff'}]
   gateway_ip: 2001:db8:fd00:1000::1
-  mtu: 1445
+  mtu: 1394
   vlan: 14
 - name: InternalApi
   name_lower: internal_api
@@ -12,7 +12,7 @@
   ip_subnet: fd00:fd00:fd00:1000::/64
   allocation_pools: [{'start': 'fd00:fd00:fd00:1000::2000', 'end': 'fd00:fd00:fd00:1000::2fff'}]
   gateway_ip: fd00:fd00:fd00:1000::1
-  mtu: 1445
+  mtu: 1394
   vlan: 12
   subnets:
     internal_api_leaf1:
@@ -26,7 +26,7 @@
   ip_subnet: fd00:fd00:fd00:2000::/64
   allocation_pools: [{'start': 'fd00:fd00:fd00:2000::2000', 'end': 'fd00:fd00:fd00:2000::2fff'}]
   gateway_ip: fd00:fd00:fd00:2000::1
-  mtu: 1445
+  mtu: 1394
   vlan: 10
   subnets:
     storage_leaf1:
@@ -40,7 +40,7 @@
   ip_subnet: fd00:fd00:fd00:3000::/64
   allocation_pools: [{'start': 'fd00:fd00:fd00:3000::2000', 'end': 'fd00:fd00:fd00:3000::2fff'}]
   gateway_ip: fd12:3456:789a:41::fffe
-  mtu: 1445
+  mtu: 1394
   vlan: 11
   subnets:
     storage_mgmt_leaf1:
@@ -54,7 +54,7 @@
   ip_subnet: fd00:fd00:fd00:4000::/64
   allocation_pools: [{'start': 'fd00:fd00:fd00:4000::2000', 'end': 'fd00:fd00:fd00:4000::2fff'}]
   gateway_ip: fd00:fd00:fd00:4000::1
-  mtu: 1445
+  mtu: 1394
   vlan: 13
   subnets:
     tenant_leaf1:
