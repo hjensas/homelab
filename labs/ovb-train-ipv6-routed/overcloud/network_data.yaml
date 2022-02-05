@@ -39,7 +39,7 @@
   vip: true
   ip_subnet: fd00:fd00:fd00:3000::/64
   allocation_pools: [{'start': 'fd00:fd00:fd00:3000::2000', 'end': 'fd00:fd00:fd00:3000::2fff'}]
-  gateway_ip: fd12:3456:789a:41::fffe
+  gateway_ip: fd00:fd00:fd00:3000::1
   mtu: 1394
   vlan: 11
   subnets:
