@@ -1,0 +1,6 @@
+- network: storage_mgmt
+- network: internal_api
+- network: storage
+- network: external
+- network: ctlplane
+
