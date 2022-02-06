@@ -3,7 +3,7 @@
 source /home/centos/stackrc
 cd /home/centos
 
-openstack overcloud deploy
+openstack overcloud deploy \
   --templates /home/centos/tripleo-heat-templates \
   --deployed-server \
   -n /home/centos/overcloud/network_data_v2.yaml \
