@@ -2,7 +2,6 @@
   count: 1
   hostname_format: controller-%index%
   defaults:
-    profile: control
     networks:
       - network: external
       - network: internalapi
@@ -14,7 +13,6 @@
   count: 1
   hostname_format: compute-%index%
   defaults:
-    profile: compute-leaf2
     networks:
       - network: internalapi
       - network: tenant
