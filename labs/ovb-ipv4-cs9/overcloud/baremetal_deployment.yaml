@@ -2,28 +2,19 @@
   count: 1
   hostname_format: controller-%index%
   defaults:
-    profile: control
     networks:
       - network: external
-        subnet: external_subnet
       - network: internalapi
-        subnet: internal_api_subnet01
       - network: storage
-        subnet: storage_subnet01
       - network: storagemgmt
-        subnet: storage_mgmt_subnet01
       - network: tenant
-        subnet: tenant_subnet01
 
 - name: Compute
   count: 1
   hostname_format: compute-%index%
   defaults:
-    profile: compute-leaf2
     networks:
       - network: internalapi
-        subnet: internal_api_subnet02
       - network: tenant
-        subnet: tenant_subnet02
       - network: storage
-        subnet: storage_subnet02
+
