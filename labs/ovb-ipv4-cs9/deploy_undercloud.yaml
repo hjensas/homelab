@@ -34,7 +34,7 @@
       REPO=https://trunk.rdoproject.org/centos9/component/tripleo/current/
       TRIPLEO_REPOS_PKG=$(curl -s https://trunk.rdoproject.org/centos9/component/tripleo/current/versions.csv | grep tripleo-repos | awk -F ',' '{print $NF}')
       curl -O "${REPO}python3-${TRIPLEO_REPOS_PKG}.noarch.rpm"
-      dnf install -y https://trunk.rdoproject.org/centos9/component/tripleo/current/python3-tripleo-repos-0.1.1-0.20220125231326.c5df4a6.el9.noarch.rpm
+      dnf install -y python3-tripleo-repos-*.el9.noarch.rpm
   - name: Set up tripleo repos
     become: yes
     shell:
