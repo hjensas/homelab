@@ -81,10 +81,9 @@
   - name: Downlaod images
     shell: |
       cd {{ ansible_env.HOME }}/images
-      curl -O https://images.rdoproject.org/centos9/master/rdo_trunk/tripleo-ci-testing/ironic-python-agent.tar
-      curl -O https://images.rdoproject.org/centos9/master/rdo_trunk/tripleo-ci-testing/overcloud-full.tar
+      curl -O https://images.rdoproject.org/centos9/master/rdo_trunk/current-tripleo/ironic-python-agent.tar
+      curl -O https://images.rdoproject.org/centos9/master/rdo_trunk/current-tripleo/overcloud-hardened-uefi-full.qcow2
       tar xvf ironic-python-agent.tar
-      tar xvf overcloud-full.tar
   - name: Install Undercloud
     shell:
       openstack undercloud install
