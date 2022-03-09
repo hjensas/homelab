@@ -10,6 +10,7 @@ sudo apt install tmux -y
 sudu su - stack
 
 git clone https://opendev.org/openstack/devstack.git
+git clone https://opendev.org/openstack/ironic-tempest-plugin.git
 ```
 
 
