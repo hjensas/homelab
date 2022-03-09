@@ -52,7 +52,10 @@ parameters:
     description: External network for devstack router
     type: string
     default: provider
-
+  DevstackSecurityGroupName:
+    description: Name for devstack security group
+    type: string
+    default: devstack_sec_grp
 
 
 resources:
@@ -77,6 +80,29 @@ resources:
       external_gateway_info:
         network: {get_param: RouterExternalNetwork}
 
+  DevstackSecurityGroup:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      name: {get_param: DevstackSecurityGroupName}
+
+  DevstackSecurityGroupRuleSSH:
+    type: OS::Neutron::SecurityGroupRule
+    properties:
+      security_group: {get_resource: DevstackSecurityGroup}
+      direction: ingress
+      ethertype: IPv4
+      protocol: tcp
+      port_range_min: 22
+      port_range_max: 22
+
+  DevstackSecurityGroupRuleICMP:
+    type: OS::Neutron::SecurityGroupRule
+    properties:
+      security_group: {get_resource: DevstackSecurityGroup}
+      direction: ingress
+      ethertype: IPv4
+      protocol: icmp
+
   DevstackNetworkRouterInterface:
     type: OS::Neutron::RouterInterface
     properties:
@@ -89,7 +115,7 @@ resources:
       name: {get_param: ServerName}
       network: {get_resource: DevstackNetwork}
       security_groups:
-        - {get_param: SecurityGroup}
+        - {get_resource: DevstackSecurityGroup}
 
   DevstackServerFloatingIp:
     type: OS::Neutron::FloatingIP
