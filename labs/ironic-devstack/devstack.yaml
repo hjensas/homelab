@@ -1,0 +1,115 @@
+heat_template_version: rocky
+
+description:
+  Simply set up a server that can be used for devstack
+
+parameters:
+  NetworkName:
+    description: Neutron tenant network name
+    type: string
+    default: devstack_net
+  SubnetName:
+    description: Subnet Name
+    type: string
+    default: devstac_subnet
+  SubnetCIDR:
+    description: CIDR for the subnet
+    type: string
+    default: 192.168.224.0/24
+  SubnetGateway:
+    description: Gateway address for the subnet
+    type: string
+    default: 192.168.224.1
+  ServerName:
+    description: Server instance name
+    type: string
+    default: devstack
+  ServerFloatingNetwork:
+    description: Network to use for server instance floating ip
+    type: string
+    default: provider
+  Flavor:
+    description: Nova flavor for server instance
+    type: string
+    default: m1.xlarge2
+  Image:
+    description: Glance image for server instance
+    type: string
+    default: ubuntu-focal
+  KeyName:
+    description: Name of Keypair for server instance
+    type: string
+    default: default
+  SecurityGroup:
+    description: Name of Security Group for server instance
+    type: string
+    default: default
+  RouterName:
+    description: Name of router for devstack lab
+    type: string
+    default: devstack_router
+  RouterExternalNetwork:
+    description: External network for devstack router
+    type: string
+    default: provider
+
+
+
+resources:
+
+  DevstackNetwork:
+    type: OS::Neutron::Net
+    properties:
+      name: {get_param: NetworkName}
+
+  DevstackSubnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: {get_param: SubnetName}
+      network: {get_resource: DevstackNetwork}
+      cidr: {get_param: SubnetCIDR}
+      gateway_ip: {get_param: SubnetGateway}
+
+  DevstackRouter:
+    type: OS::Neutron::Router
+    properties:
+      name: {get_param: RouterName}
+      external_gateway_info:
+        network: {get_param: RouterExternalNetwork}
+
+  DevstackNetworkRouterInterface:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router: {get_resource: DevstackRouter}
+      subnet: {get_resource: DevstackSubnet}
+
+  DevstackPort:
+    type: OS::Neutron::Port
+    properties:
+      name: {get_param: ServerName}
+      network: {get_resource: DevstackNetwork}
+      security_groups:
+        - {get_param: SecurityGroup}
+
+  DevstackServerFloatingIp:
+    type: OS::Neutron::FloatingIP
+    depends_on: DevstackNetworkRouterInterface
+    properties:
+      floating_network: {get_param: ServerFloatingNetwork}
+
+  DevstacServerFloatingIpAssociation:
+    type: OS::Neutron::FloatingIPAssociation
+    properties:
+      floatingip_id: {get_resource: DevstackServerFloatingIp}
+      port_id: {get_resource: DevstackPort}
+
+  DevstackServer:
+    type: OS::Nova::Server
+    properties:
+      name: {get_param: ServerName}
+      flavor: {get_param: Flavor}
+      key_name: {get_param: KeyName}
+      image: {get_param: Image}
+      networks:
+        - port: {get_resource: DevstackPort}
+
