@@ -6,7 +6,6 @@ sudu su - stack
 
 git clone https://opendev.org/openstack/devstack.git
 
-IP_ADDR=$()
 
 local.conf
 ----------
