@@ -1,3 +1,5 @@
+
+```
 sudo useradd -s /bin/bash -d /opt/stack -m stack
 sudo su -
 echo "stack ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
@@ -5,6 +7,7 @@ echo "stack ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 sudu su - stack
 
 git clone https://opendev.org/openstack/devstack.git
+```
 
 
 local.conf
