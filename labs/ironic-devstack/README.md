@@ -3,6 +3,9 @@
 sudo useradd -s /bin/bash -d /opt/stack -m stack
 sudo su -
 echo "stack ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+sudo apt update
+sudo apt upgrade -y
+sudo apt install tmux -y
 
 sudu su - stack
 
