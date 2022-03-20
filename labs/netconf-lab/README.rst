@@ -489,6 +489,9 @@ Create the VM instance
 Cisco initial setup using telnet
 ................................
 
+.. note:: When ``Abort Power On Auto Provisioning`` - type ``skip``
+   and use setup wizard.
+
 ::
 
   telnet 0.0.0.0 2251
@@ -499,6 +502,7 @@ Cisco initial setup using telnet
   ip address dhcp
   no shut
   exit
+  no password strength-check
   username admin password 0 redhat role network-admin
   boot nxos bootflash:///nxos64-cs.10.2.2.F.bin
   copy run start
