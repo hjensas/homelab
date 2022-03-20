@@ -83,6 +83,11 @@ Create a public switch on host
   NETMASK=255.255.255.0
   EOF
 
+Create DHCP service for public switch
+*************************************
+
+::
+
   cat << EOF > /etc/public-switch-dnsmasq.conf
   interface=public-switch
   port=0
@@ -96,6 +101,25 @@ Create a public switch on host
   dhcp-host=22:57:f8:dd:fe:ad,vqfx-pfe.example.com,192.168.24.31
   dhcp-host=22:57:f8:dd:fe:cc,openstack.example.com,192.168.24.23
   EOF
+
+::
+
+  cat << EOF > /etc/systemd/system/public-switch-dnsmasq.service
+  [Unit]
+  Description=Public switch DHCP server
+  After=network.target
+  
+  [Service]
+  ExecStart=/usr/sbin/dnsmasq -k -C /etc/public-switch-dnsmasq.conf
+  
+  [Install]
+  WantedBy=multi-user.target
+  EOF
+
+::
+
+  systemctl enable public-switch-dnsmasq.service
+  systemctl start public-switch-dnsmasq.service
 
 Create bridges for Cisco Nexus
 ******************************
@@ -365,5 +389,39 @@ Create Bridges for Juniper vQFX
 Restart networking service
 --------------------------
 
-systemctl restart NetworkManager.service
+::
 
+  systemctl restart NetworkManager.service
+
+Set group_fwd_mask soo LLDP is forwarded
+----------------------------------------
+
+::
+
+  echo 0x4000 > /sys/class/net/vqfx000/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/vqfx001/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/vqfx002/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/vqfx003/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/vqfx004/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/vqfx005/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/vqfx006/bridge/group_fwd_mask
+  
+  echo 0x4000 > /sys/class/net/veos000/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/veos001/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/veos002/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/veos003/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/veos004/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/veos005/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/veos006/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/veos007/bridge/group_fwd_mask
+
+  echo 0x4000 > /sys/class/net/nx000/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/nx001/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/nx002/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/nx003/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/nx004/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/nx005/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/nx006/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/nx007/bridge/group_fwd_mask
+
+  
