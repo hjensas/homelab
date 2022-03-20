@@ -450,7 +450,9 @@ Create virtual switches
 Create a SSH keypari for netconf
 ********************************
 
-ssh-key-gen -f /root/ml2netconf
+::
+
+  ssh-key-gen -f /root/ml2netconf
 
 Cisco Nexus virtual switch
 **************************
