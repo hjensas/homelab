@@ -1,0 +1,141 @@
+heat_template_version: rocky
+
+description:
+  Simply set up a large server that can host VMs (nested KVM)
+
+parameters:
+  NetworkName:
+    description: Neutron tenant network name
+    type: string
+    default: nested_kvm_net
+  SubnetName:
+    description: Subnet Name
+    type: string
+    default: netsted_kvm_subnet
+  SubnetCIDR:
+    description: CIDR for the subnet
+    type: string
+    default: 192.168.225.0/24
+  SubnetGateway:
+    description: Gateway address for the subnet
+    type: string
+    default: 192.168.225.1
+  ServerName:
+    description: Server instance name
+    type: string
+    default: nested-kvm
+  ServerFloatingNetwork:
+    description: Network to use for server instance floating ip
+    type: string
+    default: provider
+  Flavor:
+    description: Nova flavor for server instance
+    type: string
+    default: m1.xxlarge
+  Image:
+    description: Glance image for server instance
+    type: string
+    default: fedora35
+  KeyName:
+    description: Name of Keypair for server instance
+    type: string
+    default: default
+  SecurityGroup:
+    description: Name of Security Group for server instance
+    type: string
+    default: default
+  RouterName:
+    description: Name of router for netsted kvm lab
+    type: string
+    default: netsted_kvm_router
+  RouterExternalNetwork:
+    description: External network for netsted kvm router
+    type: string
+    default: provider
+  NestedKvmSecurityGroupName:
+    description: Name for netsted kvm security group
+    type: string
+    default: nested_kvm_sec_grp
+
+
+resources:
+
+  NestedKvmNetwork:
+    type: OS::Neutron::Net
+    properties:
+      name: {get_param: NetworkName}
+
+  NestedKvmSubnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: {get_param: SubnetName}
+      network: {get_resource: NestedKvmNetwork}
+      cidr: {get_param: SubnetCIDR}
+      gateway_ip: {get_param: SubnetGateway}
+
+  NestedKvmRouter:
+    type: OS::Neutron::Router
+    properties:
+      name: {get_param: RouterName}
+      external_gateway_info:
+        network: {get_param: RouterExternalNetwork}
+
+  NestedKvmSecurityGroup:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      name: {get_param: NestedKvmSecurityGroupName}
+
+  NestedKvmSecurityGroupRuleSSH:
+    type: OS::Neutron::SecurityGroupRule
+    properties:
+      security_group: {get_resource: NestedKvmSecurityGroup}
+      direction: ingress
+      ethertype: IPv4
+      protocol: tcp
+      port_range_min: 22
+      port_range_max: 22
+
+  NestedKvmSecurityGroupRuleICMP:
+    type: OS::Neutron::SecurityGroupRule
+    properties:
+      security_group: {get_resource: NestedKvmSecurityGroup}
+      direction: ingress
+      ethertype: IPv4
+      protocol: icmp
+
+  NestedKvmNetworkRouterInterface:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router: {get_resource: NestedKvmRouter}
+      subnet: {get_resource: NestedKvmSubnet}
+
+  NestedKvmPort:
+    type: OS::Neutron::Port
+    properties:
+      name: {get_param: ServerName}
+      network: {get_resource: NestedKvmNetwork}
+      security_groups:
+        - {get_resource: NestedKvmSecurityGroup}
+
+  NestedKvmServerFloatingIp:
+    type: OS::Neutron::FloatingIP
+    depends_on: NestedKvmNetworkRouterInterface
+    properties:
+      floating_network: {get_param: ServerFloatingNetwork}
+
+  DevstacServerFloatingIpAssociation:
+    type: OS::Neutron::FloatingIPAssociation
+    properties:
+      floatingip_id: {get_resource: NestedKvmServerFloatingIp}
+      port_id: {get_resource: NestedKvmPort}
+
+  NestedKvmServer:
+    type: OS::Nova::Server
+    properties:
+      name: {get_param: ServerName}
+      flavor: {get_param: Flavor}
+      key_name: {get_param: KeyName}
+      image: {get_param: Image}
+      networks:
+        - port: {get_resource: NestedKvmPort}
+
