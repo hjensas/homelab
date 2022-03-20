@@ -580,6 +580,7 @@ Copy ssh key to switch and create ml2netconf user
   configure terminal
   username ml2netconf role network-admin
   username ml2netconf sshkey file bootflash:ml2netconf.pub
+  copy run start
 
 Validate Cisco Nexus netconf
 ............................
@@ -644,7 +645,7 @@ Arista vEOS initial setup using telnet
   copy running-config startup-config
 
 
-Arista vEOS initial setup, (ssh admin@192.168.24.21)
+Arista vEOS initial setup, (ssh admin@192.168.24.22)
 ....................................................
 
 ::
