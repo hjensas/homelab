@@ -783,7 +783,7 @@ Create the VM instance for PFE
 
 ::
 
-  cp /home/fedora/virtual-switch-images/Juniper/vqfx-20.2R1.10-pfe-qemu.qcow2 \
+  cp /home/fedora/virtual-switch-images/Juniper/vqfx-20.2R1-2019010209-pfe-qemu.qcow \
      /var/lib/libvirt/images/vqfx-pfe.img
 
   virt-install \
