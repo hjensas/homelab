@@ -207,7 +207,7 @@ Create bridges for Cisco Nexus
   EOF
 
 Create bridges for Arista vEOS
-------------------------------
+******************************
 
 ::
 
@@ -387,14 +387,14 @@ Create Bridges for Juniper vQFX
   EOF
 
 Restart networking service
---------------------------
+**************************
 
 ::
 
   systemctl restart NetworkManager.service
 
 Set group_fwd_mask soo LLDP is forwarded
-----------------------------------------
+****************************************
 
 ::
 
@@ -424,4 +424,368 @@ Set group_fwd_mask soo LLDP is forwarded
   echo 0x4000 > /sys/class/net/nx006/bridge/group_fwd_mask
   echo 0x4000 > /sys/class/net/nx007/bridge/group_fwd_mask
 
+Configure libvirt networking
+----------------------------
+
+::
+
+  virsh net-destroy default
+  virsh net-undefine default
   
+  # Libvirt bridged network
+  cat << EOF > public.xml
+  <network>
+      <name>public</name>
+      <forward mode="bridge" />
+      <bridge name="public-switch" />
+  </network>
+  EOF
+  virsh net-define public.xml
+  sudo virsh net-start public
+  sudo virsh net-autostart public
+
+Create virtual switches
+-----------------------
+
+Create a SSH keypari for netconf
+********************************
+
+ssh-key-gen -f /root/ml2netconf
+
+Cisco Nexus virtual switch
+**************************
+
+Create the VM instance
+......................
+
+::
+
+  cp /home/fedora/virtual-switch-images/nexus9500v64.10.2.2.F.qcow2 /var/lib/libvirt/images/nexus.qcow2
+  qemu-img resize /var/lib/libvirt/images/nexus.qcow2 +10G
+
+  virt-install \
+    --name nexus \
+    --boot uefi \
+    --os-variant generic \
+    --noautoconsole \
+    --graphics vnc \
+    --memory 12288 \
+    --vcpus=2 \
+    --import \
+    --disk /var/lib/libvirt/images/nexus.qcow2,format=qcow2,bus=sata \
+    --serial tcp,host=0.0.0.0:2251,mode=bind,protocol=telnet \
+    --network network=public,model=e1000,mac.address=22:57:f8:dd:fe:aa \
+    --network bridge=nx000,model=e1000 \
+    --network bridge=nx001,model=e1000 \
+    --network bridge=nx002,model=e1000 \
+    --network bridge=nx003,model=e1000 \
+    --network bridge=nx004,model=e1000 \
+    --network bridge=nx005,model=e1000 \
+    --network bridge=nx006,model=e1000 \
+    --network bridge=nx007,model=e1000
+
+Cisco initial setup using telnet
+................................
+
+::
+
+  telnet 0.0.0.0 2251
+  ## Switch CLI
+  configure terminal
+  feature lldp
+  interface mgmt 0
+  ip address dhcp
+  no shut
+  exit
+  username admin password 0 redhat role network-admin
+  boot nxos bootflash:///nxos64-cs.10.2.2.F.bin
+  copy run start
+  exit
+
+Cisco initial setup, (ssh admin@192.168.24.20)
+..............................................
+
+::
+
+  configure
+  vlan 1000
+  name provisioning
+  exit                                                                                                                                           
+  vlan 1001
+  name cleaning
+  exit
+
+  vlan 1002
+  name rescue
+  exit
+
+  vlan 1003
+  name inspect
+  exit
+
+  vlan 1003
+  name inspect
+  exit
+
+  vlan 1004-1050
+  exit
+
+  interface eth1/1
+  switchport
+  switchport mode trunk
+  switchport trunk allowed vlan 1000-1050
+  no shut
+  exit
+
+  interface eth1/3
+  switchport
+  switchport mode access
+  switchport access vlan 1003
+  no shut
+  exit
+
+  interface eth1/4
+  switchport
+  switchport mode access
+  switchport access vlan 1003
+  no shut
+  exit
+
+  copy run start
+
+Cisco enable netconf and enable OpenConfig
+..........................................
+
+::
+
+  configure
+  feature netconf
+  exit
+  copy run start
+  install activate mtx-openconfig-all
+
+Copy ssh key to switch and create ml2netconf user
+.................................................
+
+::
+
+  copy scp://root@192.168.24.1/root/ml2netconf.pub bootflash:ml2netconf.pub source-interface mgmt 0
+  configure terminal
+  username ml2netconf role network-admin
+  username ml2netconf sshkey file bootflash:ml2netconf.pub
+
+Validate Cisco Nexus netconf
+............................
+
+::
+  
+  ssh -i ml2netconf -s ml2netconf@192.168.24.21 -p 830 netconf
+
+
+Arista vEOS switch
+******************
+
+Create the VM instance
+......................
+
+::
+
+  qemu-img convert -f vmdk -O qcow2 \
+    /home/fedora/virtual-switch-images/Arista/vEOS64-lab-4.27.3F.vmdk \
+    /var/lib/libvirt/images/veos.qcow2
+
+  qemu-img resize /var/lib/libvirt/images/veos.qcow2 +10G
+  virt-install \
+    --name veos \
+    --os-variant generic \
+    --noautoconsole \
+    --graphics vnc \
+    --memory 12288 \
+    --vcpus=2 \
+    --import \
+    --disk /var/lib/libvirt/images/veos.qcow2,format=qcow2,bus=sata \
+    --serial tcp,host=0.0.0.0:2252,mode=bind,protocol=telnet \
+    --network network=public,model=e1000,mac.address=22:57:f8:dd:fe:ab \
+    --network bridge=veos000,model=e1000 \
+    --network bridge=veos001,model=e1000 \
+    --network bridge=veos002,model=e1000 \
+    --network bridge=veos003,model=e1000 \
+    --network bridge=veos004,model=e1000 \
+    --network bridge=veos005,model=e1000 \
+    --network bridge=veos006,model=e1000 \
+    --network bridge=veos007,model=e1000
+
+Arista vEOS initial setup using telnet
+......................................
+
+::
+
+  telnet 0.0.0.0 2252
+  Login: admin
+  > zerotouch disable
+
+  Login: admin
+  > 
+  enable
+  configure
+  vrf instance management
+  interface management 1
+  vrf management
+  ip address dhcp
+  exit
+  username admin secret 0 redhat
+  copy running-config startup-config
+
+
+Arista vEOS initial setup, (ssh admin@192.168.24.21)
+....................................................
+
+::
+
+  enable
+  configure
+  username ml2netconf role network-operator nopassword
+  username ml2netconf ssh-key <$SSH_PUBLIC_KEY>
+  exit
+  copy running-config startup-config
+  
+  enable
+  configure
+  lldp run
+  exit
+  copy run start
+  
+  enable
+  configure
+  management api netconf
+  transport ssh default
+  vrf management
+  exit
+  exit
+  copy run startup-config
+  
+  # Below is a copy of the default-control-plane-acl with netconf (830) added at the end
+  ip access-list netconf
+          10 permit icmp any any
+          20 permit ip any any tracked
+          30 permit udp any any eq bfd ttl eq 255
+          40 permit udp any any eq bfd-echo ttl eq 254
+          50 permit udp any any eq multihop-bfd micro-bfd sbfd
+          60 permit udp any eq sbfd any eq sbfd-initiator
+          70 permit ospf any any
+          80 permit tcp any any eq ssh telnet www snmp bgp https msdp ldp netconf-ssh gnmi
+          90 permit udp any any eq bootps bootpc snmp rip ntp ldp ptp-event ptp-general
+          100 permit tcp any any eq mlag ttl eq 255
+          110 permit udp any any eq mlag ttl eq 255
+          120 permit vrrp any any
+          130 permit ahp any any
+          140 permit pim any any
+          150 permit igmp any any
+          160 permit tcp any any range 5900 5910
+          170 permit tcp any any range 50000 50100
+          180 permit udp any any range 51000 51100
+          190 permit tcp any any eq 3333
+          200 permit tcp any any eq nat ttl eq 255
+          210 permit tcp any eq bgp any
+          220 permit rsvp any any
+          230 permit tcp any any eq 6040
+          240 permit tcp any any eq 5541 ttl eq 255
+          250 permit tcp any any eq 5542 ttl eq 255
+          260 permit tcp any any eq 9559
+          279 permit tcp any any eq 830
+  exit
+  system control-plane
+  ip access-group netconf vrf management in
+  exit
+
+  copy running-config startup-config
+
+  # All ports must be set as "switchports"
+  enable
+  configure
+  interface ethernet 1-4
+  switchport
+  exit
+  exit
+  copy running-config startup-config
+  
+  # Set up vlans
+  enable
+  configure
+  vlan 1000
+  name provision
+  exit
+  vlan 1001
+  name cleaning
+  exit
+  vlan 1002
+  name rescuring
+  exit
+  vlan 1003
+  name inspection
+  exit
+  vlan 1004-1050
+  state active
+  name tenant
+  exit
+  copy running-config startup-config
+
+Validate Arista vEOS netconf
+............................
+
+::
+  
+  ssh -i ml2netconf -s ml2netconf@192.168.24.22 -p 830 netconf
+
+Juniper vQFX switch
+*******************
+
+Create the VM instance for RE
+.............................
+
+::
+
+  cp /home/fedora/virtual-switch-images/Juniper/vqfx-20.2R1.10-re-qemu.qcow2 \
+     /var/lib/libvirt/images/vqfx-re.img
+
+  virt-install \
+      --name vqfx-re \
+      --os-variant freebsd10.0 \
+      --noautoconsole \
+      --memory 2048 \
+      --vcpus=2 \
+      --import \
+      --disk /var/lib/libvirt/images/vqfx-re.img,bus=ide,format=raw \
+      --network network=public,model=e1000,mac.address=22:57:f8:dd:fe:ac \
+      --network bridge=qfx-int,model=e1000 \
+      --network bridge=qfx-int,model=e1000 \
+      --network bridge=xe000,model=e1000 \
+      --network bridge=xe001,model=e1000 \
+      --network bridge=xe002,model=e1000 \
+      --network bridge=xe003,model=e1000 \
+      --network bridge=xe004,model=e1000 \
+      --network bridge=xe005,model=e1000 \
+      --network bridge=xe006,model=e1000 \
+
+Create the VM instance for PFE
+..............................
+
+::
+
+  cp /home/fedora/virtual-switch-images/Juniper/vqfx-20.2R1.10-pfe-qemu.qcow2 \
+     /var/lib/libvirt/images/vqfx-pfe.img
+
+  virt-install \
+      --name vqfx-pfe \
+      --os-variant freebsd10.0 \
+      --noautoconsole \
+      --memory 2048 \
+      --vcpus=2 \
+      --import \
+      --disk /var/lib/libvirt/images/vqfx-pfe.img,bus=ide,format=raw \
+      --network network=public,model=e1000,mac.address=22:57:f8:dd:fe:ad \
+      --network bridge=qfx-int,model=e1000 \
+      --network bridge=qfx-int,model=e1000
+
+.. note: Juniper vQFX-re and vQFX-pfe need time to sync ...
+
