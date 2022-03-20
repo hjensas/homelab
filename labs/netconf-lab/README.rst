@@ -509,7 +509,7 @@ Note
   copy run start
   exit
 
-Cisco initial setup, (ssh admin@192.168.24.20)
+Cisco initial setup, (ssh admin@192.168.24.21)
 ..............................................
 
 ::
