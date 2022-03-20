@@ -789,5 +789,76 @@ Create the VM instance for PFE
       --network bridge=qfx-int,model=e1000 \
       --network bridge=qfx-int,model=e1000
 
+
+Juniper vQFX initial setup
+..........................
+
+::
+
+  ssh-copy-id \
+    -o PreferredAuthentications=password \
+    -o UserKnownHostsFile=/dev/null \
+    -o StrictHostKeyChecking=no \
+    192.168.24.30
+
+**Passwd**: Juniper
+
+::
+
+  ssh 192.168.24.21
+  cli
+  configure
+  deactivate system syslog user *
+  set interfaces em1 unit 0 family inet address 169.254.0.2/24
+  commit
+  exit
+  restart chassis-control
+  exit
+  exit
+  
+Create ml2netcon user and add authentication key
+................................................
+
+::
+  
+  conifg
+  set system login user netconf
+  set system login use netconf full-name "ML2 Netconf"
+  set system login use netconf class operator
+  set system login user netconf authentication ssh-rsa
+
+
 .. note: Juniper vQFX-re and vQFX-pfe need time to sync ...
+
+::
+
+  cli
+  configure
+  set protocols lldp interface all
+  commit
+  exit
+  
+  cli
+  configure
+  set vlans provisioning vlan-id 1000
+  set vlans cleaning vlan-id 1001
+  set vlans rescue vlan-id 1002
+  set vlans introspection vlan-id 1003
+  set vlans tenant vlan-id-list 1004-1050
+  set interfaces xe-0/0/0 unit 0 family ethernet-switching vlan interface-mode trunk
+  
+  set interfaces xe-0/0/1 unit 0 family ethernet-switching vlan members default
+  set interfaces xe-0/0/2 unit 0 family ethernet-switching vlan members default
+  set interfaces xe-0/0/3 unit 0 family ethernet-switching vlan members default
+  set interfaces xe-0/0/4 unit 0 family ethernet-switching vlan members default
+  set interfaces xe-0/0/5 unit 0 family ethernet-switching vlan members default
+  set interfaces xe-0/0/6 unit 0 family ethernet-switching vlan members default
+  set interfaces xe-0/0/7 unit 0 family ethernet-switching vlan members default
+  set interfaces xe-0/0/8 unit 0 family ethernet-switching vlan members default
+  set interfaces xe-0/0/9 unit 0 family ethernet-switching vlan members default
+  set interfaces xe-0/0/10 unit 0 family ethernet-switching vlan members default
+  set interfaces xe-0/0/11 unit 0 family ethernet-switching vlan members default
+  
+  commit
+  exit
 
