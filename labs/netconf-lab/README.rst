@@ -738,6 +738,8 @@ Arista vEOS initial setup, (ssh admin@192.168.24.22)
   exit
   copy running-config startup-config
 
+  reload
+
 Validate Arista vEOS netconf
 ............................
 
@@ -760,6 +762,7 @@ Create the VM instance for RE
       --name vqfx-re \
       --os-variant freebsd10.0 \
       --noautoconsole \
+      --graphics vnc \
       --memory 2048 \
       --vcpus=2 \
       --import \
@@ -773,7 +776,7 @@ Create the VM instance for RE
       --network bridge=xe003,model=e1000 \
       --network bridge=xe004,model=e1000 \
       --network bridge=xe005,model=e1000 \
-      --network bridge=xe006,model=e1000 \
+      --network bridge=xe006,model=e1000
 
 Create the VM instance for PFE
 ..............................
@@ -787,6 +790,7 @@ Create the VM instance for PFE
       --name vqfx-pfe \
       --os-variant freebsd10.0 \
       --noautoconsole \
+      --graphics vnc \
       --memory 2048 \
       --vcpus=2 \
       --import \
