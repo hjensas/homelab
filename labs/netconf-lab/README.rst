@@ -92,6 +92,8 @@ Create a public switch on host
   dhcp-option=6,192.168.254.1
   dhcp-host=22:57:f8:dd:fe:aa,nexus.example.com,192.168.24.21
   dhcp-host=22:57:f8:dd:fe:ab,veos.example.com,192.168.24.22
+  dhcp-host=22:57:f8:dd:fe:ac,vqfx-re.example.com,192.168.24.30
+  dhcp-host=22:57:f8:dd:fe:ad,vqfx-pfe.example.com,192.168.24.31
   dhcp-host=22:57:f8:dd:fe:cc,openstack.example.com,192.168.24.23
   EOF
 
