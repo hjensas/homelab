@@ -831,11 +831,12 @@ Create ml2netcon user and add authentication key
 
 ::
   
-  conifg
+  cli
+  config
   set system login user netconf
   set system login use netconf full-name "ML2 Netconf"
   set system login use netconf class operator
-  set system login user netconf authentication ssh-rsa
+  set system login user netconf authentication ssh-rsai "<$SSH_PUB_KEY>"
 
 
 Note
@@ -856,7 +857,7 @@ Note
   set vlans rescue vlan-id 1002
   set vlans introspection vlan-id 1003
   set vlans tenant vlan-id-list 1004-1050
-  set interfaces xe-0/0/0 unit 0 family ethernet-switching vlan interface-mode trunk
+  set interfaces xe-0/0/0 unit 0 family ethernet-switching interface-mode trunk
   
   set interfaces xe-0/0/1 unit 0 family ethernet-switching vlan members default
   set interfaces xe-0/0/2 unit 0 family ethernet-switching vlan members default
