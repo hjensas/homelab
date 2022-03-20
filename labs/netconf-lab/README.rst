@@ -815,7 +815,7 @@ Juniper vQFX initial setup
 
 ::
 
-  ssh 192.168.24.21
+  ssh 192.168.24.30
   cli
   configure
   deactivate system syslog user *
