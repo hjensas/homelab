@@ -489,8 +489,9 @@ Create the VM instance
 Cisco initial setup using telnet
 ................................
 
-.. note:: When ``Abort Power On Auto Provisioning`` - type ``skip``
-   and use setup wizard.
+Note
+  When ``Abort Power On Auto Provisioning`` - type ``skip`` and use setup
+  wizard.
 
 ::
 
@@ -832,7 +833,8 @@ Create ml2netcon user and add authentication key
   set system login user netconf authentication ssh-rsa
 
 
-.. note: Juniper vQFX-re and vQFX-pfe need time to sync ...
+Note
+  Juniper vQFX-re and vQFX-pfe need time to sync ...
 
 ::
 
