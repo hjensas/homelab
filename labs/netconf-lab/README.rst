@@ -770,13 +770,13 @@ Create the VM instance for RE
       --network network=public,model=e1000,mac.address=22:57:f8:dd:fe:ac \
       --network bridge=qfx-int,model=e1000 \
       --network bridge=qfx-int,model=e1000 \
-      --network bridge=xe000,model=e1000 \
-      --network bridge=xe001,model=e1000 \
-      --network bridge=xe002,model=e1000 \
-      --network bridge=xe003,model=e1000 \
-      --network bridge=xe004,model=e1000 \
-      --network bridge=xe005,model=e1000 \
-      --network bridge=xe006,model=e1000
+      --network bridge=vqfx000,model=e1000 \
+      --network bridge=vqfx001,model=e1000 \
+      --network bridge=vqfx002,model=e1000 \
+      --network bridge=vqfx003,model=e1000 \
+      --network bridge=vqfx004,model=e1000 \
+      --network bridge=vqfx005,model=e1000 \
+      --network bridge=vqfx006,model=e1000
 
 Create the VM instance for PFE
 ..............................
