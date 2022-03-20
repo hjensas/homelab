@@ -705,7 +705,7 @@ Arista vEOS initial setup, (ssh admin@192.168.24.21)
   # All ports must be set as "switchports"
   enable
   configure
-  interface ethernet 1-4
+  interface ethernet 1-8
   switchport
   exit
   exit
