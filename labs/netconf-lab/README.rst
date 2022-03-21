@@ -297,9 +297,9 @@ Creat Bridges for Cumulus VX
 
 ::
 
-  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-cu000
-  DEVICE=cu000
-  NAME=cu000
+  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-swp1
+  DEVICE=swp1
+  NAME=swp1
   MTU=9000
   ONBOOT=yes
   TYPE=bridge
@@ -307,9 +307,9 @@ Creat Bridges for Cumulus VX
   BOOTPROTO=none
   EOF
 
-  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-cu001
-  DEVICE=cu001
-  NAME=cu001
+  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-swp2
+  DEVICE=swp2
+  NAME=swp2
   MTU=9000
   ONBOOT=yes
   TYPE=bridge
@@ -317,9 +317,9 @@ Creat Bridges for Cumulus VX
   BOOTPROTO=none
   EOF
 
-  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-cu002
-  DEVICE=cu002
-  NAME=cu002
+  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-swp3
+  DEVICE=swp3
+  NAME=swp3
   MTU=9000
   ONBOOT=yes
   TYPE=bridge
@@ -327,9 +327,9 @@ Creat Bridges for Cumulus VX
   BOOTPROTO=none
   EOF
 
-  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-cu003
-  DEVICE=cu003
-  NAME=cu003
+  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-swp4
+  DEVICE=swp4
+  NAME=swp4
   MTU=9000
   ONBOOT=yes
   TYPE=bridge
@@ -337,9 +337,9 @@ Creat Bridges for Cumulus VX
   BOOTPROTO=none
   EOF
 
-  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-cu004
-  DEVICE=cu004
-  NAME=cu004
+  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-swp5
+  DEVICE=swp5
+  NAME=swp5
   MTU=9000
   ONBOOT=yes
   TYPE=bridge
@@ -347,9 +347,9 @@ Creat Bridges for Cumulus VX
   BOOTPROTO=none
   EOF
 
-  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-cu005
-  DEVICE=cu005
-  NAME=cu005
+  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-swp6
+  DEVICE=swp6
+  NAME=swp6
   MTU=9000
   ONBOOT=yes
   TYPE=bridge
@@ -357,9 +357,9 @@ Creat Bridges for Cumulus VX
   BOOTPROTO=none
   EOF
 
-  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-cu006
-  DEVICE=cu006
-  NAME=cu006
+  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-swp7
+  DEVICE=swp7
+  NAME=swp7
   MTU=9000
   ONBOOT=yes
   TYPE=bridge
@@ -367,9 +367,9 @@ Creat Bridges for Cumulus VX
   BOOTPROTO=none
   EOF
 
-  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-cu007
-  DEVICE=cu007
-  NAME=cu007
+  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-swp8
+  DEVICE=swp8
+  NAME=swp8
   MTU=9000
   ONBOOT=yes
   TYPE=bridge
@@ -511,14 +511,14 @@ Set group_fwd_mask soo LLDP is forwarded
   echo 0x4000 > /sys/class/net/nx006/bridge/group_fwd_mask
   echo 0x4000 > /sys/class/net/nx007/bridge/group_fwd_mask
 
-  echo 0x4000 > /sys/class/net/cu000/bridge/group_fwd_mask
-  echo 0x4000 > /sys/class/net/cu001/bridge/group_fwd_mask
-  echo 0x4000 > /sys/class/net/cu002/bridge/group_fwd_mask
-  echo 0x4000 > /sys/class/net/cu003/bridge/group_fwd_mask
-  echo 0x4000 > /sys/class/net/cu004/bridge/group_fwd_mask
-  echo 0x4000 > /sys/class/net/cu005/bridge/group_fwd_mask
-  echo 0x4000 > /sys/class/net/cu006/bridge/group_fwd_mask
-  echo 0x4000 > /sys/class/net/cu007/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/swp1/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/swp2/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/swp3/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/swp4/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/swp5/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/swp6/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/swp7/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/swp8/bridge/group_fwd_mask
 
 Configure libvirt networking
 ----------------------------
@@ -1002,13 +1002,13 @@ Cumulus VX switch
       --import \
       --disk /var/lib/libvirt/images/cumulus.qcow2,format=qcow2 \
       --network network=public,model=virtio,mac.address=22:57:f8:dd:fe:ac \
-      --network bridge=cu000,model=virtio \
-      --network bridge=cu001,model=virtio \
-      --network bridge=cu002,model=virtio \
-      --network bridge=cu003,model=virtio \
-      --network bridge=cu004,model=virtio \
-      --network bridge=cu005,model=virtio \
-      --network bridge=cu006,model=virtio \
-      --network bridge=cu007,model=virtio 
+      --network bridge=swp1,model=virtio \
+      --network bridge=swp2,model=virtio \
+      --network bridge=swp3,model=virtio \
+      --network bridge=swp4,model=virtio \
+      --network bridge=swp5,model=virtio \
+      --network bridge=swp6,model=virtio \
+      --network bridge=swp7,model=virtio \
+      --network bridge=swp8,model=virtio 
 
 
