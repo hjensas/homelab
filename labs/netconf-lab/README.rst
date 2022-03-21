@@ -987,23 +987,6 @@ Note
 Cumulus VX switch
 *****************
 
-/usr/bin/kvm \
-  -curses \
-  -vga virtio \
-  -name spine01 \
-  -pidfile spine01.pid \
-  -smp 2 \
-  -m 768 \
-  -net nic,macaddr=00:01:00:00:03:00,model=virtio \
-  -net user,net=192.168.0.0/24,hostfwd=tcp::1403-:22 \
-  -netdev socket,udp=127.0.0.1:1601,localaddr=127.0.0.1:1602,id=dev0 \
-  -device virtio-net-pci,mac=00:02:00:00:00:05,addr=6.0,multifunction=on,netdev=dev0,id=swp1 \
-  -netdev socket,udp=127.0.0.1:1603,localaddr=127.0.0.1:1604,id=dev1 \
-  -device virtio-net-pci,mac=00:02:00:00:00:06,addr=6.1,multifunction=off,netdev=dev1,id=swp2 \
-  -netdev socket,udp=127.0.0.1:1609,localaddr=127.0.0.1:1610,id=dev2 \
-  -device virtio-net-pci,mac=00:02:00:00:00:11,addr=6.2,multifunction=off,netdev=dev2,id=swp3 \
-  /var/lib/libvirt/images/spine01.qcow2
-
 ::
 
   cp /home/fedora/virtual-switch-images/cumulus/cumulus-linux-5.0.1-vx-amd64-qemu.qcow2 \
@@ -1018,6 +1001,14 @@ Cumulus VX switch
       --vcpus=2 \
       --import \
       --disk /var/lib/libvirt/images/cumulus.qcow2,format=qcow2 \
-      --network network=public,model=e1000,mac.address=22:57:f8:dd:fe:ac \
+      --network network=public,model=virtio,mac.address=22:57:f8:dd:fe:ac \
+      --network bridge=cu000,model=virtio \
+      --network bridge=cu001,model=virtio \
+      --network bridge=cu002,model=virtio \
+      --network bridge=cu003,model=virtio \
+      --network bridge=cu004,model=virtio \
+      --network bridge=cu005,model=virtio \
+      --network bridge=cu006,model=virtio \
+      --network bridge=cu007,model=virtio 
 
 
