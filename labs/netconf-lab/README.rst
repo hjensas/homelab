@@ -97,9 +97,10 @@ Create DHCP service for public switch
   dhcp-option=6,192.168.254.1
   dhcp-host=22:57:f8:dd:fe:aa,nexus.example.com,192.168.24.21
   dhcp-host=22:57:f8:dd:fe:ab,veos.example.com,192.168.24.22
-  dhcp-host=22:57:f8:dd:fe:ac,vqfx-re.example.com,192.168.24.30
-  dhcp-host=22:57:f8:dd:fe:ad,vqfx-pfe.example.com,192.168.24.31
-  dhcp-host=22:57:f8:dd:fe:cc,openstack.example.com,192.168.24.23
+  dhcp-host=22:57:f8:dd:fe:ac,cumulus.example.com,192.168.24.23
+  dhcp-host=22:57:f8:dd:fe:ad,vqfx-re.example.com,192.168.24.24
+  dhcp-host=22:57:f8:dd:fe:ae,vqfx-pfe.example.com,192.168.24.25
+  dhcp-host=22:57:f8:dd:fe:cc,openstack.example.com,192.168.24.40
   EOF
 
 ::
@@ -291,6 +292,92 @@ Create bridges for Arista vEOS
   BOOTPROTO=none
   EOF
 
+Creat Bridges for Cumulus VX
+****************************
+
+::
+
+  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-cu000
+  DEVICE=cu000
+  NAME=cu000
+  MTU=9000
+  ONBOOT=yes
+  TYPE=bridge
+  BRIDGING_OPTS=ageing_time=0
+  BOOTPROTO=none
+  EOF
+
+  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-cu001
+  DEVICE=cu001
+  NAME=cu001
+  MTU=9000
+  ONBOOT=yes
+  TYPE=bridge
+  BRIDGING_OPTS=ageing_time=0
+  BOOTPROTO=none
+  EOF
+
+  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-cu002
+  DEVICE=cu002
+  NAME=cu002
+  MTU=9000
+  ONBOOT=yes
+  TYPE=bridge
+  BRIDGING_OPTS=ageing_time=0
+  BOOTPROTO=none
+  EOF
+
+  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-cu003
+  DEVICE=cu003
+  NAME=cu003
+  MTU=9000
+  ONBOOT=yes
+  TYPE=bridge
+  BRIDGING_OPTS=ageing_time=0
+  BOOTPROTO=none
+  EOF
+
+  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-cu004
+  DEVICE=cu004
+  NAME=cu004
+  MTU=9000
+  ONBOOT=yes
+  TYPE=bridge
+  BRIDGING_OPTS=ageing_time=0
+  BOOTPROTO=none
+  EOF
+
+  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-cu005
+  DEVICE=cu005
+  NAME=cu005
+  MTU=9000
+  ONBOOT=yes
+  TYPE=bridge
+  BRIDGING_OPTS=ageing_time=0
+  BOOTPROTO=none
+  EOF
+
+  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-cu006
+  DEVICE=cu006
+  NAME=cu006
+  MTU=9000
+  ONBOOT=yes
+  TYPE=bridge
+  BRIDGING_OPTS=ageing_time=0
+  BOOTPROTO=none
+  EOF
+
+  cat << EOF > /etc/sysconfig/network-scripts/ifcfg-cu007
+  DEVICE=cu007
+  NAME=cu007
+  MTU=9000
+  ONBOOT=yes
+  TYPE=bridge
+  BRIDGING_OPTS=ageing_time=0
+  BOOTPROTO=none
+  EOF
+
+
 Create Bridges for Juniper vQFX
 *******************************
 
@@ -423,6 +510,15 @@ Set group_fwd_mask soo LLDP is forwarded
   echo 0x4000 > /sys/class/net/nx005/bridge/group_fwd_mask
   echo 0x4000 > /sys/class/net/nx006/bridge/group_fwd_mask
   echo 0x4000 > /sys/class/net/nx007/bridge/group_fwd_mask
+
+  echo 0x4000 > /sys/class/net/cu000/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/cu001/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/cu002/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/cu003/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/cu004/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/cu005/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/cu006/bridge/group_fwd_mask
+  echo 0x4000 > /sys/class/net/cu007/bridge/group_fwd_mask
 
 Configure libvirt networking
 ----------------------------
@@ -767,7 +863,7 @@ Create the VM instance for RE
       --vcpus=2 \
       --import \
       --disk /var/lib/libvirt/images/vqfx-re.img,bus=ide,format=raw \
-      --network network=public,model=e1000,mac.address=22:57:f8:dd:fe:ac \
+      --network network=public,model=e1000,mac.address=22:57:f8:dd:fe:ad \
       --network bridge=qfx-int,model=e1000 \
       --network bridge=qfx-int,model=e1000 \
       --network bridge=vqfx000,model=e1000 \
@@ -795,7 +891,7 @@ Create the VM instance for PFE
       --vcpus=2 \
       --import \
       --disk /var/lib/libvirt/images/vqfx-pfe.img,bus=ide,format=raw \
-      --network network=public,model=e1000,mac.address=22:57:f8:dd:fe:ad \
+      --network network=public,model=e1000,mac.address=22:57:f8:dd:fe:ae \
       --network bridge=qfx-int,model=e1000 \
       --network bridge=qfx-int,model=e1000
 
@@ -837,6 +933,10 @@ Create ml2netcon user and add authentication key
   set system login use netconf full-name "ML2 Netconf"
   set system login use netconf class operator
   set system login user netconf authentication ssh-rsai "<$SSH_PUB_KEY>"
+  set system schema openconfig unhide
+  set system services netconf rfc-compliant
+  commit
+
 
 
 Note
@@ -852,13 +952,23 @@ Note
   
   cli
   configure
+  delete interfaces xe-0/0/1 unit 0 family inet
+  delete interfaces xe-0/0/2 unit 0 family inet
+  delete interfaces xe-0/0/3 unit 0 family inet
+  delete interfaces xe-0/0/4 unit 0 family inet
+  delete interfaces xe-0/0/5 unit 0 family inet
+  delete interfaces xe-0/0/6 unit 0 family inet
+  delete interfaces xe-0/0/7 unit 0 family inet
+  commit
+
   set vlans provisioning vlan-id 1000
   set vlans cleaning vlan-id 1001
   set vlans rescue vlan-id 1002
   set vlans introspection vlan-id 1003
   set vlans tenant vlan-id-list 1004-1050
-  set interfaces xe-0/0/0 unit 0 family ethernet-switching interface-mode trunk
-  
+  set interfaces xe-0/0/0 unit 0 family ethernet-switching interface-mode trunk vlan members all
+  commit
+
   set interfaces xe-0/0/1 unit 0 family ethernet-switching vlan members default
   set interfaces xe-0/0/2 unit 0 family ethernet-switching vlan members default
   set interfaces xe-0/0/3 unit 0 family ethernet-switching vlan members default
@@ -866,11 +976,48 @@ Note
   set interfaces xe-0/0/5 unit 0 family ethernet-switching vlan members default
   set interfaces xe-0/0/6 unit 0 family ethernet-switching vlan members default
   set interfaces xe-0/0/7 unit 0 family ethernet-switching vlan members default
-  set interfaces xe-0/0/8 unit 0 family ethernet-switching vlan members default
-  set interfaces xe-0/0/9 unit 0 family ethernet-switching vlan members default
-  set interfaces xe-0/0/10 unit 0 family ethernet-switching vlan members default
-  set interfaces xe-0/0/11 unit 0 family ethernet-switching vlan members default
   
   commit
   exit
+
+Note
+  OpenConfig capabilities are not listed when connecting to vQFX10K.
+  It might just not be supported ... https://github.com/Juniper/vqfx10k-vagrant/issues/46
+
+Cumulus VX switch
+*****************
+
+/usr/bin/kvm \
+  -curses \
+  -vga virtio \
+  -name spine01 \
+  -pidfile spine01.pid \
+  -smp 2 \
+  -m 768 \
+  -net nic,macaddr=00:01:00:00:03:00,model=virtio \
+  -net user,net=192.168.0.0/24,hostfwd=tcp::1403-:22 \
+  -netdev socket,udp=127.0.0.1:1601,localaddr=127.0.0.1:1602,id=dev0 \
+  -device virtio-net-pci,mac=00:02:00:00:00:05,addr=6.0,multifunction=on,netdev=dev0,id=swp1 \
+  -netdev socket,udp=127.0.0.1:1603,localaddr=127.0.0.1:1604,id=dev1 \
+  -device virtio-net-pci,mac=00:02:00:00:00:06,addr=6.1,multifunction=off,netdev=dev1,id=swp2 \
+  -netdev socket,udp=127.0.0.1:1609,localaddr=127.0.0.1:1610,id=dev2 \
+  -device virtio-net-pci,mac=00:02:00:00:00:11,addr=6.2,multifunction=off,netdev=dev2,id=swp3 \
+  /var/lib/libvirt/images/spine01.qcow2
+
+::
+
+  cp /home/fedora/virtual-switch-images/cumulus/cumulus-linux-5.0.1-vx-amd64-qemu.qcow2 \
+     /var/lib/libvirt/images/cumulus.qcow2
+
+  virt-install \
+      --name cumulus \
+      --os-variant generic \
+      --noautoconsole \
+      --graphics vnc \
+      --memory 1024 \
+      --vcpus=2 \
+      --import \
+      --disk /var/lib/libvirt/images/cumulus.qcow2,format=qcow2 \
+      --network network=public,model=e1000,mac.address=22:57:f8:dd:fe:ac \
+
 
