@@ -1287,9 +1287,10 @@ Post devstack changes
   openstack router add subnet router1 inspect
   
   
-  # Setup netconf devices config
-  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini networking_baremetal enabled_netconf_devices nexus.example.com,veos.example.com
+  # Setup devices config
+  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini networking_baremetal enabled_devices nexus.example.com,veos.example.com
   
+  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini nexus.example.com driver netconf-openconfig
   crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini nexus.example.com switch_info nexus
   crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini nexus.example.com host 192.168.24.21
   crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini nexus.example.com username ml2netconf
@@ -1297,6 +1298,7 @@ Post devstack changes
   crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini nexus.example.com hostkey_verify false
   crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini nexus.example.com device_params name:nexus
   
+  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini veos.example.com driver netconf-openconfig
   crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini veos.example.com switch_info veos
   crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini veos.example.com host 192.168.24.22
   crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini veos.example.com username ml2netconf
