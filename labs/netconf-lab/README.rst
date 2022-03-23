@@ -1228,3 +1228,93 @@ Devstack conf
   # enable_plugin networking-generic-switch https://opendev.org/openstack/networking-generic-switch
   enable_plugin networking-baremetal https://opendev.org/openstack/networking-baremetal
 
+Post devstack changes
+.....................
+
+::
+
+  # Update neutron.conf
+  crudini --set --existing /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_flat flat_networks public
+  crudini --set --existing /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_vlan network_vlan_ranges dataplane:1000:1050
+  crudini --set --existing /etc/neutron/plugins/ml2/ml2_conf.ini ovs bridge_mappings public:br-ex,dataplane:br-dataplane
+  
+  # Update inspector.conf
+  crudini --set --existing /etc/ironic-inspector/inspector.conf DEFAULT timeout 7200
+  crudini --set /etc/ironic-inspector/inspector.conf processing processing_hooks "\$default_processing_hooks,extra_hardware,lldp_basic,local_link_connection"
+  
+  # Update ironic.conf
+  crudini --set --existing /etc/ironic/ironic.conf conductor deploy_callback_timeout 7200
+  crudini --set --existing /etc/ironic/ironic.conf pxe boot_retry_timeout 7200
+  crudini --set --existing /etc/ironic/ironic.conf neutron provisioning_network provision
+  crudini --set --existing /etc/ironic/ironic.conf neutron cleaning_network cleaning
+  crudini --set --existing /etc/ironic/ironic.conf neutron rescuing_network rescueing
+  crudini --set /etc/ironic/ironic.conf neutron inspection_network inspect
+  crudini --set --existing /etc/ironic/ironic.conf pxe kernel_append_params "nofb nomodeset systemd.journald.forward_to_console=yes ipa-insecure=1 ipa-collect-lldp=1"
+  
+  
+  # Delete all devstack networks + rotuers + subnets
+  openstack network delete ironic-provision
+  openstack network delete shared
+  oprenstack router show router1
+  openstack router remove subnet router1 <SUBNET_ID>
+  openstack router remove subnet router1 <SUBNET_ID>
+  openstack network delete ...
+  openstack netowrk delete ...
+  
+  
+  sudo systemctl restart devstack@*
+  
+  # Create network resources
+  openstack network create provision --share --provider-segment 1000 --provider-network-type vlan --provider-physical-network dataplane
+  openstack network create cleaning --share --provider-segment 1001 --provider-network-type vlan --provider-physical-network dataplane
+  openstack network create rescueing --share --provider-segment 1002 --provider-network-type vlan --provider-physical-network dataplane
+  openstack network create inspect --share --provider-segment 1003 --provider-network-type vlan --provider-physical-network dataplane
+  
+  openstack subnet create provision --network provision --subnet-range 192.168.30.0/24 --dhcp
+  openstack subnet create cleaning --network cleaning --subnet-range 192.168.31.0/24 --dhcp
+  openstack subnet create rescueing --network rescueing --subnet-range 192.168.32.0/24 --dhcp
+  openstack subnet create inspect --network inspect --subnet-range 192.168.33.0/24 --dhcp
+  
+  openstack network create public --share --external --provider-network-type flat --provider-physical-network public
+  openstack subnet create public --network public --subnet-range 172.24.5.0/24
+  
+  openstack router create router1
+  openstack router set --external-gateway public router1
+  openstack router add subnet router1 cleaning
+  openstack router add subnet router1 rescueing
+  openstack router add subnet router1 provision
+  openstack router add subnet router1 inspect
+  
+  
+  # Setup netconf devices config
+  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini networking_baremetal enabled_netconf_devices nexus.example.com,veos.example.com
+  
+  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini nexus.example.com switch_info nexus
+  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini nexus.example.com host 192.168.24.21
+  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini nexus.example.com username ml2netconf
+  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini nexus.example.com key_filename /etc/neutron/ssh_keys/ml2netconf
+  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini nexus.example.com hostkey_verify false
+  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini nexus.example.com device_params name:nexus
+  
+  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini veos.example.com switch_info veos
+  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini veos.example.com host 192.168.24.22
+  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini veos.example.com username ml2netconf
+  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini veos.example.com key_filename /etc/neutron/ssh_keys/ml2netconf
+  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini veos.example.com hostkey_verify false
+  crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini veos.example.com device_params name:default
+  
+  mkdir /etc/neutron/ssh_keys
+  cp ml2netconf /etc/neutron/ssh_keys/
+  chown stack:stack /etc/neutron/ssh_keys/ml2netconf 
+  chown stack:stack /etc/neutron/ssh_keys
+  
+  
+  sudo systemctl restart devstack@q-svc.service
+  
+  # Add routes to netwoks on devstack host
+  sudo ip route change 192.168.33.0/24 dev br-ex via 172.24.5.92
+  sudo ip route change 192.168.32.0/24 dev br-ex via 172.24.5.92
+  sudo ip route change 192.168.31.0/24 dev br-ex via 172.24.5.92
+  sudo ip route change 192.168.30.0/24 dev br-ex via 172.24.5.92
+
+
