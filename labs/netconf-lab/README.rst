@@ -1050,7 +1050,8 @@ Install devstack
     --network bridge=nx001,model=virtio \
     --network bridge=nx002,model=virtio
 
-**SSH to the devstack VM**
+SSH to the devstack VM
+**********************
 
 ::
 
@@ -1067,7 +1068,7 @@ Install devstack
   systemctl start lldpd.service
 
 Create network bridge dataplane (run as root, sudo fails 
-........................................................
+********************************************************
 
 ::
 
