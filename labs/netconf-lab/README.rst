@@ -59,7 +59,7 @@ Create a firewall zones, and rules
   firewall-cmd --zone=public-switch --add-service dhcp --permanent
   firewall-cmd --zone=public-switch --add-service ssh --permanent
 
-  nmcli con mod eth0 connection.zone public-switch
+  nmcli con mod "System eth0" connection.zone public-switch
   systemctl restart firewalld
 
 Create virtual networks
@@ -1055,7 +1055,7 @@ SSH to the devstack VM
 
 ::
 
-  ssh root@192.168.24.23
+  ssh root@192.168.24.40
 
   growpart /dev/vda 1
   resize2fs /dev/vda1
