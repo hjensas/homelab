@@ -1258,8 +1258,9 @@ Post devstack changes
   openstack router show router1
   openstack router remove subnet router1 <SUBNET_ID>
   openstack router remove subnet router1 <SUBNET_ID>
+  openstack router delete router1
   openstack network delete ...
-  openstack netowrk delete ...
+  openstack network delete ...
   
   
   sudo systemctl restart devstack@*
