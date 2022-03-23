@@ -1255,7 +1255,7 @@ Post devstack changes
   # Delete all devstack networks + rotuers + subnets
   openstack network delete ironic-provision
   openstack network delete shared
-  oprenstack router show router1
+  openstack router show router1
   openstack router remove subnet router1 <SUBNET_ID>
   openstack router remove subnet router1 <SUBNET_ID>
   openstack network delete ...
