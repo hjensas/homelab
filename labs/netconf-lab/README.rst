@@ -1313,9 +1313,8 @@ Post devstack changes
   sudo systemctl restart devstack@q-svc.service
   ROUTER_GW_IP=$(openstack port list -c "Fixed IP Addresses" -f json --device-owner 'network:router_gateway' | jq --raw-output '.[0]."Fixed IP Addresses"[0].ip_address')
   # Add routes to netwoks on devstack host
-  sudo ip route change 192.168.33.0/24 dev br-ex via 172.24.5.92
-  sudo ip route change 192.168.32.0/24 dev br-ex via 172.24.5.92
-  sudo ip route change 192.168.31.0/24 dev br-ex via 172.24.5.92
-  sudo ip route change 192.168.30.0/24 dev br-ex via 172.24.5.92
-
+  sudo ip route change 192.168.33.0/24 dev br-ex via $ROUTER_GW_IP
+  sudo ip route change 192.168.32.0/24 dev br-ex via $ROUTER_GW_IP
+  sudo ip route change 192.168.31.0/24 dev br-ex via $ROUTER_GW_IP
+  sudo ip route change 192.168.30.0/24 dev br-ex via $ROUTER_GW_IP
 
