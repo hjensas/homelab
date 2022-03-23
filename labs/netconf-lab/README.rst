@@ -1050,4 +1050,44 @@ Install devstack
     --network bridge=nx001,model=virtio \
     --network bridge=nx002,model=virtio
 
+**SSH to the devstack VM**
+
+::
+
+  ssh root@192.168.24.23
+
+  growpart /dev/vda 1
+  resize2fs /dev/vda1
+  apt update
+
+  apt upgrade -y
+  apt install git tmux lldpd openvswitch-switch crudini -y
+  echo "configure system hostname 'openstack.example.com'" > /etc/lldpd.d/lldp.conf
+  systemctl enable lldpd.service
+  systemctl start lldpd.service
+
+Create network bridge dataplane (run as root, sudo fails 
+........................................................
+
+::
+
+  cat << EOF > /etc/netplan/80-dataplane-bridge.yaml
+  network:
+    version: 2
+    renderer: networkd
+    ethernets:
+      enp2s0:
+        dhcp4: no
+      enp3s0:
+       dhcp4: no
+       addresses: [192.168.29.1/24]
+    bridges:
+      br-dataplane:
+        openvswitch: {}
+        interfaces:
+        - enp2s0
+  EOF
+  sudo netplan apply
+
+  
 
