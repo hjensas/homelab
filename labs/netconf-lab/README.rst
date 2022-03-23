@@ -1109,7 +1109,7 @@ Devstack setup
   rsync -av hjensas@192.168.254.29:/home/hjensas/code/networking-baremetal/* networking-baremetal/
 
 Devstack conf
-*************
+.............
 
 ::
 
