@@ -1011,4 +1011,43 @@ Cumulus VX switch
       --network bridge=swp7,model=virtio \
       --network bridge=swp8,model=virtio 
 
+Note
+  Netconf/Openconf support is not currently available, it is mentioned
+  in some of their docs that it nvue is the foundation to make it available.
+  It might be, if not nvue will likley get python bindings,
+  also openapi schema, so possible to generate bindings.
+
+
+Install devstack
+----------------
+
+::
+
+  curl -O https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img
+
+  cp ~/focal-server-cloudimg-amd64.img /var/lib/libvirt/images/openstack.raw
+  qemu-img resize /var/lib/libvirt/images/openstack.raw +15G
+
+  # Set root password in server image and hostname
+  LIBGUESTFS_BACKEND=direct virt-customize \
+  -a /var/lib/libvirt/images/openstack.raw \
+  --hostname openstack \
+  --root-password password:redhat \
+  --run-command 'netplan set ethernets.enp1s0.dhcp4=true' \
+  --run-command 'dpkg-reconfigure openssh-server' \
+  --ssh-inject root:file:/root/.ssh/id_rsa.pub
+
+  virt-install \
+    --name openstack \
+    --os-variant ubuntu20.04 \
+    --noautoconsole \
+    --memory 8192 \
+    --vcpus=2 \
+    --graphics vnc \
+    --import \
+    --disk /var/lib/libvirt/images/openstack.raw,bus=virtio,format=qcow2 \
+    --network network=public,model=virtio,mac.address=22:57:f8:dd:fe:cc \
+    --network bridge=nx001,model=virtio \
+    --network bridge=nx002,model=virtio
+
 
