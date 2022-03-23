@@ -92,6 +92,7 @@ Create DHCP service for public switch
   interface=public-switch
   port=0
   log-dhcp
+  dhcp-option=26,1462
   dhcp-range=192.168.24.100,192.168.24.200,255.255.255.0,10m
   dhcp-option=option:router,192.168.24.1
   dhcp-option=6,192.168.254.1
