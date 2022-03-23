@@ -1060,6 +1060,7 @@ SSH to the devstack VM
 
   growpart /dev/vda 1
   resize2fs /dev/vda1
+  ip link set mtu 1442 enp1s0
   apt update
 
   apt upgrade -y
@@ -1091,5 +1092,139 @@ Create network bridge dataplane (run as root, sudo fails
   EOF
   sudo netplan apply
 
+Devstack setup
+**************
+
+::
+
+  useradd -s /bin/bash -d /opt/stack -m stack
+  echo "stack ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+  sudo su - stack
+  ssh-keygen
+  ssh-copy-id vbmc@192.168.24.1
+
+  git clone https://opendev.org/openstack/devstack
+  # Sync networking-baremetal repo
+  git clone https://opendev.org/openstack/networking-baremetal
+  rsync -av hjensas@192.168.254.29:/home/hjensas/code/networking-baremetal/* networking-baremetal/
+
+Devstack conf
+*************
+
+::
+
+  [[local|localrc]]
+  disable_all_services
+  enable_service placement-api
+  enable_service mysql
+  enable_service tempest
+  enable_service q-agt
+  enable_service n-cpu
+  disable_service horizon
+  enable_service etcd3
+  disable_service neutron-metering
+  enable_service n-cond
+  disable_service c-api
+  enable_service q-metering
+  enable_service s-object
+  enable_service n-api-meta
+  enable_service q-svc
+  disable_service neutron-api
+  enable_service tls-proxy
+  enable_service key
+  disable_service c-bak
+  disable_service neutron-l3
+  disable_service c-sch
+  enable_service q-l3
+  disable_service neutron-agent
+  disable_service cinder
+  disable_service neutron-metadata-agent
+  enable_service rabbit
+  disable_service neutron-dhcp
+  enable_service dstat
+  enable_service s-account
+  enable_service s-container
+  enable_service ir-neutronagt
+  enable_service n-novnc
+  enable_service n-api
+  enable_service generic_switch
+  enable_service s-proxy
+  enable_service n-sch
+  enable_service q-meta
+  enable_service q-dhcp
+  enable_service g-api
+  disable_service c-vol
+  enable_service networking_baremetal
   
+  ADMIN_PASSWORD="secretadmin"
+  BUILD_TIMEOUT="2400"
+  DATABASE_PASSWORD="secretdatabase"
+  DEBUG_LIBVIRT_COREDUMPS="True"
+  DEFAULT_INSTANCE_TYPE="baremetal"
+  EBTABLES_RACE_FIX="True"
+  ENABLE_TENANT_VLANS="True"
+  FIXED_RANGE="172.24.6.0/24"
+  FLOATING_RANGE="172.24.5.0/24"
+  FORCE_CONFIG_DRIVE="False"
+  HOST_IP="192.168.29.1"
+  IPV4_ADDRS_SAFE_TO_USE="172.24.6.0/24"
+  IRONIC_AUTOMATED_CLEAN_ENABLED="False"
+  IRONIC_BAREMETAL_BASIC_OPS="True"
+  IRONIC_BUILD_DEPLOY_RAMDISK="False"
+  IRONIC_CALLBACK_TIMEOUT="700"
+  IRONIC_DEFAULT_DEPLOY_INTERFACE="direct"
+  IRONIC_DEFAULT_RESCUE_INTERFACE=""
+  IRONIC_DEPLOY_DRIVER="ipmi"
+  IRONIC_ENABLED_NETWORK_INTERFACES="flat,neutron"
+  IRONIC_INSPECTOR_BUILD_RAMDISK="False"
+  IRONIC_NETWORK_INTERFACE="neutron"
+  IRONIC_PROVISION_NETWORK_NAME="ironic-provision"
+  IRONIC_PROVISION_PROVIDER_NETWORK_TYPE="vlan"
+  IRONIC_PROVISION_SUBNET_GATEWAY="172.24.7.1"
+  IRONIC_PROVISION_SUBNET_PREFIX="172.24.7.0/24"
+  IRONIC_PROVISION_ALLOCATION_POOL="start=172.24.7.100,end=172.24.7.150"
+  IRONIC_USE_LINK_LOCAL="True"
+  IRONIC_USE_NEUTRON_SEGMENTS="True"
+  IRONIC_VM_COUNT="0"
+  IRONIC_VM_EPHEMERAL_DISK="0"
+  IRONIC_VM_LOG_DIR="/opt/stack/ironic-bm-logs"
+  IRONIC_VM_SPECS_DISK="4"
+  IRONIC_VM_SPECS_RAM="3072"
+  LIBVIRT_TYPE="qemu"
+  LOGFILE="/opt/stack/logs/devstacklog.txt"
+  LOG_COLOR="False"
+  NETWORK_GATEWAY="172.24.6.1"
+  NOVA_VNC_ENABLED="True"
+  NOVNC_FROM_PACKAGE="True"
+  OVS_BRIDGE_MAPPINGS="mynetwork:brbm,public:br-ex"
+  PHYSICAL_NETWORK="dataplane"
+  TENANT_VLAN_RANGE="1000:1500"
+  PUBLIC_BRIDGE_MTU="1500"
+  PUBLIC_NETWORK_GATEWAY="172.24.5.1"
+  PUBLIC_PHYSICAL_NETWORK="public"
+  Q_AGENT="openvswitch"
+  Q_ML2_TENANT_NETWORK_TYPE="vlan"
+  Q_PLUGIN="ml2"
+  Q_ML2_PLUGIN_MECHANISM_DRIVERS=openvswitch
+  Q_SERVICE_PLUGIN_CLASSES="neutron.services.l3_router.l3_router_plugin.L3RouterPlugin,segments"
+  Q_USE_DEBUG_COMMAND="True"
+  Q_USE_PROVIDERNET_FOR_PUBLIC="True"
+  RABBIT_PASSWORD="secretrabbit"
+  SERVICE_HOST="192.168.29.1"
+  SERVICE_PASSWORD="secretservice"
+  SERVICE_TIMEOUT="90"
+  SWIFT_ENABLE_TEMPURLS="True"
+  SWIFT_HASH="1234123412341234"
+  SWIFT_REPLICAS="1"
+  SWIFT_START_ALL_SERVICES="False"
+  SWIFT_TEMPURL_KEY="secretkey"
+  VERBOSE="True"
+  VERBOSE_NO_TIMESTAMP="True"
+  VIRT_DRIVER="ironic"
+  # LIBS_FROM_GIT=networking-baremetal,ironic-python-agent-builder,swift,nova,virtualbmc,ironic,ironic-python-agent,glance,placement,cinder,requirements,neutron,ironic-tempest-plugin,networking-generic-switch,devstack,keystone
+  LIBS_FROM_GIT=networking-baremetal,ironic-python-agent-builder,swift,nova,virtualbmc,ironic,ironic-python-agent,glance,placement,cinder,requirements,neutron,ironic-tempest-plugin,devstack,keystone
+  enable_plugin ironic https://opendev.org/openstack/ironic
+  enable_plugin ironic-inspector https://opendev.org/openstack/ironic-inspector
+  # enable_plugin networking-generic-switch https://opendev.org/openstack/networking-generic-switch
+  enable_plugin networking-baremetal https://opendev.org/openstack/networking-baremetal
 
