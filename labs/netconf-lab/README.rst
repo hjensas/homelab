@@ -1425,4 +1425,67 @@ Post devstack changes
   sudo ip route add 192.168.30.0/24 dev br-ex via $ROUTER_GW_IP
 
 
+Set up VBMC
+***********
+
+::
+
+  vbmc add nexusbm0 --port 6230 --libvirt-uri qemu+ssh://vbmc@192.168.24.1/system --password redhat --username admin
+  vbmc add veosbm0 --port 6231 --libvirt-uri qemu+ssh://vbmc@192.168.24.1/system --password redhat --username admin
+  vbmc start nexusbm0
+  vbmc start veosbm0
+
+**Validate BMCs**
+
+::
+
+  ipmitool -I lanplus -U admin -P redhat -H 127.0.0.1 -p 6230 power status
+  ipmitool -I lanplus -U admin -P redhat -H 127.0.0.1 -p 6231 power status
+
+Import nodes
+************
+
+::
+
+  cat << EOF > ~/ironic_nodes.yaml
+  nodes:
+  - name: nexusbm0
+    driver: ipmi
+    driver_info:
+      ipmi_address: 127.0.0.1
+      ipmi_port: 6230
+      ipmi_username: admin
+      ipmi_password: redhat
+    properties:
+      cpus: 1
+      cpu_arch: x86_64
+      memory_mb: 2048
+      local_gb: 10
+    ports:
+    - address: 22:57:f8:dd:fe:00
+      physical_network: dataplane
+  - name: veosbm0
+    driver: ipmi
+    driver_info:
+      ipmi_address: 127.0.0.1
+      ipmi_port: 6231
+      ipmi_username: admin
+      ipmi_password: redhat
+    properties:
+      cpus: 1
+      cpu_arch: x86_64
+      memory_mb: 2048
+      local_gb: 10
+    ports:
+    - address: 22:57:f8:dd:fe:10
+      physical_network: dataplane
+  EOF
+
+::
+
+  openstack baremetal create ~/ironic_nodes.yaml
+  openstack baremetal node manage nexusbm0
+  openstack baremetal node manage veosbm0
+
+
 
