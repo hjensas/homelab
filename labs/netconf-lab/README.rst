@@ -1019,6 +1019,110 @@ Note
   also openapi schema, so possible to generate bindings.
 
 
+Create some virtual BMs
+-----------------------
+
+::
+
+  curl -O https://cloud.centos.org/centos/8-stream/x86_64/images/CentOS-Stream-GenericCloud-8-20220125.1.x86_64.qcow2
+
+Create BM attached to nexus
+***************************
+
+::
+
+  mkdir ~/nexusbm0
+  cat << EOF > ~/nexusbm0/ifcfg-eth0
+  DEVICE=eth0
+  NAME=eth0
+  ONBOOT=yes
+  TYPE=Ethernet
+  BOOTPROTO=none
+  IPADDR=192.168.25.10
+  NETMASK=255.255.255.0
+  EOF
+
+::
+
+  cp ~/CentOS-Stream-GenericCloud-8-*.qcow2 /var/lib/libvirt/images/nexusbm0.qcow2
+
+::
+
+  LIBGUESTFS_BACKEND=direct virt-customize \
+    -a /var/lib/libvirt/images/nexusbm0.qcow2 \
+    --hostname nexusbm0 \
+    --root-password password:redhat \
+    --uninstall cloud-init \
+    --install lldpd \
+    --run-command 'systemctl enable lldpd' \
+    --install tcpdump \
+    --copy-in ~/nexusbm0/ifcfg-eth0:/etc/sysconfig/network-scripts \
+    --delete /etc/sysconfig/network-scripts/ens3 \
+    --delete /etc/sysconfig/network-scripts/ens3.1 \
+    --selinux-relabel
+
+::
+
+  virt-install \
+    --name nexusbm0 \
+    --os-variant centos8 \
+    --noautoconsole \
+    --memory 4096 \
+    --vcpus=1 \
+    --graphics vnc \
+    --import \
+    --disk /var/lib/libvirt/images/nexusbm0.qcow2,bus=virtio,format=qcow2 \
+    --network bridge=nx003,model=virtio,mac.address=22:57:f8:dd:fe:00
+
+
+Create BM attached to veos
+**************************
+
+::
+
+  mkdir ~/veosbm0
+  cat << EOF > ~/veosbm0/ifcfg-eth0
+  DEVICE=eth0
+  NAME=eth0
+  ONBOOT=yes
+  TYPE=Ethernet
+  BOOTPROTO=none
+  IPADDR=192.168.25.20
+  NETMASK=255.255.255.0
+  EOF
+
+::
+
+  cp ~/CentOS-Stream-GenericCloud-8-*.qcow2 /var/lib/libvirt/images/veosbm0.qcow2
+
+::
+
+  LIBGUESTFS_BACKEND=direct virt-customize \
+    -a /var/lib/libvirt/images/veosbm0.qcow2 \
+    --hostname veosbm0 \
+    --root-password password:redhat \
+    --uninstall cloud-init \
+    --install lldpd \
+    --run-command 'systemctl enable lldpd' \
+    --install tcpdump \
+    --copy-in ~/veosbm0/ifcfg-eth0:/etc/sysconfig/network-scripts \
+    --delete /etc/sysconfig/network-scripts/ens3 \
+    --delete /etc/sysconfig/network-scripts/ens3.1 \
+    --selinux-relabel
+
+::
+
+  virt-install \
+    --name veosbm0 \
+    --os-variant centos8 \
+    --noautoconsole \
+    --memory 4096 \
+    --vcpus=1 \
+    --graphics vnc \
+    --import \
+    --disk /var/lib/libvirt/images/veosbm0.qcow2,bus=virtio,format=qcow2 \
+    --network bridge=veos003,model=virtio,mac.address=22:57:f8:dd:fe:10
+
 Install devstack
 ----------------
 
@@ -1319,4 +1423,6 @@ Post devstack changes
   sudo ip route add 192.168.32.0/24 dev br-ex via $ROUTER_GW_IP
   sudo ip route add 192.168.31.0/24 dev br-ex via $ROUTER_GW_IP
   sudo ip route add 192.168.30.0/24 dev br-ex via $ROUTER_GW_IP
+
+
 
