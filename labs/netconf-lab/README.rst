@@ -1491,6 +1491,23 @@ Import nodes
 Testing notes
 -------------
 
+Create/Delete/Update network
+
+::
+
+  openstack network create \
+    --provider-network-type vlan \
+    --provider-segment 1040 \
+    --provider-physical-network dataplane \
+    vlan1040
+  openstack network set --disable vlan1040
+  openstack network set --enable vlan1040
+  openstack network set \
+    --name vlan1041 \
+    --provider-segment 1041 \
+    vlan1041
+  openstack network delete vlan1041
+
 Some commands to do some simple testing in python shell
 
 ::
