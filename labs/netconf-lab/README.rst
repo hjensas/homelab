@@ -1488,4 +1488,47 @@ Import nodes
   openstack baremetal node manage veosbm0
 
 
+Testing notes
+-------------
+
+Some commands to do some simple testing in python shell
+
+::
+
+  import openstack
+  conn = openstack.connect('devstack-admin')
+  net_id = conn.network.find_network(name_or_id='test-net').id
+  
+  nexus_port = conn.network.create_port(name='nexus-test-port', network_id=net_id)
+  
+  nexus_binding_profile = {}
+  nexus_lli = []
+  nexus_lli.append({'port_id': 'eth1/4', 'switch_id': '', 'switch_info': 'nexus'})
+  nexus_binding_profile['local_link_information'] = nexus_lli
+  nexus_bind_args = {'binding:profile': nexus_binding_profile,
+                     'binding:host_id': '7a140743-db18-4ce4-9e9b-6793fbe401a5',
+                     'binding:vnic_type': 'baremetal'}
+  nexus_unbind_args = {'binding:profile': None,
+                       'binding:host_id': None}
+  
+  conn.network.update_port(nexus_port, **nexus_bind_args)
+  
+  conn.network.update_port(nexus_port, **nexus_unbind_args)
+  
+  
+  veos_port = conn.network.create_port(name='veos-test-port', network_id=net_id)
+  
+  veos_binding_profile = {}
+  veos_lli = []
+  veos_lli.append({'port_id': 'Ethernet4', 'switch_id': '', 'switch_info': 'veos'})
+  veos_binding_profile['local_link_information'] = veos_lli
+  veos_bind_args = {'binding:profile': veos_binding_profile,
+                     'binding:host_id': '7a140743-db18-4ce4-9e9b-6793fbe401a5',
+                     'binding:vnic_type': 'baremetal'}
+  veos_unbind_args = {'binding:profile': None,
+                       'binding:host_id': None}
+  
+  conn.network.update_port(veos_port, **veos_bind_args)
+  
+  conn.network.update_port(veos_port, **veos_unbind_args)
 
