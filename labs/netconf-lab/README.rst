@@ -596,6 +596,7 @@ Note
   ## Switch CLI
   configure terminal
   feature lldp
+  feature lacp
   interface mgmt 0
   ip address dhcp
   no shut
