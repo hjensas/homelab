@@ -1568,7 +1568,7 @@ Commands for LACP bonds testing in phython shell
   nexus_lacp_bind_args = {'binding:profile': nexus_lacp_binding_profile,
                           'binding:host_id': '7a140743-db18-4ce4-9e9b-6793fbe401a5',
                           'binding:vnic_type': 'baremetal'}
-  nexus_lacp_bind_args = {'binding:profile': None,
+  nexus_lacp_unbind_args = {'binding:profile': None,
                           'binding:host_id': None}
   
   conn.network.update_port(nexus_lacp_port, **nexus_lacp_bind_args)
