@@ -1508,7 +1508,7 @@ Create/Delete/Update network
     vlan1041
   openstack network delete vlan1041
 
-Some commands to do some simple testing in python shell
+Some commands to do some simple port testing in python shell
 
 ::
 
@@ -1517,7 +1517,6 @@ Some commands to do some simple testing in python shell
   net_id = conn.network.find_network(name_or_id='test-net').id
   
   nexus_port = conn.network.create_port(name='nexus-test-port', network_id=net_id)
-  
   nexus_binding_profile = {}
   nexus_lli = []
   nexus_lli.append({'port_id': 'eth1/4', 'switch_id': '', 'switch_info': 'nexus'})
@@ -1529,12 +1528,10 @@ Some commands to do some simple testing in python shell
                        'binding:host_id': None}
   
   conn.network.update_port(nexus_port, **nexus_bind_args)
-  
   conn.network.update_port(nexus_port, **nexus_unbind_args)
   
   
   veos_port = conn.network.create_port(name='veos-test-port', network_id=net_id)
-  
   veos_binding_profile = {}
   veos_lli = []
   veos_lli.append({'port_id': 'Ethernet4', 'switch_id': '', 'switch_info': 'veos'})
@@ -1546,6 +1543,56 @@ Some commands to do some simple testing in python shell
                        'binding:host_id': None}
   
   conn.network.update_port(veos_port, **veos_bind_args)
-  
   conn.network.update_port(veos_port, **veos_unbind_args)
+
+Commands for LACP bonds testing in phython shell
+
+::
+
+  import openstack
+  conn = openstack.connect('devstack-admin')
+  net_id = conn.network.find_network(name_or_id='test-net').id
+
+  nexus_lacp_port = conn.network.create_port(name='nexus-lacp-test-port', network_id=net_id)
+  nexus_lacp_binding_profile = {}
+  nexus_lacp_lli = nexus_lacp_binding_profile['local_link_information'] = []
+  nexus_lacp_lli.append({'port_id': 'eth1/11', 'switch_id': '', 'switch_info': 'nexus'})
+  nexus_lacp_lli.append({'port_id': 'eth1/12', 'switch_id': '', 'switch_info': 'nexus'})
+  nexus_lgi = nexus_lacp_binding_profile['local_group_information'] = {}
+  nexus_lgi['id'] = 'port_group_id'
+  nexus_lgi['name'] = 'PortGroup1'
+  nexus_lgi['bond_mode'] = '802.3ad'
+  nexus_bond_prop = nexus_lgi['bond_properties'] = {}
+  nexus_bond_prop['bond_lacp_rate'] = 'fast'
+  nexus_bond_prop['bond_min_links'] = 2
+  nexus_lacp_bind_args = {'binding:profile': nexus_lacp_binding_profile,
+                          'binding:host_id': '7a140743-db18-4ce4-9e9b-6793fbe401a5',
+                          'binding:vnic_type': 'baremetal'}
+  nexus_lacp_bind_args = {'binding:profile': None,
+                          'binding:host_id': None}
+  
+  conn.network.update_port(nexus_lacp_port, **nexus_lacp_bind_args)
+  conn.network.update_port(nexus_lacp_port, **nexus_lacp_unbind_args)
+  
+  
+  veos_lacp_port = conn.network.create_port(name='veos-lacp-test-port', network_id=net_id)
+  veos_lacp_binding_profile = {}
+  veos_lacp_lli = veos_lacp_binding_profile['local_link_information'] = []
+  veos_lacp_lli.append({'port_id': 'Ethernet7', 'switch_id': '', 'switch_info': 'veos'})
+  veos_lacp_lli.append({'port_id': 'Ethernet8', 'switch_id': '', 'switch_info': 'veos'})
+  veos_lgi = veos_lacp_binding_profile['local_group_information'] = {}
+  veos_lgi['id'] = 'port_group_id'
+  veos_lgi['name'] = 'PortGroup1'
+  veos_lgi['bond_mode'] = '802.3ad'
+  veos_bond_prop = veos_lgi['bond_properties'] = {}
+  veos_bond_prop['bond_lacp_rate'] = 'fast'
+  veos_bond_prop['bond_min_links'] = 2
+  veos_lacp_bind_args = {'binding:profile': veos_lacp_binding_profile,
+                         'binding:host_id': '7a140743-db18-4ce4-9e9b-6793fbe401a5',
+                         'binding:vnic_type': 'baremetal'}
+  veos_lacp_unbind_args = {'binding:profile': None,
+                           'binding:host_id': None}
+  
+  conn.network.update_port(veos_lacp_port, **veos_lacp_bind_args)
+  conn.network.update_port(veos_lacp_port, **veos_lacp_unbind_args)
 
