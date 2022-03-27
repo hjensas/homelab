@@ -932,8 +932,8 @@ Create ml2netcon user and add authentication key
   cli
   config
   set system login user netconf
-  set system login use netconf full-name "ML2 Netconf"
-  set system login use netconf class operator
+  set system login user netconf full-name "ML2 Netconf"
+  set system login user netconf class super-user
   set system login user netconf authentication ssh-rsai "<$SSH_PUB_KEY>"
   set system schema openconfig unhide
   set system services netconf rfc-compliant
