@@ -907,13 +907,13 @@ Juniper vQFX initial setup
     -o PreferredAuthentications=password \
     -o UserKnownHostsFile=/dev/null \
     -o StrictHostKeyChecking=no \
-    192.168.24.30
+    192.168.24.24
 
 **Passwd**: Juniper
 
 ::
 
-  ssh 192.168.24.30
+  ssh 192.168.24.24
   cli
   configure
   deactivate system syslog user *
