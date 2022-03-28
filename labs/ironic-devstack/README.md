@@ -7,7 +7,7 @@ sudo apt update
 sudo apt upgrade -y
 sudo apt install tmux -y
 
-sudu su - stack
+sudo su - stack
 
 git clone https://opendev.org/openstack/devstack.git
 git clone https://opendev.org/openstack/ironic-tempest-plugin.git

@@ -549,7 +549,7 @@ Create a SSH keypari for netconf
 
 ::
 
-  ssh-key-gen -f /root/ml2netconf
+  ssh-keygen -f /root/ml2netconf
 
 Cisco Nexus virtual switch
 **************************
