@@ -9,7 +9,8 @@ Install packages for virtualization host etc
   dnf update -y
   dnf install -y \
     guestfs-tools libguestfs-tools tmux vim-enhanced \
-    virt-install telnet bridge-utils libvirt firewalld
+    virt-install telnet bridge-utils libvirt firewalld \
+    NetworkManager-initscripts-ifcfg-rh
 
 Enable and start libvirtd
 -------------------------
@@ -57,6 +58,7 @@ Create a firewall zones, and rules
   firewall-cmd --zone=public-switch --add-forward --permanent
   firewall-cmd --zone=public-switch --add-masquerade --permanent
   firewall-cmd --zone=public-switch --add-service dhcp --permanent
+  firewall-cmd --zone=public-switch --add-service tftp --permanent
   firewall-cmd --zone=public-switch --add-service ssh --permanent
 
   nmcli con mod "System eth0" connection.zone public-switch
@@ -83,6 +85,22 @@ Create a public switch on host
   NETMASK=255.255.255.0
   EOF
 
+Create TFTP directory
+*********************
+
+::
+
+  mkdir /var/lib/tftpboot
+
+Create Cisco Nexus POAP script
+******************************
+
+::
+
+  cat << EOF > /var/lib/tftpboot/nexus.py
+  
+  EOF
+
 Create DHCP service for public switch
 *************************************
 
@@ -93,15 +111,19 @@ Create DHCP service for public switch
   port=0
   log-dhcp
   dhcp-option=26,1462
-  dhcp-range=192.168.24.100,192.168.24.200,255.255.255.0,10m
+  dhcp-range=192.168.24.100,192.168.24.200,255.255.255.0,2h
   dhcp-option=option:router,192.168.24.1
   dhcp-option=6,192.168.254.1
-  dhcp-host=22:57:f8:dd:fe:aa,nexus.example.com,192.168.24.21
-  dhcp-host=22:57:f8:dd:fe:ab,veos.example.com,192.168.24.22
+  dhcp-host=22:57:f8:dd:fe:aa,set:nexus,nexus.example.com,192.168.24.21
+  dhcp-host=22:57:f8:dd:fe:ab,set:veos,veos.example.com,192.168.24.22
   dhcp-host=22:57:f8:dd:fe:ac,cumulus.example.com,192.168.24.23
   dhcp-host=22:57:f8:dd:fe:ad,vqfx-re.example.com,192.168.24.24
   dhcp-host=22:57:f8:dd:fe:ae,vqfx-pfe.example.com,192.168.24.25
   dhcp-host=22:57:f8:dd:fe:cc,openstack.example.com,192.168.24.40
+  dhcp-option=tag:nexus,66,"192.168.24.1"
+  dhcp-option=tag:nexux,67,poap.py
+  enable-tftp
+  tftp-root=/var/lib/tftpboot
   EOF
 
 ::
