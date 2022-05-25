@@ -16,21 +16,6 @@
         - git
         - tmux
         - vim-enhanced
-  - name: Set up public interface
-    become: yes
-    copy:
-      content: | 
-        NAME=eth2
-        DEVICE=eth2
-        BOOTPROTO=none
-        IPV6INIT=yes
-        IPV6ADDR={{ undercloud_public_ip }}
-        MTU=1442
-      dest: /etc/sysconfig/network-scripts/ifcfg-eth2
-  - name: Bring up public interface
-    ansible.builtin.systemd:
-      state: restarted
-      name: NetworkManager.service
   - name: Git checkout tripleo-repos
     git:
       repo: https://opendev.org/openstack/tripleo-repos.git
@@ -45,6 +30,27 @@
     shell: |
       /usr/local/bin/tripleo-repos -b wallaby current ceph
       dnf module enable container-tools:3.0 -y
+  - name: Install packages
+    become: yes
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+        - openstack-network-scripts
+  - name: Set up public interface
+    become: yes
+    copy:
+      content: | 
+        NAME=eth2
+        DEVICE=eth2
+        BOOTPROTO=none
+        IPV6INIT=yes
+        IPV6ADDR={{ undercloud_public_ip }}
+        MTU=1442
+      dest: /etc/sysconfig/network-scripts/ifcfg-eth2
+  - name: Bring up public interface
+    become: yes
+    command: ifup eth2
   - name: upgrade all packages
     become: yes
     yum:
