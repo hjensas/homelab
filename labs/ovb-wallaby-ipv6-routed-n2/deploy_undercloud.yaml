@@ -7,15 +7,6 @@
       mkswap /opt/8GB.swap
       swapon /opt/8GB.swap
       echo "/opt/8GB.swap swap                                    swap    defaults 0 0" >> /etc/fstab
-  - name: Install packages
-    become: yes
-    yum:
-      name: "{{ packages }}"
-    vars:
-      packages:
-        - git
-        - tmux
-        - vim-enhanced
   - name: Install tripleo repos rpm
     become: yes
     shell: |
@@ -32,6 +23,9 @@
       name: "{{ packages }}"
     vars:
       packages:
+        - git
+        - tmux
+        - vim-enhanced
         - openstack-network-scripts
   - name: Set up public interface
     become: yes
@@ -44,9 +38,13 @@
         IPV6ADDR={{ undercloud_public_ip }}
         MTU=1442
       dest: /etc/sysconfig/network-scripts/ifcfg-eth2
-  - name: Bring up public interface
+  - name: Disable NetworkManager - enable network.service
     become: yes
-    command: ifup eth2
+    shell: |
+      systemctl enable network.service
+      systemctl disable NetworkManager.service
+      systemctl stop NetworkManager.service
+      systemctr start network.service
   - name: upgrade all packages
     become: yes
     yum:
