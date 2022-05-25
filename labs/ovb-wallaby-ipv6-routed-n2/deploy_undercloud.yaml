@@ -7,6 +7,15 @@
       mkswap /opt/8GB.swap
       swapon /opt/8GB.swap
       echo "/opt/8GB.swap swap                                    swap    defaults 0 0" >> /etc/fstab
+  - name: Install packages
+    become: yes
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+        - git
+        - tmux
+        - vim-enhanced
   - name: Set up public interface
     become: yes
     copy:
@@ -19,17 +28,9 @@
         MTU=1442
       dest: /etc/sysconfig/network-scripts/ifcfg-eth2
   - name: Bring up public interface
-    become: yes
-    command: ifup eth2
-  - name: Install packages
-    become: yes
-    yum:
-      name: "{{ packages }}"
-    vars:
-      packages:
-        - git
-        - tmux
-        - vim-enhanced
+    ansible.builtin.systemd:
+      state: restarted
+      name: NetworkManager.service
   - name: Git checkout tripleo-repos
     git:
       repo: https://opendev.org/openstack/tripleo-repos.git
