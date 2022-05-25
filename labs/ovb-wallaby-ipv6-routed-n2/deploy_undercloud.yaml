@@ -26,7 +26,6 @@
     become: yes
     shell: |
       tripleo-repos -b wallaby current ceph
-      dnf module enable container-tools:3.0 -y
   - name: Install packages
     become: yes
     yum:
