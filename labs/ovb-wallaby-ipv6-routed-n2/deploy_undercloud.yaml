@@ -16,15 +16,12 @@
         - git
         - tmux
         - vim-enhanced
-  - name: Git checkout tripleo-repos
-    git:
-      repo: https://opendev.org/openstack/tripleo-repos.git
-      dest: "{{ ansible_env.HOME }}/tripleo-repos"
   - name: Install tripleo repos rpm
     become: yes
     shell: |
-      cd {{ ansible_env.HOME }}/tripleo-repos
-      /usr/libexec/platform-python setup.py install
+      centos_ver=$(rpm --eval %{centos_ver})
+      curl -o /etc/yum.repos.d/delorean.repo https://trunk.rdoproject.org/centos${centos_ver}-master/current-tripleo/delorean.repo
+      dnf install -y python3-tripleo-repos
   - name: Set up tripleo repos
     become: yes
     shell: |
