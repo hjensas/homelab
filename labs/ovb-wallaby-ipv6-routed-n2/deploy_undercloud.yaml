@@ -25,7 +25,7 @@
   - name: Set up tripleo repos
     become: yes
     shell: |
-      /usr/local/bin/tripleo-repos -b wallaby current ceph
+      tripleo-repos -b wallaby current ceph
       dnf module enable container-tools:3.0 -y
   - name: Install packages
     become: yes
