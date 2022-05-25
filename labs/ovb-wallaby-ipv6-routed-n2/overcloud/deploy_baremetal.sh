@@ -1,4 +1,4 @@
-source /home/centos/stackrc
+source /home/cloud-user/stackrc
 
 openstack overcloud node provision \
 	--stack my_overcloud \
@@ -6,4 +6,4 @@ openstack overcloud node provision \
 	--output ~/overcloud-baremetal-deployed.yaml \
 	~/overcloud/baremetal_deployment.yaml
 
-sed -i 's|/usr/share/openstack-tripleo-heat-templates|/home/centos/tripleo-heat-templates|g' /home/centos/overcloud-baremetal-deployed.yaml
+sed -i 's|/usr/share/openstack-tripleo-heat-templates|/home/cloud-user/tripleo-heat-templates|g' /home/cloud-user/overcloud-baremetal-deployed.yaml

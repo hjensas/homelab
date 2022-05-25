@@ -1,12 +1,12 @@
 #!/bin/bash
 
-source /home/centos/stackrc
-cd /home/centos
+source /home/cloud-user/stackrc
+cd /home/cloud-user
 
 
 openstack overcloud network provision \
-  --output /home/centos/overcloud-networks-deployed.yaml \
-  /home/centos/overcloud/network_data_v2.yaml 
+  --output /home/cloud-user/overcloud-networks-deployed.yaml \
+  /home/cloud-user/overcloud/network_data_v2.yaml 
 
-sed -i 's|/usr/share/openstack-tripleo-heat-templates|/home/centos/tripleo-heat-templates|g' /home/centos/overcloud-networks-deployed.yaml
+sed -i 's|/usr/share/openstack-tripleo-heat-templates|/home/cloud-user/tripleo-heat-templates|g' /home/cloud-user/overcloud-networks-deployed.yaml
 
