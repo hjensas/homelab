@@ -1,7 +1,4 @@
 parameter_defaults:
-  ControlPlaneSubnet: ctlplane-leaf1
-  ControllerControlPlaneSubnet: ctlplane-leaf1
-  ComputeControlPlaneSubnet: ctlplane-leaf2
   ControllerNetworkConfigUpdate: true
   ComputeNetworkConfigUpdate: true
 
