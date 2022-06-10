@@ -1,11 +1,11 @@
 #!/bin/bash
 
-source /home/centos/stackrc
-cd /home/centos
+source /home/cloud-user/stackrc
+cd /home/cloud-user
 
 openstack overcloud network vip provision \
   --stack overcloud \
   --templates ~/tripleo-heat-templates \
-  --output /home/centos/overcloud-vips-deployed.yaml \
-  /home/centos/overcloud/vip_data.yaml
+  --output /home/cloud-user/overcloud-vips-deployed.yaml \
+  /home/cloud-user/overcloud/vip_data.yaml
 
