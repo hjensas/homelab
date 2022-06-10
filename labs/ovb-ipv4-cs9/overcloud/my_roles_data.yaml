@@ -170,7 +170,6 @@
     - OS::TripleO::Services::TripleoPackages
     - OS::TripleO::Services::Tuned
     - OS::TripleO::Services::Vpp
-    - OS::TripleO::Services::Zaqar
 ###############################################################################
 # Role: Compute                                                               #
 ###############################################################################

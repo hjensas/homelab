@@ -21,4 +21,4 @@
       - network: tenant
       - network: storage
     network_config:
-      template: templates/multiple_nics/multiple_nics_dvr.j2
+      template: templates/multiple_nics/multiple_nics_dvr.j2podma
