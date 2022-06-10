@@ -4,9 +4,4 @@ parameter_defaults:
   ComputeControlPlaneSubnet: ctlplane-leaf2
   ControllerNetworkConfigUpdate: true
   ComputeNetworkConfigUpdate: true
-  VipSubnetMap:
-    External: external_subnet
-    Storage: storage_subnet01
-    StorageMgmt: storage_mgmt_subnet01
-    InternalApi: internal_api_subnet01
 
