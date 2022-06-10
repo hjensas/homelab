@@ -8,7 +8,10 @@
       - network: storage
       - network: storagemgmt
       - network: tenant
-
+    network_config:
+      template: templates/multiple_nics/multiple_nics_dvr.j2
+      default_route_network:
+        - external
 - name: Compute
   count: 1
   hostname_format: compute-%index%
@@ -17,4 +20,5 @@
       - network: internalapi
       - network: tenant
       - network: storage
-
+    network_config:
+      template: templates/multiple_nics/multiple_nics_dvr.j2
