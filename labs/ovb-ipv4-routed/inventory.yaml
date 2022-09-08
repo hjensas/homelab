@@ -15,8 +15,8 @@ all:
       key_name: default
       create_clouds_yaml: false
       cloud_name: homelab
-      baremetal_image_name: ipxe-boot
-      bmc_template_name: bmc-image
+      baremetal_image_name: ipxe-boot-uefi
+      bmc_template_name: CentOS-Stream-GenericCloud-9
       env_args: >-
        -e {{ ovb_working_dir }}/env-{{ idnum }}-base.yaml
        -e {{ ovb_repo_directory }}/environments/bmc-use-cache.yaml
@@ -28,10 +28,10 @@ all:
           baremetal_flavor: m1.large
           bmc_flavor: m1.small
           extra_node_flavor: m1.small
-          baremetal_image: CentOS-Stream-GenericCloud-8
+          baremetal_image: CentOS-Stream-GenericCloud-9
           radvd_flavor: m1.small
-          radvd_image: CentOS-7-x86_64-GenericCloud
-          dhcp_relay_image: CentOS-7-x86_64-GenericCloud
+          radvd_image: CentOS-Stream-GenericCloud-9
+          dhcp_relay_image: CentOS-Stream-GenericCloud-9
           dhcp_relay_flavor: m1.small
           external_net: provider
 
