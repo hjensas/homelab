@@ -1,5 +1,5 @@
-ovb-ipv4-routed lab
-===================
+ovb-ipv4-cs9 lab
+============
 
 Set up OVB environment
 ----------------------
@@ -8,13 +8,14 @@ Set up OVB environment
 
   export OS_CLOUD=homelab
 
-  export LAB_NAME=ovb-ipv4-routed
+  export LAB_NAME=ovb-ipv6
   export LAB_DIR=~/$LAB_NAME
   mkdir $LAB_DIR
   git clone https://github.com/hjensas/homelab.git $LAB_DIR/homelab
   export LAB_REPO_DIR=$LAB_DIR/homelab/labs/$LAB_NAME
 
   git clone https://review.rdoproject.org/r/config $LAB_DIR/config
+  cd $LAB_DIR 
 
   mkdir $LAB_REPO_DIR/roles
   scp -r $LAB_DIR/config/roles/ovb-manage $LAB_REPO_DIR/roles
@@ -34,10 +35,22 @@ Set up OVB environment
   $OVB_UNDERCLOUD ansible_user=$CLOUD_USER ansible_ssh_extra_args='-o StrictHostKeyChecking=no' undercloud_public_ip=$OVB_UNDERCLOUD_PUBLIC idnum=$ID_NUM
   EOF
 
-  ansible-playbook -i inventory.ini $LAB_DIR/homelab/labs/playbooks/ssh_hardening.yaml
   scp -o StrictHostKeyChecking=no $LAB_DIR/ovb_working_dir/instackenv.json $CLOUD_USER@$OVB_UNDERCLOUD:
   ansible-playbook -i inventory.ini $LAB_REPO_DIR/deploy_undercloud.yaml
 
+
+Deploy the overcloud
+--------------------
+
+Log into the ovb undercloud node, user: centos.
+
+To deploy without routed networks first::
+
+  bash ~/overcloud/deploy_overcloud_pre_update.sh
+
+Deploy (or update) with routed networks::
+
+  bash ~/overcloud/deploy_overcloud.sh
 
 Run Tempest tests on the overcloud
 ----------------------------------

@@ -6,30 +6,35 @@ Set up OVB environment
 
 ::
 
-  mkdir ~/ovb-ipv6-routed
-  virtualenv ~/ovb-ipv6-routed
-  source ~/ovb-ipv6-routed/bin/activate
-  git clone https://opendev.org/openstack/openstack-virtual-baremetal.git ~/ovb-ipv6-routed/openstack-virtual-baremetal
-  pip install ~/ovb-ipv6-routed/openstack-virtual-baremetal
-  pip install python-openstackclient
-  pip install ansible
-  git clone https://github.com/hjensas/homelab.git ~/ovb-ipv6-routed/homelab
-  cp ~/ovb-ipv6-routed/homelab/labs/ovb-ipv6-routed/ovb/* ~/ovb-ipv6-routed/openstack-virtual-baremetal/
+  export OS_CLOUD=homelab
 
-Set up OVB routed-networks lab
-------------------------------
+  export LAB_NAME=ovb-ipv6-routed
+  export LAB_DIR=~/$LAB_NAME
+  mkdir $LAB_DIR
+  git clone https://github.com/hjensas/homelab.git $LAB_DIR/homelab
+  export LAB_REPO_DIR=$LAB_DIR/homelab/labs/$LAB_NAME
 
-The OVB environment files expect:
- - A pre-existing private network to be available in the tenant.
-   This network also need to be connected to a router with a connection
-   to the external network.
- - A key, key_name: default must exist
+  git clone https://review.rdoproject.org/r/config $LAB_DIR/config
+  cd $LAB_DIR
 
-  .. NOTE:: Source the cloud RC file first
+  mkdir $LAB_REPO_DIR/roles
+  scp -r $LAB_DIR/config/roles/ovb-manage $LAB_REPO_DIR/roles
+
+  ansible-playbook --inventory $LAB_REPO_DIR/inventory.yaml $LAB_REPO_DIR/create-ovb-stack.yaml -e lab_dir=$LAB_DIR
 
 ::
 
-  cd ~/ovb-ipv6-routed/openstack-virtual-baremetal/
-  export OS_CLOUD=homelab
-  bash ~/ovb-ipv6-routed/openstack-virtual-baremetal/deploy_ovb.sh
+  CLOUD_USER=cloud-user
+  ID_NUM=$(cat $LAB_DIR/ovb_working_dir/idnum)
+  OVB_UNDERCLOUD=$(openstack stack output show baremetal_$ID_NUM undercloud_host_floating_ip -f value -c output_value)
+  OVB_UNDERCLOUD_PUBLIC=2001:db8:fd00:1000::fffe/64
+
+  cat << EOF > inventory.ini
+  [undercloud]
+  $OVB_UNDERCLOUD ansible_user=$CLOUD_USER ansible_ssh_extra_args='-o StrictHostKeyChecking=no' undercloud_public_ip=$OVB_UNDERCLOUD_PUBLIC idnum=$ID_NUM lab_name=$LAB_NAME
+  EOF
+
+  scp -o StrictHostKeyChecking=no $LAB_DIR/ovb_working_dir/instackenv.json $CLOUD_USER@$OVB_UNDERCLOUD:
+  ansible-playbook -i inventory.ini $LAB_REPO_DIR/deploy_undercloud.yaml
+
 

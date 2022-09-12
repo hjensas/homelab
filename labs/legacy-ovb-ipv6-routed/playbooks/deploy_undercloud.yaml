@@ -7,55 +7,68 @@
       mkswap /opt/8GB.swap
       swapon /opt/8GB.swap
       echo "/opt/8GB.swap swap                                    swap    defaults 0 0" >> /etc/fstab
-  - name: Delete default "System eth2" connection
-    become: true
-    command: nmcli connection del "System eth2"
-  - name: Set up public interface
-    become: yes
-    copy:
-      content: | 
-        [connection]
-        id=eth2
-        type=ethernet
-        autoconnect=true
-        interface-name=eth2
-        
-        [ipv4]
-        method=manual
-        addresses={{ undercloud_public_ip }}/24
-        
-        [ipv6]
-        method=disabled
-        
-        [ethernet]
-        mtu=1442
-      dest: /etc/NetworkManager/system-connections/eth2.nmconnection
-      mode: 0600
-      owner: root
-      group: root
-  - name: Reload NetworkManager connections
-    become: true
-    command: nmcli connection reload
   - name: Install packages
     become: yes
     yum:
       name: "{{ packages }}"
     vars:
       packages:
+        - python3
         - git
         - tmux
         - vim-enhanced
+        - tcpdump
+        - python3-setuptools
+        - python3-requests
+        - libguestfs-tools
+        - patch
+        - patchutils
+        - createrepo_c
+        - network-scripts
+  - name: Ensure /etc/sysconfig/network-scripts/ifcfg-ens3 is GONE
+    become: yes
+    file:
+      path: /etc/sysconfig/network-scripts/ifcfg-ens3
+      state: absent
+  - name: Disable NetworkManager.service
+    become: yes
+    systemd:
+      state: stopped
+      enabled: no
+      name: NetworkManager.service
+  - name: Enable network.service
+    become: yes
+    systemd:
+      state: started
+      enabled: yes
+      name: network.service
+  - name: Set up public interface
+    become: yes
+    copy:
+      content: | 
+        NAME=eth2
+        DEVICE=eth2
+        BOOTPROTO=static
+        IPADDR={{ undercloud_public_ip }}
+        PREFIX=64
+        MTU=1442
+      dest: /etc/sysconfig/network-scripts/ifcfg-eth2
+  - name: Bring up public interface
+    become: yes
+    command: ifup eth2
+  - name: Git checkout tripleo-repos
+    git:
+      repo: https://opendev.org/openstack/tripleo-repos.git
+      dest: "{{ ansible_env.HOME }}/tripleo-repos"
   - name: Install tripleo repos rpm
     become: yes
     shell: |
-      REPO=https://trunk.rdoproject.org/centos9/component/tripleo/current/
-      TRIPLEO_REPOS_PKG=$(curl -s https://trunk.rdoproject.org/centos9/component/tripleo/current/versions.csv | grep tripleo-repos | awk -F ',' '{print $NF}')
-      curl -O "${REPO}python3-${TRIPLEO_REPOS_PKG}.noarch.rpm"
-      dnf install -y python3-tripleo-repos-*.el9.noarch.rpm
+      cd {{ ansible_env.HOME }}/tripleo-repos
+      /usr/libexec/platform-python setup.py install
   - name: Set up tripleo repos
     become: yes
     shell:
-      tripleo-repos current-tripleo-dev ceph
+      /usr/local/bin/tripleo-repos current-tripleo-dev ceph
   - name: upgrade all packages
     become: yes
     yum:
@@ -64,13 +77,14 @@
   - name: Unconditionally reboot the machine with all defaults
     become: yes
     reboot:
-  - name: Install tripleo client
+  - name: Install tripleo client and ceph-ansible
     become: yes
     yum:
       name: "{{ packages }}"
     vars:
       packages:
         - python3-tripleoclient
+        - ceph-ansible
   - name: Git checkout labs
     git:
       repo: https://github.com/hjensas/homelab.git
@@ -83,29 +97,23 @@
       # version: FETCH_HEAD
   - name: Create symlinks
     file:
-      src: "{{ ansible_env.HOME }}/homelab/labs/ovb-ipv4-routed/{{ item }}"
+      src: "{{ ansible_env.HOME }}/homelab/labs/legacy-ovb-ipv6-routed/{{ item }}"
       dest: "{{ ansible_env.HOME }}/{{ item }}"
       state: link
     with_items:
       - overcloud
-  - name: Create symlinks undercloud
-    file:
-      src: "{{ ansible_env.HOME }}/homelab/labs/ovb-ipv4-routed/undercloud/{{ item }}"
-      dest: "{{ ansible_env.HOME }}/{{ item }}"
-      state: link
-    with_items:
       - undercloud.conf
+      - set_capabilities.sh
+      - baremetal_deployment.yaml
   - name: Create images directory
     file:
       dest: "{{ ansible_env.HOME }}/images"
       state: directory
-  - name: Build Images
+  - name: Build Images - async task
     shell: |
       cd {{ ansible_env.HOME }}/images
-      curl -o CentOS-Stream-GenericCloud-9.qcow2 https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-GenericCloud-9-20220829.0.x86_64.qcow2
       export DIB_YUM_REPO_CONF="/etc/yum.repos.d/delorean* /etc/yum.repos.d/tripleo-centos-*"
-      export DIB_LOCAL_IMAGE={{ ansible_env.HOME }}/images/CentOS-Stream-GenericCloud-9.qcow2
-      openstack overcloud image build --config-file /usr/share/openstack-tripleo-common/image-yaml/overcloud-images-python3.yaml --config-file /usr/share/openstack-tripleo-common/image-yaml/overcloud-images-centos9.yaml
+      openstack overcloud image build --config-file /usr/share/openstack-tripleo-common/image-yaml/overcloud-images-python3.yaml --config-file /usr/share/openstack-tripleo-common/image-yaml/overcloud-images-centos8.yaml
   - name: Install Undercloud
     shell:
       openstack undercloud install
@@ -124,9 +132,12 @@
     shell: |
       source {{ ansible_env.HOME }}/stackrc
       openstack overcloud node introspect --all-manageable --provide
-  - name: Set node capabilities
+  - name: Create flavors and set node capabilities
     shell: |
-      source ~/stackrc
-      openstack baremetal node set --property capabilities='profile:control,boot_option:local' baremetal-{{ idnum }}-leaf1-0
-      openstack baremetal node set --property capabilities='profile:compute-leaf2,boot_option:local' baremetal-{{ idnum }}-leaf2-0
-      
+      source {{ ansible_env.HOME }}/stackrc
+      bash {{ ansible_env.HOME }}/set_capabilities.sh
+  - name: Deploy baremetal nodes
+    shell: |
+      source {{ ansible_env.HOME }}/stackrc
+      openstack overcloud node provision --stack overcloud --output {{ ansible_env.HOME }}/overcloud-baremetal-deployed.yaml {{ ansible_env.HOME }}/baremetal_deployment.yaml
+

@@ -4,6 +4,8 @@
   defaults:
     profile: control
     networks:
+      - network: ctlplane
+        vif: true
       - network: external
         subnet: external_subnet
       - network: internal_api
@@ -25,6 +27,8 @@
   defaults:
     profile: compute-leaf2
     networks:
+      - network: ctlplane
+        vif: true
       - network: internal_api
         subnet: internal_api_subnet02
       - network: tenant
