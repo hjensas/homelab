@@ -1,0 +1,10 @@
+- network: storage_mgmt
+  subnet: storage_mgmt_subnet01
+- network: internal_api
+  subnet: internal_api_subnet01
+- network: storage
+  subnet: storage_subnet01
+- network: external
+  subnet: external_subnet
+- network: ctlplane
+  subnet: ctlplane-leaf1

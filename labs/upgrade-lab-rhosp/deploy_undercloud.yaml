@@ -1,0 +1,72 @@
+- hosts: undercloud
+  tasks:
+  # Pool ID: 8a85f9a07db4828b017dc513c19107b5
+  # subscription-manager attach --pool=8a85f9a07db4828b017dc513c19107b5
+  - name: Set up some swap space
+    become: yes
+    shell: |
+      dd if=/dev/zero of=/opt/8GB.swap bs=8192 count=1048576
+      mkswap /opt/8GB.swap
+      swapon /opt/8GB.swap
+      echo "/opt/8GB.swap swap                                    swap    defaults 0 0" >> /etc/fstab
+  - name: Delete default "System eth2" connection
+    become: true
+    command: nmcli connection del "System eth2"
+  - name: Set up public interface
+    become: yes
+    copy:
+      content: | 
+        [connection]
+        id=eth2
+        type=ethernet
+        autoconnect=true
+        interface-name=eth2
+        
+        [ipv4]
+        method=manual
+        addresses={{ undercloud_public_ip }}/24
+        
+        [ipv6]
+        method=disabled
+        
+        [ethernet]
+        mtu=1442
+      dest: /etc/NetworkManager/system-connections/eth2.nmconnection
+      mode: 0600
+      owner: root
+      group: root
+  - name: Reload NetworkManager connections
+    become: true
+    command: nmcli connection reload
+  - name: Install packages
+    become: yes
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+        - git
+        - tmux
+        - vim-enhanced
+  - name: Git checkout labs
+    git:
+      repo: https://github.com/hjensas/homelab.git
+      dest: "{{ ansible_env.HOME }}/homelab"
+  - name: Create symlinks
+    file:
+      src: "{{ ansible_env.HOME }}/homelab/labs/{{ lab_name }}/{{ item }}"
+      dest: "{{ ansible_env.HOME }}/{{ item }}"
+      state: link
+    with_items:
+      - overcloud
+  - name: Create symlinks undercloud
+    file:
+      src: "{{ ansible_env.HOME }}/homelab/labs/{{ lab_name }}/undercloud/{{ item }}"
+      dest: "{{ ansible_env.HOME }}/{{ item }}"
+      state: link
+    with_items:
+      - undercloud.conf
+  - name: Create images directory
+    file:
+      dest: "{{ ansible_env.HOME }}/images"
+      state: directory
+

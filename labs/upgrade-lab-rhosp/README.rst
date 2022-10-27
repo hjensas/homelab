@@ -1,5 +1,5 @@
-upgrade-lab
-===========
+upgrade-lab-rhosp
+=================
 
 Set up OVB environment
 ----------------------
@@ -8,7 +8,7 @@ Set up OVB environment
 
   export OS_CLOUD=homelab
 
-  export LAB_NAME=upgrade-lab
+  export LAB_NAME=upgrade-lab-rhosp
   export LAB_DIR=~/$LAB_NAME
   mkdir $LAB_DIR
   git clone https://github.com/hjensas/homelab.git $LAB_DIR/homelab

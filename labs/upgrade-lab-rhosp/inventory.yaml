@@ -28,7 +28,7 @@ all:
           baremetal_flavor: m1.large
           bmc_flavor: m1.small
           extra_node_flavor: m1.small
-          baremetal_image: CentOS-Stream-GenericCloud-9
+          baremetal_image: RHEL-baseos-9
           radvd_flavor: m1.small
           radvd_image: CentOS-Stream-GenericCloud-9
           dhcp_relay_image: CentOS-Stream-GenericCloud-9

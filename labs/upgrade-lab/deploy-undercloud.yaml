@@ -1,0 +1,105 @@
+- hosts: undercloud
+  tasks:
+  - name: Set up some swap space
+    become: yes
+    shell: |
+      dd if=/dev/zero of=/opt/8GB.swap bs=8192 count=1048576
+      mkswap /opt/8GB.swap
+      swapon /opt/8GB.swap
+      echo "/opt/8GB.swap swap                                    swap    defaults 0 0" >> /etc/fstab
+  - name: Delete default "System eth2" connection
+    become: true
+    command: nmcli connection del "System eth2"
+  - name: Set up public interface
+    become: yes
+    copy:
+      content: | 
+        [connection]
+        id=eth2
+        type=ethernet
+        autoconnect=true
+        interface-name=eth2
+        
+        [ipv4]
+        method=manual
+        addresses={{ undercloud_public_ip }}/24
+        
+        [ipv6]
+        method=disabled
+        
+        [ethernet]
+        mtu=1442
+      dest: /etc/NetworkManager/system-connections/eth2.nmconnection
+      mode: 0600
+      owner: root
+      group: root
+  - name: Reload NetworkManager connections
+    become: true
+    command: nmcli connection reload
+  - name: Install packages
+    become: yes
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+        - git
+        - tmux
+        - vim-enhanced
+  - name: Install tripleo repos rpm
+    become: yes
+    shell: |
+      REPO=https://trunk.rdoproject.org/centos9/component/tripleo/current/
+      TRIPLEO_REPOS_PKG=$(curl -s https://trunk.rdoproject.org/centos9/component/tripleo/current/versions.csv | grep tripleo-repos | awk -F ',' '{print $NF}')
+      curl -O "${REPO}python3-${TRIPLEO_REPOS_PKG}.noarch.rpm"
+      dnf install -y python3-tripleo-repos-*.el9.noarch.rpm
+  - name: Set up tripleo repos
+    become: yes
+    shell:
+      tripleo-repos current-tripleo-dev ceph
+  - name: upgrade all packages
+    become: yes
+    yum:
+      name: '*'
+      state: latest
+  - name: Unconditionally reboot the machine with all defaults
+    become: yes
+    reboot:
+  - name: Install tripleo client
+    become: yes
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+        - python3-tripleoclient
+  - name: Git checkout labs
+    git:
+      repo: https://github.com/hjensas/homelab.git
+      dest: "{{ ansible_env.HOME }}/homelab"
+  - name: Git checkout tripleo-heat-templates
+    git:
+      repo: https://opendev.org/openstack/tripleo-heat-templates.git
+      dest: "{{ ansible_env.HOME }}/tripleo-heat-templates"
+      # refspec: refs/changes/49/619649/10
+      # version: FETCH_HEAD
+  - name: Create symlinks
+    file:
+      src: "{{ ansible_env.HOME }}/homelab/labs/{{ lab_name }}/{{ item }}"
+      dest: "{{ ansible_env.HOME }}/{{ item }}"
+      state: link
+    with_items:
+      - overcloud
+  - name: Create symlinks undercloud
+    file:
+      src: "{{ ansible_env.HOME }}/homelab/labs/{{ lab_name }}/undercloud/{{ item }}"
+      dest: "{{ ansible_env.HOME }}/{{ item }}"
+      state: link
+    with_items:
+      - undercloud.conf
+  - name: Create images directory
+    file:
+      dest: "{{ ansible_env.HOME }}/images"
+      state: directory
+  - name: Install Undercloud
+    shell:
+      openstack undercloud install
+
