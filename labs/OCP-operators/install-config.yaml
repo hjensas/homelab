@@ -1,0 +1,47 @@
+apiVersion: v1
+baseDomain: ocp.lab.example.com
+compute:
+- architecture: amd64
+  hyperthreading: Enabled
+  name: worker
+  platform:
+    openstack:
+      type: m1.xxlarge
+  replicas: 1
+controlPlane:
+  architecture: amd64
+  hyperthreading: Enabled
+  name: master
+  platform:
+    openstack:
+      type: m1.xlarge2
+  replicas: 3
+metadata:
+  creationTimestamp: null
+  name: shiftstack
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: 10.0.0.0/16
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  openstack:
+    apiFloatingIP: 192.168.254.163
+    ingressFloatingIP: 192.168.254.194
+    apiVIP: 10.0.0.5
+    cloud: homelab
+    clusterOSImage: rhcos
+    defaultMachinePlatform:
+      type: m1.xlarge2
+    externalDNS:
+      - 192.168.254.1
+    externalNetwork: provider
+    ingressVIP: 10.0.0.7
+publish: External
+pullSecret: 
+sshKey: |
+  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCINPOs6XsfMVQMqjmiduT3Bxhogy7MbAFOWlR+9LlKkTW1kV6glsCXY5svtggd2zRtc40UWalHaj9jC+yEkZdI35h2PkK+Sww52u4nczqgNpIFNt7Dm2xtYKbTolAV9jSeNkRlGMCq9EBzQlwiV0HkHx1CdNR/zzXbyNZLmOybFkXqR150H01kUhdv0v6AMWTDZjMEWO/PaWCOgzZhH9ztXjy+rwa7pdaI4+0Pb9Kib+d8/IrgNsLB/sCazqD+9/COI6AHqzTDS1aU9/gMQrUN1ronzMEQhzzOuoI8WeLqU++j+0dT2UWVPlQqoln+RYu7dUn/DSZDrsYenudT5+P hjensas@hjensas.home.internal
