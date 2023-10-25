@@ -10,9 +10,10 @@
   - name: Install tripleo repos rpm
     become: yes
     shell: |
-      centos_ver=$(rpm --eval %{centos_ver})
-      curl -o /etc/yum.repos.d/delorean.repo https://trunk.rdoproject.org/centos${centos_ver}-master/current-tripleo/delorean.repo
-      dnf install -y python3-tripleo-repos
+      REPO=https://trunk.rdoproject.org/centos9/component/tripleo/current/
+      TRIPLEO_REPOS_PKG=$(curl -s https://trunk.rdoproject.org/centos9/component/tripleo/current/versions.csv | grep tripleo-repos | awk -F ',' '{print $NF}')
+      curl -O "${REPO}python3-${TRIPLEO_REPOS_PKG}.noarch.rpm"
+      dnf install -y python3-tripleo-repos-*.el9.noarch.rpm
   - name: Set up tripleo repos
     become: yes
     shell: |
@@ -91,7 +92,7 @@
   - name: Build Images
     shell: |
       cd {{ ansible_env.HOME }}/images
-      curl -o {{ ansible_env.HOME }}/images/CentOS-Stream-GenericCloud-9.qcow2 https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-GenericCloud-9-20220509.0.x86_64.qcow2
+      curl -o {{ ansible_env.HOME }}/images/CentOS-Stream-GenericCloud-9.qcow2 https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-GenericCloud-9-latest.x86_64.qcow2
       export DIB_YUM_REPO_CONF="/etc/yum.repos.d/delorean* /etc/yum.repos.d/tripleo-centos-*"
       export DIB_LOCAL_IMAGE={{ ansible_env.HOME }}/images/CentOS-Stream-GenericCloud-9.qcow2
       openstack overcloud image build --config-file /usr/share/openstack-tripleo-common/image-yaml/overcloud-images-python3.yaml --config-file /usr/share/openstack-tripleo-common/image-yaml/overcloud-images-centos9.yaml
