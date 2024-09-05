@@ -1,0 +1,23 @@
+- name: Assert config is defined
+  ansible.builtin.assert:
+    that:
+      - controller_ansible_host is defined
+      - controller_ansible_host | length > 0
+      - ansible_inventory is defined
+      - ansible_inventory | length > 0
+
+- name: Add controller-0 to the Ansible inventory
+  ansible.builtin.add_host: "{{ controller_ansible_host }}"
+
+- name: Wait for controller-0 to be ready
+  delegate_to: "{{ controller_ansible_host.name }}"
+  ansible.builtin.wait_for_connection:
+    sleep: 2
+    timeout: 300
+
+- name: Write ansible inventory to file on controller-0
+  delegate_to: "{{ controller_ansible_host.name }}"
+  ansible.builtin.copy:
+    content: "{{ ansible_inventory | to_nice_yaml(indent=2) }}"
+    dest: "/home/zuul/ansible-inventory.yml"
+    mode: '0644'

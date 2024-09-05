@@ -1,0 +1,67 @@
+---
+# Copyright Red Hat, Inc.
+# All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+- name: Bootstrap architecutre on Openstack cloud
+  hosts: localhost
+  gather_facts: true
+  environment:
+    OS_CLOUD: "{{ dffw_bootstrap_cloud_name }}"
+  vars:
+    ntp_servers:
+      - clock.corp.redhat.com
+    dns_servers:
+      - 10.11.5.160
+      - 10.2.70.215
+    ssh_pub_key: >-
+      ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCgzueD/tWt2g2Uc3r9krmLwpGzQ5O4V60ojCNfpWOeAE201IglE+C3P8PU1Hj/uwfQKgORH/9DDObJdfCmFQXn/e3eY97w+ARa19xyuyG5s0wcUJVfhMGXMcSrCIW9C8bKvKYdBtHg3KQ02d3d/vEhwA7rNWWeFD0PXsIrZ7rQBia3HsK3gdvVnCTv+rGtsCOUnTL0NQVwbAv2tBq7HHXfEd/oAG6nkeyd3xE3RoldpNlV656tognfdj8inrWjr4B9U1VqwhqTbT0541Ew45mDvYWE5qBjwHvI/s5JkUYR2LAypWNnWR1TU1GQQ5tmWvucsNsybx8WNuJQF3mUFVMKYArdxzQ5g9NPvkO0HkV6IV18ICR3GyHC6rULkzFtgc3nfeZmW85tKEWAYNKuyrQpi16NIIAdPLWjIUup5egp51T4Vb+e8FdCQy5klrtQctaqZN7gRY5aL5X/TpvilM17dSeLLaQCcfIOEXIqgAjFkthzPpNLQYFr4lz/bHvAKm8= cloud-user@hjensas-adm.novalocal
+    pull_secret_file: /home/cloud-user/pull-secret.txt
+    zuul:
+      build: 1dcaf86e72ec4400a8012f3892d815be
+    ovn_k8s_gateway_config_host_routing: true
+    enable_iscsi: true
+    enable_multipath: true
+    cinder_volume_pvs:
+      - /dev/vdc
+      - /dev/vdd
+      - /dev/vde
+    topolvms_disk_list:
+      - /dev/vdb
+  pre_tasks:
+    - name: Slurp the pull-secret file
+      register: slurp_pull_secret
+      ansible.builtin.slurp:
+        src: "{{ pull_secret_file }}"
+  roles:
+    - role: heat_stack
+      vars:
+        stack_name: "dffw-{{ template_path | basename | splitext | first }}-{{ zuul.build[:8] }}"
+        stack_template_path: "{{ template_path }}"
+        stack_parameters: 
+          dns_servers: "{{ dns_servers }}"
+          ssh_pub_key: "{{ ssh_pub_key }}"
+          ntp_servers: "{{ ntp_servers }}"
+
+    - role: controller
+      vars:
+        controller_ansible_host: "{{ stack_outputs.controller_ansible_host }}"
+        ansible_inventory: "{{ stack_outputs.ansible_inventory }}"
+
+    - role: ocp_agent_installer
+      delegate_to: controller-0
+      vars:
+        install_config: "{{ stack_outputs.ocp_install_config }}"
+        agent_config: "{{  stack_outputs.ocp_agent_config }}"
+        pull_secret: "{{ slurp_pull_secret.content }}"
